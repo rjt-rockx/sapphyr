@@ -7,13 +7,13 @@ module.exports.run = async (client, msg, args) => {
     let botembed = new Discord.RichEmbed()
     .setDescription("Information on Sapphyr")
     .setColor(color.green)
-    .setThumbnail(bIcon)
+    .setThumbnail(botIcon)
     .addField("Created On:", client.user.createdAt)
     .addField("Total Guilds:", client.guilds.size)
     .addField("Total Users:", client.users.size)
-    .addField("Sapphyr's Github:", '<https://github.com/rjt-rockx/sapphyr>')
+    .addField("Sapphyr's Github:", '<https://github.com/rjt-rockx/sapphyr>');
 
-    message.channel.send(botembed);
+    msg.channel.send(botembed);
 }
 
 module.exports.help = {
