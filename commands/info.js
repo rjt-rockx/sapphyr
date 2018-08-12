@@ -11,7 +11,7 @@ module.exports.run = async (bot, message, args) => {
     .addField("Created On:", client.user.createdAt)
     .addField("Total Guilds:", client.guilds.size)
     .addField("Total Users:", client.users.size)
-    .addField("Sapphyr's github:", <https://github.com/rjt-rockx/sapphyr>)
+    .addField("Sapphyr's github:", '<https://github.com/rjt-rockx/sapphyr>')
 
     message.channel.send(botembed);
 }
