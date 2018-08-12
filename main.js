@@ -5,6 +5,8 @@ var utils = require("./utils/utils.js");
 var fs = require("fs");
 bot.commands = new Discord.Collection();
 
+
+
 fs.readdir("./commands/", (err, files) => {
 	if(err) console.log(err);
   let jsfile = files.filter(f => f.split(".").pop() === "js");
@@ -32,12 +34,18 @@ function clean(text) {
 }
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
+	var activity = [
+	"s.help",
+	"over Sinbad Knights"
+];
+	setInterval(() => {
+        const index = Math.floor(Math.random() * (activity.length - 1) + 1);
+        client.user.setActivity(activity[index] { type:'WATCHING' }); 
+    }, 30000); 
 });
 
 client.on('message', msg => {
-	if (msg.content === 'ping') {
-		msg.reply('Pong!');
-	}
+	
   let msgArray = msg.content.split(" ");
   let cmd = msgArray[0];
   let args = msgArray.slice(1);
