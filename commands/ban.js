@@ -21,7 +21,8 @@ module.exports.run = async (client, msg, args) => {
     .setDescription(`${bUser} has successfully been banned from the guild.:white_check_mark:`)
     .setColor(color.green);
 
-    msg.channel.send(bEmbed);
+   await msg.guild.member(bUser).ban(breason);
+         msg.channel.send(bEmbed);
 
 }
 
