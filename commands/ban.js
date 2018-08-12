@@ -1,6 +1,6 @@
 var Discord = require("discord.js");
 var errors = require("../utils/errorList.js");
-var color = require("../utils/color.json");
+var color = require("../utils/colors.json");
 
 module.exports.run = async (client, msg, args) => {
 
