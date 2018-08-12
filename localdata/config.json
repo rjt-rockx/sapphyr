@@ -1,0 +1,13 @@
+{
+    "bot": {
+        "token": "",
+        "id": "",
+        "owners": [
+            ""
+        ]
+    },
+    "nadekoConnector": {
+        "address": "",
+        "password": ""
+    }
+}
