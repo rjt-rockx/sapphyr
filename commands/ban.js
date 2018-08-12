@@ -4,7 +4,7 @@ var color = require("../utils/colors.json");
 
 module.exports.run = async (client, msg, args) => {
 
-   message.delete();
+   msg.delete();
     if(!msg.member.hasPermission("BAN_MEMBERS")) return errors.missingPerms(msg, "BAN_MEMBERS");
     if(args[0] == "help"){
       msg.reply("Usage: s.ban @someone reason");
