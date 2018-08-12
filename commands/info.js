@@ -1,7 +1,7 @@
 var Discord = require("discord.js");
 var color = require("../utils/colors.json");
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (client, msg, args) => {
 
     let botIcon = client.user.displayAvatarURL;
     let botembed = new Discord.RichEmbed()
