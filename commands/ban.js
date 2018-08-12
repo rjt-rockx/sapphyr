@@ -5,12 +5,12 @@ var color = require("../utils/colors.json");
 module.exports.run = async (client, msg, args) => {
 
    message.delete();
-    if(!message.member.hasPermission("BAN_MEMBERS")) return errors.missingPerms(msg, "BAN_MEMBERS");
+    if(!msg.member.hasPermission("BAN_MEMBERS")) return errors.missingPerms(msg, "BAN_MEMBERS");
     if(args[0] == "help"){
-      message.reply("Usage: s.ban @someone reason");
+      msg.reply("Usage: s.ban @someone reason");
       return;
     }
-    let bUser = message.guild.member(msg.mentions.users.first() || msg.guild.members.get(args[0]));
+    let bUser = msg.guild.member(msg.mentions.users.first() || msg.guild.members.get(args[0]));
     if(!bUser) return errors.nullUser(msg.channel);
     let breason = args.join(" ").slice(1);
     if(!breason) return errors.noReason(msg.channel);
