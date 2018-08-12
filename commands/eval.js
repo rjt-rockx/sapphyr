@@ -9,7 +9,7 @@ module.exports.run = async (client, msg, args) => {
       return text;
 }
 
-  if(message.author.id !== "192060404501839872") return msg.reply("You cannot use this command.");
+  if(msg.author.id !== "192060404501839872") return msg.reply("You cannot use this command.");
     try {
       const code = args.join(" ");
       let evaled = eval(code);
