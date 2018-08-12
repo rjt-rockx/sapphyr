@@ -1,0 +1,28 @@
+{
+	"env": {
+		"es6": true,
+		"node": true
+	},
+	"extends": "eslint:recommended",
+	"parserOptions": {
+		"ecmaVersion": 2018
+	},
+	"rules": {
+		"no-console": "off",
+		"indent": "off",
+		"no-unused-vars": "off",
+		"no-empty-pattern": "off",
+		"quotes": [
+			"double",
+			"warn"
+		],
+		"linebreak-style": [
+			"warn",
+			"unix"
+		],
+		"semi": [
+			"error",
+			"always"
+		]
+	}
+}
