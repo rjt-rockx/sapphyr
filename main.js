@@ -24,7 +24,12 @@ jsfile.forEach((f, i) =>{
     });
 });
 
-
+function clean(text) {
+  if (typeof(text) === "string")
+    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+  else
+      return text;
+}
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 });
