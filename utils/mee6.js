@@ -31,6 +31,8 @@ class Mee6Api {
     }
 
     async getLeaderboard(items, page) {
+        if (items > 1000)
+            throw new Error("Items can't be greater than 1000 due to API restrictions.");
         let { body: { players: members } } = await got.get(`https://mee6.xyz/api/plugins/levels/leaderboard/${this.guildId}?limit=${items}&page=${page}`, { json: true });
         return members.map((user, index) => {
             return {
