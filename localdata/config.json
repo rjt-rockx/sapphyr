@@ -1,12 +1,13 @@
 {
     "bot": {
         "token": "",
-        "id": "",
+        "id": "468507221052096522",
         "owners": [
-            ""
+            "192060404501839872"
         ]
     },
     "nadekoConnector": {
+        "enabled": false,
         "address": "",
         "password": ""
     }

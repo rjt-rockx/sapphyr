@@ -93,7 +93,8 @@ class NadekoConnectorClient {
         }
     }
 }
-}
 
-exports.defaultClient = new NadekoConnectorClient(config.nadekoConnector.address, config.nadekoConnector.password);
+var defaultClient = new NadekoConnectorClient(config.nadekoConnector.address, config.nadekoConnector.password);
+
+exports.defaultClient = defaultClient;
 exports.client = NadekoConnectorClient;

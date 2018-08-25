@@ -1,61 +1,70 @@
-var Discord = require('discord.js');
-var client = new Discord.Client();
+var path = require("path");
+var sqlite = require("sqlite");
 var config = require("./localdata/config.json");
-var utils = require("./utils/utils.js");
-var fs = require("fs");
-bot.commands = new Discord.Collection();
+var commando = require("discord.js-commando");
 
-
-
-fs.readdir("./commands/", (err, files) => {
-	if(err) console.log(err);
-  let jsfile = files.filter(f => f.split(".").pop() === "js");
-  if(jsfile.length <= 0){
-    console.log("Couldn't find commands.");
-    return;
-  }
-
-jsfile.forEach((f, i) =>{
-  let files = require(`./commands/${f}`);
-  console.log(`${f} has been loaded successfully.`);
-  if (files.help && files.help.name) {
-    bot.commands.set(files.help.name, files);
-  } else {
-    console.error(`File: ${f} does not have module.exports.help name property, therefor command cannot be loaded.`);
-         }
-    });
-});
-
-function clean(text) {
-  if (typeof(text) === "string")
-    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-  else
-      return text;
-}
-client.on('ready', () => {
-	console.log(`Logged in as ${client.user.tag}!`);
-	var activity = [
-	"s.help",
-	"over Sinbad Knights"
-];
-	setInterval(() => {
-        const index = Math.floor(Math.random() * (activity.length - 1) + 1);
-        client.user.setActivity(activity[index] { type:'WATCHING' }); 
-    }, 30000); 
-});
-
-client.on('message', msg => {
-	
-  let msgArray = msg.content.split(" ");
-  let cmd = msgArray[0];
-  let args = msgArray.slice(1);
-
-  let commandfile = bot.commands.get(cmd.slice(prefix.length));
-  if(commandfile) commandfile.run(client, msg, args)
-	
+var client = new commando.Client({
+  owner: config.owners,
+  unknownCommandResponse: false,
+  commandPrefix: "s."
 });
 
 
+client
+  .on("error", console.error)
+  .on("warn", console.warn)
+  .on("debug", console.log)
 
 
-client.login(config.token);
+  .on("ready", () => {
+    console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+  })
+
+
+  .on("disconnect", () => { console.warn("Disconnected!"); })
+  .on("reconnecting", () => { console.warn("Reconnecting..."); })
+
+
+  .on("commandError", (cmd, err) => {
+    if (err instanceof commando.FriendlyError) return;
+    console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
+  })
+
+
+  .on("commandBlocked", (msg, reason) => {
+    console.log(`Command ${msg.command ? `${msg.command.groupID}:${msg.command.memberName}` : ""}
+			blocked; ${reason}
+		`);
+  })
+
+
+  .on("commandPrefixChange", (guild, prefix) => {
+    console.log(`Prefix ${prefix === "" ? "removed" : `changed to ${prefix || "the default"}`}
+			${guild ? `in guild ${guild.name} (${guild.id})` : "globally"}.
+		`);
+  })
+
+
+  .on("commandStatusChange", (guild, command, enabled) => {
+    console.log(`Command ${command.groupID}:${command.memberName}
+			${enabled ? "enabled" : "disabled"}
+			${guild ? `in guild ${guild.name} (${guild.id})` : "globally"}.
+		`);
+  })
+
+
+  .on("groupStatusChange", (guild, group, enabled) => {
+    console.log(`Group ${group.id}
+			${enabled ? "enabled" : "disabled"}
+			${guild ? `in guild ${guild.name} (${guild.id})` : "globally"}.
+		`);
+  });
+
+client.setProvider(
+  sqlite.open(path.resolve("./localdata/sapphyr.db")).then(db => new commando.SQLiteProvider(db))
+).catch(console.error);
+
+client.registry
+  .registerCommandsIn(path.resolve("./commands"));
+
+client.login(config.bot.token);
