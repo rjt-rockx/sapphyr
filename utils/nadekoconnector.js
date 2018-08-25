@@ -25,7 +25,6 @@ class NadekoConnectorClient {
     }
 
     async getBotInfo() {
-        this.checkInitialized();
         var token = await this.encode({});
         var { body } = await got(`${this.address}/getbotinfo/${token}`);
         var info = JSON.parse(body);
@@ -81,6 +80,19 @@ class NadekoConnectorClient {
         this.checkInitialized();
         return this.botInfo.owners;
     }
+
+    async getBalance(userId) {
+        this.checkInitialized();
+        var token = await this.encode({ userId: userId });
+        var { body } = await got(`${this.address}/getbalance/${token}`);
+        var info = JSON.parse(body);
+        if (!info.success)
+            throw new Error(info.error);
+        if (info.success) {
+            return info;
+        }
+    }
+}
 }
 
 exports.defaultClient = new NadekoConnectorClient(config.nadekoConnector.address, config.nadekoConnector.password);
