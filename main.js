@@ -65,6 +65,7 @@ client.setProvider(
 ).catch(console.error);
 
 client.registry
+  .registerDefaultTypes()
   .registerCommandsIn(path.resolve("./commands"));
 
 client.login(config.bot.token);
