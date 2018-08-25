@@ -13,8 +13,8 @@
 		"no-unused-vars": "off",
 		"no-empty-pattern": "off",
 		"quotes": [
-			"double",
-			"warn"
+			"error",
+			"double"
 		],
 		"linebreak-style": [
 			"warn",
