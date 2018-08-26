@@ -81,16 +81,11 @@ class NadekoConnectorClient {
         return this.botInfo.owners;
     }
 
-    async getBalance(userId) {
+    async getCurrency(userId) {
         this.checkInitialized();
         var token = await this.encode({ userId: userId });
-        var { body } = await got(`${this.address}/getbalance/${token}`);
-        var info = JSON.parse(body);
-        if (!info.success)
-            throw new Error(info.error);
-        if (info.success) {
-            return info;
-        }
+        var { body } = await got(`${this.address}/getcurrency/${token}`);
+        return JSON.parse(body);
     }
 }
 
