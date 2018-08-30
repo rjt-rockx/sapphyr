@@ -1,95 +1,37 @@
 var got = require("got");
 var jwt = require("jsonwebtoken");
-var config = require("../localdata/config.json");
 
-// jwt nadekoconnector client
 class NadekoConnectorClient {
     constructor(address, password) {
         this.address = address;
         this.password = password;
-        this.init = false;
     }
 
-    get initialized() {
-        return this.init;
-    }
-
-    async encode(data) {
-        var token = await jwt.sign(data, this.password);
-        return token;
-    }
-
-    checkInitialized() {
-        if (!this.init)
-            throw new Error("NadekoConnector Client has not been initialized. Initialize it first before calling any function.");
+    async getData(endpoint, data) {
+        let token = jwt.sign(data, this.password);
+        let { body } = await got(`${this.address}/${endpoint}/${token}`);
+        return JSON.parse(body);
     }
 
     async getBotInfo() {
-        var token = await this.encode({});
-        var { body } = await got(`${this.address}/getbotinfo/${token}`);
-        var info = JSON.parse(body);
-        if (!info.success)
-            throw new Error(info.error);
-        if (info.success) {
-            this.init = true;
-            this.botInfo = info.bot;
-            return info;
-        }
-    }
-
-    async initialize() {
-        await this.getBotInfo();
-    }
-
-    get currencySign() {
-        this.checkInitialized();
-        return this.botInfo.currency.sign;
-    }
-
-    get currencyName() {
-        this.checkInitialized();
-        return this.botInfo.currency.name;
-    }
-
-    get currencyPluralName() {
-        this.checkInitialized();
-        return this.botInfo.currency.pluralName;
-    }
-
-    get currencyData() {
-        this.checkInitialized();
-        return this.botInfo.currency;
-    }
-
-    get xpPerMessage() {
-        this.checkInitialized();
-        return this.botInfo.xp.perMessage;
-    }
-
-    get xpInterval() {
-        this.checkInitialized();
-        return this.botInfo.xp.interval;
-    }
-
-    get botId() {
-        this.checkInitialized();
-        return this.botInfo.id;
-    }
-
-    get owners() {
-        this.checkInitialized();
-        return this.botInfo.owners;
+        return await this.getData("getBotInfo", {});
     }
 
     async getCurrency(userId) {
-        this.checkInitialized();
-        var token = await this.encode({ userId: userId });
-        var { body } = await got(`${this.address}/getcurrency/${token}`);
-        return JSON.parse(body);
+        return await this.getData("getCurrency", { userId: userId });
+    }
+
+    async addCurrency(userId, currency, reason) {
+        return await this.getData("addCurrency", { userId: userId, currency: currency, reason: reason });
+    }
+
+    async getGuildXp(userId, guildId) {
+        return await this.getData("getGuildXp", { userId: userId, guildId: guildId });
+    }
+
+    async setGuildXp(userId, guildId, xp, awardedXp) {
+        return await this.getData("getGuildXp", { userId: userId, guildId: guildId, xp: xp, awardedXp: awardedXp });
     }
 }
 
-var defaultClient = new NadekoConnectorClient(config.nadekoConnector.address, config.nadekoConnector.password);
-
-exports.defaultClient = defaultClient;
-exports.client = NadekoConnectorClient;
+module.exports = NadekoConnectorClient;
