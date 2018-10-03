@@ -34,13 +34,6 @@ client
     console.log(`Group ${group.id} ${enabled ? "enabled" : "disabled"} ${guild ? `in guild ${guild.name} (${guild.id})` : "globally"}.`);
   });
 
-client.setProvider(
-  sqlite
-    .open(path.resolve("./localdata/sapphyr.db"))
-    .then(db => new commando.SQLiteProvider(db))
-    .catch(console.error)
-);
-
 client.registry
   .registerDefaultTypes()
   .registerGroup("utility", "Utility commands");
