@@ -6,8 +6,10 @@ var commando = require("discord.js-commando");
 
 var client = new commando.Client({
   owner: config.owners,
+  commandEditableDuration: 0,
+  nonCommandEditable: false,
   unknownCommandResponse: false,
-  commandPrefix: "s."
+  commandPrefix: "_"
 });
 
 
