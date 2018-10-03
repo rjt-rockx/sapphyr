@@ -62,3 +62,6 @@ typings/
 
 # local data
 localdata/
+
+# test files
+test*
