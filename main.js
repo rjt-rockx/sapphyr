@@ -38,7 +38,10 @@ client
 
 client.registry
   .registerDefaultTypes()
-  .registerGroup("utility", "Utility commands");
+  .registerDefaultGroups()
+  .registerDefaultCommands()
+  .registerGroup("basics")
+  .registerCommandsIn(path.join(__dirname, "commands"));
 
 fs.readdirSync(path.resolve("./commands")).forEach((file) => {
   let command = require(path.resolve("./commands/" + file));

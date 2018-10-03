@@ -4,7 +4,7 @@ module.exports = class PingCommand extends Command {
         super(client, {
             name: "ping",
             description: "Checks the bot's ping.",
-            group: "utility",
+            group: "basics",
             memberName: "ping"
         });
     }
