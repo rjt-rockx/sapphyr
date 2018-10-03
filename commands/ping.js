@@ -1,19 +1,16 @@
-var { Command } = require("commando");
+var { Command } = require("discord.js-commando");
 module.exports = class PingCommand extends Command {
     constructor(client) {
         super(client, {
             name: "ping",
             description: "Checks the bot's ping.",
+            group: "utility",
+            memberName: "ping"
         });
     }
 
     async run(msg) {
-        if (!msg.editable) {
-            let pingMsg = await msg.reply("Pinging...");
-            return pingMsg.edit(`Pong! | ${pingMsg.createdTimestamp - msg.createdTimestamp}ms.`);
-        } else {
-            await msg.edit("Pinging...");
-            return msg.edit(`Pong! | ${msg.editedTimestamp - msg.createdTimestamp}ms.`);
-        }
+        let pingMsg = await msg.channel.send("🔁 | Pinging ...");
+        return await pingMsg.edit(`✅ | ${Date.now() - pingMsg.createdTimestamp}ms.`);
     }
 };
