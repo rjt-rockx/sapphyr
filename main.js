@@ -1,8 +1,8 @@
 var fs = require("fs");
 var path = require("path");
-var sqlite = require("sqlite");
 var config = require("./localdata/config.json");
 var commando = require("discord.js-commando");
+var services = require("./services");
 
 var client = new commando.Client({
   owner: config.owners,
@@ -39,13 +39,7 @@ client
 client.registry
   .registerDefaultTypes()
   .registerDefaultGroups()
-  .registerDefaultCommands()
   .registerGroup("basics")
   .registerCommandsIn(path.join(__dirname, "commands"));
-
-fs.readdirSync(path.resolve("./commands")).forEach((file) => {
-  let command = require(path.resolve("./commands/" + file));
-  client.registry.registerCommand(command);
-});
 
 client.login(config.bot.token);
