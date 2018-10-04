@@ -15,6 +15,7 @@ var client = new commando.Client({
 client
 	.on("ready", () => {
 		console.log(`Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+		client.user.setActivity("with sapphires!");
 	})
 	.on("commandError", (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
