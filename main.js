@@ -39,7 +39,11 @@ client
 client.registry
 	.registerDefaultTypes()
 	.registerDefaultGroups()
-	.registerGroup("basics")
+	.registerGroups([
+		["basics", "basic commands"],
+		["fun", "fun commands"],
+		["moderation", "moderation commands"]
+	])
 	.registerCommandsIn(path.join(__dirname, "commands"));
 
 client.login(config.bot.token);
