@@ -27,11 +27,11 @@ module.exports = class banCommand extends Command {
            ]
          });
        }
-   async run(msg, { user }, { content }, { time }){
+   async run(msg, user, content, time){
 
     let guild = this.msg.guild.name;
-    if(!{ time }) {
-      { time } = "N/A";
+    if(!time) {
+      time = "N/A";
     }
     if(user.hasPermission("BAN_MEMBERS")) return msg.reply("You cannot ban a user with a higher role.");
     if(!this.msg.member.hasPermission("BAN_MEMBERS")) return msg.reply("You cannot do this.");

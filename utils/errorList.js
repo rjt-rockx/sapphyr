@@ -9,7 +9,7 @@ module.exports.missingPerms = (msg, perms) => {
   let embed = new Discord.RichEmbed()
         .setAuthor(msg.author.tag)
         .setTitle("Error Occured")
-        .setColor("#e60000");
+        .setColor("#e60000")
         .addField("Missing permissions", perms);
     
     msg.channel.send(embed).then(m => m.delete(5000));
