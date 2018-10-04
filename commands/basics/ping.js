@@ -11,6 +11,6 @@ module.exports = class PingCommand extends Command {
 
     async run(msg) {
         let pingMsg = await msg.channel.send("🔁 | Pinging ...");
-        return await pingMsg.edit(`✅ | ${Date.now() - pingMsg.createdTimestamp}ms.`);
+        return await pingMsg.edit(`✅ | ${Date.now() - pingMsg.createdAt.getMilliseconds()}ms.`);
     }
 };
