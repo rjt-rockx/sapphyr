@@ -71,13 +71,14 @@ module.exports = class HelpCommand extends Command {
 
         var maxPage = Math.ceil(list.length / 10) - 1;
 
+        if (!name) {
+            if (page < -1) {
+                embed.setDescription('please specify a larger number');
+            }
 
-        if (page < -1) {
-            embed.setDescription('please specify a larger number');
-        }
-
-        else if (page > maxPage) {
-            embed.setDescription('please specify a smaller page number');
+            else if (page > maxPage) {
+                embed.setDescription('please specify a smaller page number');
+            }
         }
 
         else {
@@ -86,8 +87,10 @@ module.exports = class HelpCommand extends Command {
                     embed.addField(list[(page * 10) + i].name, list[(page * 10) + i].description);
                 }
             }
-
-            embed.setFooter('page ' + (page + 1) + ' / ' + (maxPage + 1));
+            
+            if (!name) {
+                embed.setFooter('page ' + (page + 1) + ' / ' + (maxPage + 1));
+            }
         }
         
         msg.channel.send(embed);
