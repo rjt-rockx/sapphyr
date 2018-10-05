@@ -4,8 +4,11 @@ module.exports = {
 	type: "event",
 	on: {
 		message: async function (message) {
-			if (message.channel.id === message.guild.channels.find("name", "art").id && message.attachments.size > 0)
-				message.react("🔺");
+			if (message.guild.channels.find("name", "art")) {
+				if (message.channel.id === message.guild.channels.find("name", "art").id && message.attachments.size > 0) {
+					message.react("🔺");
+				}
+			}
 		}
 	}
 };
