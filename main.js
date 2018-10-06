@@ -50,3 +50,4 @@ client.login(config.bot.token);
 
 initializeServices(client);
 global.services = services;
+global.client = client;
