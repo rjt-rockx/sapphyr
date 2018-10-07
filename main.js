@@ -42,7 +42,8 @@ client.registry
 	.registerGroups([
 		["basics", "basic commands"],
 		["fun", "fun commands"],
-		["moderation", "moderation commands"]
+		["moderation", "moderation commands"],
+		["utils", "utility commands"]
 	])
 	.registerCommandsIn(path.join(__dirname, "commands"));
 
