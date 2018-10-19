@@ -12,11 +12,16 @@ var client = new commando.Client({
 	commandPrefix: "_"
 });
 
-
 client
-	.on("ready", () => {
+	.on("ready", async () => {
 		console.log(`Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
 		client.user.setActivity("with sapphires!");
+		client.datahandler = new utils.datahandler();
+		await client.datahandler.initialize();
+		await initializeServices(client);
+		global.services = services;
+		global.utils = utils;
+		global.client = client;
 	})
 	.on("commandError", (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
@@ -49,8 +54,3 @@ client.registry
 	.registerCommandsIn(path.join(__dirname, "commands"));
 
 client.login(config.bot.token);
-
-initializeServices(client);
-global.services = services;
-global.utils = utils;
-global.client = client;
