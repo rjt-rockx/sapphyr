@@ -1,17 +1,23 @@
 const { MongoClient } = require("mongodb");
 
 class dataHandler {
-    constructor(host = "localhost:27017", databaseName = "sapphyr") {
+    constructor(host = "27017", databaseName = "sapphyr") {
         if (typeof host === "number")
             host = "localhost:" + host;
         this._host = "mongodb://" + host;
         this._databaseName = databaseName;
         this.client = new MongoClient(this._host, { useNewUrlParser: true });
+        this.initialized = false;
     }
 
     async initialize() {
         await this.client.connect();
         this.db = this.client.db(this._databaseName);
+        this.initialized = true;
+    }
+
+    get isInitialized() {
+        return this.initialized;
     }
 
     async close() {
@@ -26,42 +32,43 @@ class dataHandler {
 
     async getGuild(guild) {
         let guilds = await this.db.collection("guilds");
-        return await guilds.find({ guildId: guild.id }).toArray();
+        return await guilds.find({ id: guild.id }).toArray();
+    }
+
+    async getOrAddGuild(guild) {
+        let guildData = await this.getGuild(guild);
+        if (Array.isArray(guildData) && guildData.length < 1)
+            await this.addGuild(guild);
+        let data = await this.getGuild(guild);
+        return data[0];
     }
 
     async addGuild(guild) {
         let guilds = await this.db.collection("guilds");
         return await guilds.insertOne({
-            guildId: guild.id,
+            id: guild.id,
             prefix: "_",
             permissions: [],
-            linkDetection: { enabled: false },
+            linkdetection: { enabled: false },
             beta: false
         });
     }
 
     async removeGuild(guild) {
         let guilds = await this.db.collection("guilds");
-        return await guilds.deleteMany({ guildId: guild.id });
+        if(typeof guild.id === "undefined") return;
+        return await guilds.deleteMany({ id: guild.id });
+    }
+
+    async removeAllGuilds() {
+        let guilds = await this.db.collection("guilds");
+        return await guilds.deleteMany({});
     }
 
     async editGuild(guild, settings = {}) {
         let guilds = await this.db.collection("guilds");
-        return await guilds.updateOne({ guildId: guild.id }, { $set: settings });
+        return await guilds.updateOne({ id: guild.id }, { $set: settings });
     }
 }
 
 module.exports = dataHandler;
-
-// async function test() {
-//     let x = new dataHandler();
-//     await x.initialize();
-//     await x.addGuild({ id: 12345 });
-//     await x.getGuilds();
-//     await x.editGuild({ id: 12345 }, { prefix: ">" });
-//     await x.getGuilds();
-//     await x.removeGuild({ id: 12345 });
-//     await x.getGuilds();
-//     await x.close();
-// }
-// test();
