@@ -8,6 +8,7 @@ module.exports = class SayCommand extends Command {
             group: 'fun',
             memberName: 'say',
             description: 'bot sends args',
+            userPermissions: ["MANAGE_MESSAGES"],
             args: [
                 {
                     key: 'text',
@@ -25,6 +26,3 @@ module.exports = class SayCommand extends Command {
         return msg.channel.send(sayEmbed);
     }
 };
-exports.help = {
-  name: "say"
-}

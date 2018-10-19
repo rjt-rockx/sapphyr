@@ -22,6 +22,3 @@ module.exports = class AvatarCommand extends Command {
       return msg.channel.send(avatarEmbed);
     }
 };
-exports.help = {
-  name: "avatar"
-}
