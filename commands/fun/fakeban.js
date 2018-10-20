@@ -32,7 +32,7 @@ module.exports = class FakeBan extends Command {
         .addField("Banned User:", fUser)
         .addField("Reason", reason);
         msg.delete();
-        msg.channel.send(fakeEmbed).then(msg.channel.send(`**${fUser}** has left the guild.`, m => m.delete(4000)));
+        msg.channel.send(fakeEmbed).then(msg.channel.send(`**${fUser}** has left the guild.`));
         fUser.send(`Lmao! You got ~~fake~~ banned from ${msg.guild.name}!`);
     }
 }
