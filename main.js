@@ -16,12 +16,26 @@ client
 	.on("ready", async () => {
 		console.log(`Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
 		client.user.setActivity("with sapphires!");
+		// Initialize datahandler
 		client.datahandler = new utils.datahandler();
 		await client.datahandler.initialize();
+		// Initialize services
 		await initializeServices(client);
+		// Attach to global object
 		global.services = services;
 		global.utils = utils;
 		global.client = client;
+		// Register commands, groups and types
+		client.registry
+			.registerDefaultTypes()
+			.registerDefaultGroups()
+			.registerGroups([
+				["basics", "basic commands"],
+				["fun", "fun commands"],
+				["moderation", "moderation commands"],
+				["utils", "utility commands"]
+			])
+			.registerCommandsIn(path.join(__dirname, "commands"));
 	})
 	.on("commandError", (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
@@ -41,16 +55,5 @@ client
 	.on("groupStatusChange", (guild, group, enabled) => {
 		console.log(`Group ${group.id} ${enabled ? "enabled" : "disabled"} ${guild ? `in guild ${guild.name} (${guild.id})` : "globally"}.`);
 	});
-
-client.registry
-	.registerDefaultTypes()
-	.registerDefaultGroups()
-	.registerGroups([
-		["basics", "basic commands"],
-		["fun", "fun commands"],
-		["moderation", "moderation commands"],
-		["utils", "utility commands"]
-	])
-	.registerCommandsIn(path.join(__dirname, "commands"));
 
 client.login(config.bot.token);
