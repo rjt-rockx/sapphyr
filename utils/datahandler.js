@@ -1,7 +1,7 @@
 const { MongoClient } = require("mongodb");
 
 class dataHandler {
-    constructor(host = "27017", databaseName = "sapphyr") {
+    constructor(host = 27017, databaseName = "sapphyr") {
         if (typeof host === "number")
             host = "localhost:" + host;
         this._host = "mongodb://" + host;
@@ -56,7 +56,7 @@ class dataHandler {
 
     async removeGuild(guild) {
         let guilds = await this.db.collection("guilds");
-        if(typeof guild.id === "undefined") return;
+        if (typeof guild.id === "undefined") return;
         return await guilds.deleteMany({ id: guild.id });
     }
 
