@@ -27,7 +27,7 @@ module.exports = class BaseCommand extends Command {
             await this.client.datahandler.initialize();
         }
         if (context.guild && context.guild.id) {
-            context.db = new guildDatahandler(this.client.datahandler, context.guild.db);
+            context.db = new guildDatahandler(this.client.datahandler, context.guild.id);
             await context.db.reload();
         }
         this.task(context);
