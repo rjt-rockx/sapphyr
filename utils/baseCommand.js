@@ -6,7 +6,6 @@ const guildDatahandler = require("./guildDatahandler.js");
 module.exports = class BaseCommand extends Command {
     constructor(client, commandInfo) {
         super(client, commandInfo);
-        this.client = client;
     }
 
     async run(message, args, fromPattern) {
