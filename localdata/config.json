@@ -10,5 +10,10 @@
         "enabled": false,
         "address": "",
         "password": ""
+    },
+    "default": {
+        "prefix": "_",
+        "permissions": [],
+        "beta": false
     }
 }
