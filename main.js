@@ -14,7 +14,7 @@ var client = new commando.Client({
 
 client
 	.on("ready", async () => {
-		console.log(`Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+		console.log(`Logged in as ${client.user.tag} (${client.user.id})`);
 		client.user.setActivity("with sapphires!");
 		// Initialize datahandler
 		client.datahandler = new utils.datahandler();
