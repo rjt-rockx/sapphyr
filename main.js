@@ -5,7 +5,7 @@ var { initializeServices, removeServices, services } = require("./services");
 var utils = require("./utils");
 
 var client = new commando.Client({
-	owner: config.owners,
+	owner: config.bot.owners,
 	commandEditableDuration: 0,
 	nonCommandEditable: false,
 	unknownCommandResponse: false,
