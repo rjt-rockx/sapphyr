@@ -24,7 +24,6 @@ client
 		// Attach to global object
 		global.services = services;
 		global.utils = utils;
-		global.client = client;
 		// Register commands, groups and types
 		client.registry
 			.registerDefaultTypes()
