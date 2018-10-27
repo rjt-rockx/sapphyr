@@ -19,22 +19,27 @@ client
 		// Initialize datahandler
 		client.datahandler = new utils.datahandler();
 		await client.datahandler.initialize();
+		console.log("Datahandler initialized.");
 		// Initialize services
 		await initializeServices(client);
+		console.log("Services initialized.");
 		// Attach to global object
 		global.services = services;
 		global.utils = utils;
+		console.log("Global variables initialized.");
 		// Register commands, groups and types
-		client.registry
-			.registerDefaultTypes()
-			.registerDefaultGroups()
-			.registerGroups([
-				["basics", "basic commands"],
-				["fun", "fun commands"],
-				["moderation", "moderation commands"],
-				["utils", "utility commands"]
-			])
-			.registerCommandsIn(path.join(__dirname, "commands"));
+		client.registry.registerDefaultTypes();
+		console.log("Default types initialized.");
+		client.registry.registerDefaultGroups();
+		console.log("Default groups initialized.");
+		client.registry.registerGroups([
+			["basics", "basic commands"],
+			["fun", "fun commands"],
+			["utils", "utility commands"]
+		]);
+		console.log("Command groups initialized.");
+		client.registry.registerCommandsIn(path.join(__dirname, "commands"));
+		console.log("Commands initialized.");
 	})
 	.on("commandError", (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
