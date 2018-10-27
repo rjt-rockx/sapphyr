@@ -1,5 +1,5 @@
 var { Command } = require("discord.js-commando");
-module.exports = class PingCommand extends Command {
+module.exports = class PingCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
             name: "ping",
@@ -9,8 +9,8 @@ module.exports = class PingCommand extends Command {
         });
     }
 
-    async run(msg) {
-        let pingMsg = await msg.channel.send("🔁 | Pinging ...");
-        return await pingMsg.edit(`✅ | ${pingMsg.createdTimestamp - msg.createdTimestamp}ms.`);
+    async task({ message }) {
+        let pingMsg = await message.channel.send("🔁 | Pinging ...");
+        return await pingMsg.edit(`✅ | ${pingMsg.createdTimestamp - message.createdTimestamp}ms.`);
     }
 };
