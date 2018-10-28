@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const { Command } = require('discord.js-commando');
 
-module.exports = class BugCommand extends Command {
+module.exports = class BugCommand extends global.utils.baseCommand {
     constructor(client){
         super(client, {
             name: 'bug',
@@ -18,23 +18,23 @@ module.exports = class BugCommand extends Command {
             ]
         })
     }
-    async run(msg, { desc }){
-        if(msg.attachments.size < 1) {
+    async task(ctx){
+        if(ctx.message.attachments.size < 1) {
             let bugEmbed = new Discord.RichEmbed()
             .setTitle("Bug Report")
-            .setDescription(desc);
+            .setDescription(ctx.args.desc);
 
-            await msg.guild.channels.find("name", "dev-chat").send(bugEmbed);
-            msg.channel.send("Bug has been successfully reported. :thumbsup:");
+            await this.client.channels.get("477644168299151375").send(bugEmbed);
+            ctx.message.channel.send("Bug has been successfully reported. :thumbsup:");
             return;
         };
-        let attachment = msg.attachments.first().url;
+        let attachment = ctx.message.attachments.first().url;
         let bEmbed = new Discord.RichEmbed()
         .setTitle("Bug Report")
-        .setDescription(desc)
-        .setImage(attachment);
+        .setDescription(ctx.args.desc)
+        .setImage(ctx.args.attachment);
 
-        await msg.guild.channels.find("name", "dev-chat").send(bEmbed);
-        msg.channel.send("Bug has been successfully reported. :thumbsup:");
+        await this.client.channels.get("477644168299151375").send(bEmbed);
+        ctx.message.channel.send("Bug has been successfully reported. :thumbsup:");
     }
 }
