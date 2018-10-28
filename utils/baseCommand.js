@@ -15,9 +15,9 @@ module.exports = class BaseCommand extends Command {
             fromPattern: fromPattern,
             channel: message.channel,
             user: message.member ? message.member : message.author,
-            dm: message.direct,
+            dm: data => message.author.send(data),
             react: message.react,
-            embed: message.embed,
+            embed: data => message.channel.send({ embed: data }),
             client: this.client
         };
         if (message.guild) context.guild = message.guild;
