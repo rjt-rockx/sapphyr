@@ -65,8 +65,11 @@ class dataHandler {
         return await guilds.deleteMany({});
     }
 
-    async editGuild(guild, settings = {}) {
+    async editGuild(guild, settings = {}, removeSettings = false) {
         let guilds = await this.db.collection("guilds");
+        if (typeof removeSettings !== "boolean") return;
+        if (removeSettings)
+            return await guilds.updateOne({ id: guild.id }, { $unset: settings });
         return await guilds.updateOne({ id: guild.id }, { $set: settings });
     }
 }
