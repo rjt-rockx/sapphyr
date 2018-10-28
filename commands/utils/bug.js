@@ -32,7 +32,7 @@ module.exports = class BugCommand extends global.utils.baseCommand {
         let bEmbed = new Discord.RichEmbed()
         .setTitle("Bug Report")
         .setDescription(ctx.args.desc)
-        .setImage(ctx.args.attachment);
+        .setImage(attachment);
 
         await this.client.channels.get("477644168299151375").send(bEmbed);
         ctx.message.channel.send("Bug has been successfully reported. :thumbsup:");
