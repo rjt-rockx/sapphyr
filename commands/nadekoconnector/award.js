@@ -34,7 +34,7 @@ module.exports = class AwardCurrencyCommand extends global.utils.baseCommand {
         if (typeof botInfo.bot.currency.sign === "undefined")
             return await ctx.send("Unable to parse NadekoConnector information.");
         if (!ctx.args.reason) return await ctx.send("No reason specified.");
-        ctx.args.reason = "[Sapphyr] " + ctx.args.reason;
+        ctx.args.reason = "[Sapphyr] Awarded by: " + ctx.message.author + " |" + ctx.args.reason;
         if (ctx.args.amount === 0) return;
         let response = null;
         if (ctx.args.amount < 0)
