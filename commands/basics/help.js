@@ -1,5 +1,4 @@
-var { Command } = require("discord.js-commando");
-var { RichEmbed } = require("discord.js");
+const { Util: { escapeMarkdown } } = require("discord.js");
 module.exports = class HelpCommand extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
@@ -18,14 +17,63 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 		});
 	}
 
-	async task({ client, args, message }) {
+	async task({ client, args, message, channel, user }) {
 		if (args.command === "all") {
+			let fieldPaginator = global.utils.fieldPaginator;
 			let commands = client.registry.commands.array().map(command => {
-				return { name: client.commandPrefix + command.name, value: command.description };
+				let commandData = getCommandData(command, client);
+				return { name: commandData.name, value: commandData.description };
 			});
-			return message.channel.send({ embed: { fields: commands } });
+			let fields = chunk(commands, 5);
+			return new fieldPaginator(channel, user, fields, 30);
 		}
-		let command = args.command;
-		return message.channel.send({ embed: { title: client.commandPrefix + command.name, description: command.description } });
+		let commandData = getCommandData(args.command, client);
+		var fields = [];
+		if (commandData.arguments.length > 0)
+			fields.push({ name: "Arguments", value: commandData.arguments });
+		if (commandData.userperms.length > 0)
+			fields.push({ name: "Required User Permissions", value: commandData.userperms });
+		return message.channel.send({ embed: { title: commandData.name, description: commandData.description, fields: fields } });
 	}
 };
+
+
+function getCommandData(command, client) {
+	let commandName = client.commandPrefix + command.name;
+	if (Array.isArray(command.aliases) && command.aliases.length > 0) {
+		let aliases = [];
+		aliases.push(escapeMarkdown(commandName));
+		command.aliases.map(alias => aliases.push(escapeMarkdown(client.commandPrefix + alias)));
+		commandName = aliases.join(" / ");
+	}
+	let arguments = [];
+	if (command.argsCollector && command.argsCollector.args && Array.isArray(command.argsCollector.args)) {
+		let argKeys = command.argsCollector.args.map(arg => `${arg.default ? "[" + arg.key + "]" : "<" + arg.key + ">"}`);
+		commandName += " " + argKeys.join(" ");
+		arguments = command.argsCollector.args.map(arg => `**${toTitleCase(arg.key)}** - ${arg.prompt} ${arg.default ? `(Default: ${arg.default})` : ""}`).join("\n");
+	}
+	let userperms = [];
+	if (Array.isArray(command.userPermissions) && command.userPermissions.length > 0) {
+		userperms = command.userPermissions.map(permission => toTitleCase(permission.split("_").join(" "))).join("\n");
+	}
+	return {
+		name: commandName,
+		arguments: arguments,
+		userperms: userperms,
+		description: command.description
+	};
+}
+
+function toTitleCase(str) {
+	return str.replace(
+		/\w\S*/g,
+		function (txt) {
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		}
+	);
+}
+
+function chunk(a, l) {
+	if (a.length == 0) return [];
+	else return [a.slice(0, l)].concat(chunk(a.slice(l), l));
+}
