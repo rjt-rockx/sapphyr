@@ -6,6 +6,7 @@ module.exports = class NcSetCommand extends global.utils.baseCommand {
             description: "Sets the NadekoConnector configuration for this guild.",
             group: "nadekoconnector",
             memberName: "ncset",
+            aliases: ["nadekoset"],
             userPermissions: ["ADMINISTRATOR"],
             clientPermissions: ["ADMINISTRATOR"],
             args: [
