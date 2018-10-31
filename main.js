@@ -35,7 +35,8 @@ client
 		client.registry.registerGroups([
 			["basics", "basic commands"],
 			["fun", "fun commands"],
-			["utils", "utility commands"]
+			["utils", "utility commands"],
+			["nadekoconnector", "nadekoconnector commands"]
 		]);
 		console.log("Command groups initialized.");
 		client.registry.registerCommandsIn(path.join(__dirname, "commands"));

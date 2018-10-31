@@ -50,6 +50,7 @@ class dataHandler {
             prefix: "_",
             permissions: [],
             linkdetection: { enabled: false },
+            nadekoconnector: { enabled: false },
             beta: false
         });
     }

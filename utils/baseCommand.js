@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const { Command } = require("discord.js-commando");
 const datahandler = require("./datahandler.js");
 const guildDatahandler = require("./guildDatahandler.js");
+const nadekoConnector = require("./nadekoConnector.js");
 
 module.exports = class BaseCommand extends Command {
     constructor(client, commandInfo) {
@@ -16,6 +17,7 @@ module.exports = class BaseCommand extends Command {
             channel: message.channel,
             user: message.member ? message.member : message.author,
             dm: data => message.author.send(data),
+            send: data => message.channel.send(data),
             react: message.react,
             embed: data => message.channel.send({ embed: data }),
             client: this.client
@@ -28,6 +30,11 @@ module.exports = class BaseCommand extends Command {
         if (context.guild && context.guild.id) {
             context.db = new guildDatahandler(this.client.datahandler, context.guild.id);
             await context.db.reload();
+        }
+        if (context.db) {
+            let nc = await context.db.get("nadekoconnector");
+            if (typeof nc === "object" && nc.enabled === true)
+                context.nadekoConnector = new nadekoConnector(nc.address, nc.password);
         }
         this.task(context);
     }
