@@ -3,6 +3,7 @@ const { Command } = require("discord.js-commando");
 const datahandler = require("./datahandler.js");
 const guildDatahandler = require("./guildDatahandler.js");
 const nadekoConnector = require("./nadekoConnector.js");
+const log = require("fancy-log");
 
 module.exports = class BaseCommand extends Command {
     constructor(client, commandInfo) {
@@ -36,6 +37,7 @@ module.exports = class BaseCommand extends Command {
             if (typeof nc === "object" && nc.enabled === true)
                 context.nadekoConnector = new nadekoConnector(nc.address, nc.password);
         }
-        this.task(context);
+        await this.task(context);
+        log(`Command ${message.command.name} was executed by user ${message.author.tag} (${message.author.id}).`);
     }
 };
