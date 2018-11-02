@@ -53,11 +53,12 @@ module.exports = class RoleAwardCommand extends global.utils.baseCommand {
         ctx.args.Reason = "[Sapphyr] Awarded by " + ctx.message.author + " | " + ctx.args.Reason;
         rolemembers.forEach(m => {
             if (ctx.args.Amount < 0) {
-                responce = await ctx.nadekoConnector.subtractCurrency(m, ctx.args.Amount, ctx.args.Reason);
+                responce = ctx.nadekoConnector.subtractCurrency(m, ctx.args.Amount, ctx.args.Reason);
              log("Currency subtracted from role " + ctx.args.Role + " with reason " + ctx.args.Reason + "\n Currency added: " + ctx.args.Amount);
+             return;
             }
             if (ctx.args.Amount > 0) {
-             responce = await ctx.nadekoConnector.addCurrency(m, ctx.args.Amount, ctx.args.Reason);
+             responce = ctx.nadekoConnector.addCurrency(m, ctx.args.Amount, ctx.args.Reason);
              log("Currency added to role " + ctx.args.Role + " with reason " + ctx.args.Reason + "\n Currency added: " + ctx.args.Amount);
             }
         });
