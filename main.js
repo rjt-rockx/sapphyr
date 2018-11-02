@@ -38,7 +38,7 @@ client
 			["fun", "Fun, time wasting commands."],
 			["utils", "General utility commands."],
 			["nadekoconnector", "Nadekoconnector commands."],
-			["challenges", "Commands for SBK Challenges"]
+			["challenges", "Commands for SBK Challenges."]
 		]);
 		log("Command groups initialized.");
 		client.registry.registerCommandsIn(path.join(__dirname, "commands"));
