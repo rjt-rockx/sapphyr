@@ -43,7 +43,7 @@ module.exports = class RoleAwardCommand extends global.utils.baseCommand {
                 .setTitle("Success")
                 .setDescription(`Successfully awarded ${ctx.args.Amount} ${botInfo.bot.currency.sign} to role ${ctx.args.Role}`);
         // I hate embeds, feels good to get back to the actual code.
-        if (!ctx.message.guild.roles.find("name", ctx.args.Role)) return await ctx.message.channel.end(missingroles);
+        if (!ctx.message.guild.roles.find("name", ctx.args.Role)) return await ctx.message.channel.send(missingroles);
         if (!ctx.args.Amount) return await ctx.message.channel.send(missingamount);
         let responce = null;
         if (!ctx.args.Reason) return await ctx.message.channel.send(missingreason);
