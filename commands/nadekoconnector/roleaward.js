@@ -1,5 +1,6 @@
 var { Command } = require('discord.js-commando');
 var { RichEmbed } = require('discord.js');
+var log = require('fancy-log');
 
 module.exports = class RoleAwardCommand extends global.utils.baseCommand {
     constructor(client) {
@@ -51,11 +52,14 @@ module.exports = class RoleAwardCommand extends global.utils.baseCommand {
         let rolemembers = role.members.map(members => members.id);
         ctx.args.Reason = "[Sapphyr] Awarded by " + ctx.message.author + " | " + ctx.args.Reason;
         rolemembers.forEach(m => {
-            async function addCurrency(){
-             responce = await ctx.nadekoConnector.addCurrency(m, ctx.args.Amount, ctx.args.Reason);
-             console.log("Currency added to role " + ctx.args.Role + " with reason " + ctx.args.Reason + "\n Currency added: " + ctx.args.Amount);
+            if (ctx.args.Amount < 0) {
+                responce = await ctx.nadekoConnector.subtractCurrency(m, ctx.args.Amount, ctx.args.Reason);
+             log("Currency subtracted from role " + ctx.args.Role + " with reason " + ctx.args.Reason + "\n Currency added: " + ctx.args.Amount);
             }
-            addCurrency();
+            if (ctx.args.Amount > 0) {
+             responce = await ctx.nadekoConnector.addCurrency(m, ctx.args.Amount, ctx.args.Reason);
+             log("Currency added to role " + ctx.args.Role + " with reason " + ctx.args.Reason + "\n Currency added: " + ctx.args.Amount);
+            }
         });
     return ctx.message.channel.send(successEmbed);
     }
