@@ -34,10 +34,11 @@ client
 		client.registry.registerDefaultGroups();
 		log("Default groups initialized.");
 		client.registry.registerGroups([
-			["basics", "basic commands"],
-			["fun", "fun commands"],
-			["utils", "utility commands"],
-			["nadekoconnector", "nadekoconnector commands"]
+			["basics", "The essentials all bot needs."],
+			["fun", "Fun, time wasting commands."],
+			["utils", "General utility commands."],
+			["nadekoconnector", "Nadekoconnector commands."],
+			["challenges", "Commands for SBK Challenges"]
 		]);
 		log("Command groups initialized.");
 		client.registry.registerCommandsIn(path.join(__dirname, "commands"));
