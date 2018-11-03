@@ -52,7 +52,7 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
                 .setDescription("Your role " + "`" + role + "`" + " has been removed.")
                 .addField("Reason", "Time Limit Reached.");
             user.send(removed);
-            }, 1209600000);
+            }, 1209600000); // atm does require a vps to do, as it resets each time the bot resets, so i cannot personally host the shop as i dont have a vps.
         } 
 
         if (ctx.args.RoleID == "1") {
