@@ -1,5 +1,6 @@
 var { Command } = require('discord.js-commando');
 var { RichEmbed } = require('discord.js');
+var ms = require('ms');
 
 module.exports = class BuyCommand extends global.utils.baseCommand {
     constructor(client) {
@@ -43,6 +44,17 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
 
         // roles
 
+        async function timer(role, user) {
+            setTimeout(async function remove(){
+                await user.removeRole(role.id);
+                let removed = new RichEmbed()
+                .setTitle("Role Removed")
+                .setDescription("Your role " + "`" + role + "`" + " has been removed.")
+                .addField("Reason", "Time Limit Reached.");
+            user.send(removed);
+            }, 1209600000);
+        } 
+
         if (ctx.args.RoleID == "1") {
             if (currency.currency < 2500) return await ctx.send(cantAfford);
             rstring = "Balanced Green";
@@ -50,6 +62,7 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
         return await ctx.send(success);
         }
 
@@ -60,6 +73,8 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
+
         return await ctx.send(success);
         }
 
@@ -71,6 +86,8 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
+
         return await ctx.send(success);
         }
 
@@ -82,6 +99,8 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
+
         return await ctx.send(success);
         }
 
@@ -93,6 +112,8 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
+
         return await ctx.send(success);
         }
 
@@ -104,6 +125,8 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
+
         return await ctx.send(success);
         }
 
@@ -115,6 +138,8 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
+
         return await ctx.send(success);
         }
 
@@ -126,6 +151,8 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
+
         return await ctx.send(success);
         }
 
@@ -137,6 +164,8 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
+
         return await ctx.send(success);
         }
 
@@ -148,6 +177,8 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
+
         return await ctx.send(success);
         }
 
@@ -159,6 +190,8 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
             await ctx.message.member.addRole(role.id);
             reason = "[Sapphyr] " + "Purchased " + "`" + rstring + "`";
             ctx.nadekoConnector.subtractCurrency(ctx.message.author.id, 2500, reason);
+            timer(role, ctx.message.member);
+
         return await ctx.send(success);
         }
     }
