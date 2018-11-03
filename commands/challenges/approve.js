@@ -56,6 +56,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
                 .addField("Challenge:", msg.content)
                 .addField("Submitter:", msg.author)
                 .addField("Difficulty:", ctx.args.Difficulty)
+                .addField("Money Rewarded:", `${rewardAmount} ${botInfo.bot.currency.sign}`)
                 .setTimestamp();
             msg.delete();
             ctx.client.channels.get("507667784285552640").send(approved);
