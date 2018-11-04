@@ -54,13 +54,13 @@ module.exports = class RoleAwardCommand extends global.utils.baseCommand {
         ctx.args.Reason = "[Sapphyr] Awarded by " + ctx.message.author + " | " + ctx.args.Reason;
         rolemembers.forEach(m => {
             if (ctx.args.Amount < 0) {
-                responce = ctx.nadekoConnector.subtractCurrency(m, ctx.args.Amount, ctx.args.Reason);
+                responce = await ctx.nadekoConnector.subtractCurrency(m, ctx.args.Amount, ctx.args.Reason);
              log("Currency subtracted from role " + ctx.args.Role + " with reason " + ctx.args.Reason + "\n Currency added: " + ctx.args.Amount);
              ctx.client.users.get(m).send(`${ctx.args.Amount} ${botInfo.bot.currency.sign} has been removed from your account by ${ctx.message.author} with reason ${dmReason}.`);
             return;
             }
             if (ctx.args.Amount > 0) {
-             responce = ctx.nadekoConnector.addCurrency(m, ctx.args.Amount, ctx.args.Reason);
+             responce = await ctx.nadekoConnector.addCurrency(m, ctx.args.Amount, ctx.args.Reason);
              log("Currency added to role " + ctx.args.Role + " with reason " + ctx.args.Reason + "\n Currency added: " + ctx.args.Amount);
              ctx.client.users.get(m).send(`${ctx.args.Amount} ${botInfo.bot.currency.sign} has been added to your account by ${ctx.message.author} with reason ${dmReason}.`);
             }
