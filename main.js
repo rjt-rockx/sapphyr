@@ -28,20 +28,12 @@ client
 		global.services = services;
 		global.utils = utils;
 		log("Global variables initialized.");
-		// Register commands, groups and types
+		// Register modules, commands and argument types.
 		client.registry.registerDefaultTypes();
 		log("Default types initialized.");
-		client.registry.registerDefaultGroups();
-		log("Default groups initialized.");
-		client.registry.registerGroups([
-			["basics", "basic commands"],
-			["fun", "fun commands"],
-			["utils", "utility commands"],
-			["nadekoconnector", "nadekoconnector commands"]
-		]);
-		log("Command groups initialized.");
-		client.registry.registerCommandsIn(path.join(__dirname, "commands"));
-		log("Commands initialized.");
+		let { initializeModules } = require("./modules");
+		await initializeModules(client);
+		log("Modules initialized.");
 	})
 	.on("commandError", (cmd, err) => {
 		if (err instanceof commando.FriendlyError) return;
