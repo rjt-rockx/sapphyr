@@ -27,6 +27,7 @@ client
 		// Attach to global object
 		global.services = services;
 		global.utils = utils;
+		global.client = client;
 		log("Global variables initialized.");
 		// Register commands, groups and types
 		client.registry.registerDefaultTypes();
