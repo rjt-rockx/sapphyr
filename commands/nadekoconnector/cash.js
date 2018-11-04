@@ -29,6 +29,7 @@ module.exports = class CashCommand extends global.utils.baseCommand {
         let targetUser = ctx.args.user === "self" ? ctx.message.author : ctx.args.user;
         let currency = await ctx.nadekoConnector.getCurrency(targetUser.id);
         let embed = new RichEmbed()
+        .setColor("#7959ff")
         .setDescription(`**${targetUser.tag}** has ${currency.currency} ${botInfo.bot.currency.sign}`);
         await ctx.send(embed);
     }
