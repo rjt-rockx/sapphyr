@@ -52,7 +52,7 @@ module.exports = class RoleAwardCommand extends global.utils.baseCommand {
         let rolemembers = role.members.map(members => members.id);
         let dmReason = ctx.args.Reason;
         ctx.args.Reason = "[Sapphyr] Awarded by " + ctx.message.author + " | " + ctx.args.Reason;
-        rolemembers.forEach(m => {
+        rolemembers.forEach(async (m) => {
             if (ctx.args.Amount < 0) {
                 responce = await ctx.nadekoConnector.subtractCurrency(m, ctx.args.Amount, ctx.args.Reason);
              log("Currency subtracted from role " + ctx.args.Role + " with reason " + ctx.args.Reason + "\n Currency added: " + ctx.args.Amount);
