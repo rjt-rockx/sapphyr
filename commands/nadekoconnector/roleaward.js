@@ -33,15 +33,19 @@ module.exports = class RoleAwardCommand extends global.utils.baseCommand {
         let botInfo = await ctx.nadekoConnector.getBotInfo();
             let missingroles = new RichEmbed()
                 .setTitle("Missing Role")
+                .setColor("#7959ff")
                 .setDescription("Missing role to award, the role is cap sensitive.");
             let missingamount = new RichEmbed()
                 .setTitle("Missing Amount")
+                .setColor("#7959ff")
                 .setDescription("Missing amount to award.");
             let missingreason = new RichEmbed()
                 .setTitle("Missing Reason")
+                .setColor("#7959ff")
                 .setDescription("Missing reason to award");
             let successEmbed = new RichEmbed()
                 .setTitle("Success")
+                .setColor("#7959ff")
                 .setDescription(`Successfully awarded ${ctx.args.Amount} ${botInfo.bot.currency.sign} to role ${ctx.args.Role}`);
         // I hate embeds, feels good to get back to the actual code.
         if (!ctx.message.guild.roles.find("name", ctx.args.Role)) return await ctx.message.channel.send(missingroles);
@@ -56,13 +60,21 @@ module.exports = class RoleAwardCommand extends global.utils.baseCommand {
             if (ctx.args.Amount < 0) {
                 responce = await ctx.nadekoConnector.subtractCurrency(m, ctx.args.Amount, ctx.args.Reason);
              log("Currency subtracted from role " + ctx.args.Role + " with reason " + ctx.args.Reason + "\n Currency added: " + ctx.args.Amount);
-             ctx.client.users.get(m).send(`${ctx.args.Amount} ${botInfo.bot.currency.sign} has been removed from your account by ${ctx.message.author} with reason ${dmReason}.`);
+             let embed = new RichEmbed()
+             .setTitle("Currency Removed")
+             .setColor("#7959ff")
+             .setDescription(`${ctx.args.Amount} ${botInfo.bot.currency.sign} has been removed from your account by ${ctx.message.author.tag} with reason ${dmReason}.`);
+             ctx.client.users.get(m).send(embed);
             return;
             }
             if (ctx.args.Amount > 0) {
+                let embed = new RichEmbed()
+                .setTitle("Currency Added")
+                .setColor("#7959ff")
+                .setDescription(`${ctx.args.Amount} ${botInfo.bot.currency.sign} has been added to your account by ${ctx.message.author.tag} with reason ${dmReason}.`);
              responce = await ctx.nadekoConnector.addCurrency(m, ctx.args.Amount, ctx.args.Reason);
              log("Currency added to role " + ctx.args.Role + " with reason " + ctx.args.Reason + "\n Currency added: " + ctx.args.Amount);
-             ctx.client.users.get(m).send(`${ctx.args.Amount} ${botInfo.bot.currency.sign} has been added to your account by ${ctx.message.author} with reason ${dmReason}.`);
+             ctx.client.users.get(m).send(embed);
             }
     
         });
