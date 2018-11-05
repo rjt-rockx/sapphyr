@@ -1,24 +1,18 @@
-var { Command } = require("discord.js-commando");
-var Discord = require('discord.js');
+const { Command } = require("discord.js-commando"), Discord = require("discord.js");
 
 module.exports = class AvatarCommand extends Command {
-    constructor(client) {
-        super(client, {
-            name: "avatar",
-            description: "gets user avatar",
-            group: "fun",
-            memberName: "avatar"
-        });
-    }
+  constructor(client) {
+    super(client, {
+      name: "avatar",
+      description: "This command will get the avatar of the user.",
+      group: "fun",
+      memberName: "avatar",
+    });
+  }
 
-    async run(msg) {
-      let aUser = msg.guild.member(msg.mentions.users.first() || msg.guild.members.get(args[0]));
-      if(!aUser) {
-        aUser = msg.author.tag;
-      }
-      let avatarEmbed = new Discord.RichEmbed()
-      .setTitle(`${aUser}'s Profile Picture'`)
-      .setImage(aUser.displayAvatarURL);
-      return msg.channel.send(avatarEmbed);
-    }
+  run(msg) {
+    let aUser = msg.mentions.members.first();
+    if (!aUser) aUser = msg.author;
+    return msg.channel.send(new Discord.RichEmbed().setTitle(`${aUser}'s Profile Picture`).setImage(aUser.displayAvatarURL));
+  }
 };
