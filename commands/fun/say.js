@@ -1,5 +1,4 @@
-const { Command } = require('discord.js-commando');
-const Discord = require('discord.js');
+const { Command } = require("discord.js-commando"), Discord = require("discord.js");
 
 module.exports = class SayCommand extends Command {
     constructor(client) {
@@ -18,11 +17,8 @@ module.exports = class SayCommand extends Command {
             ]
         });
     }
-
-    run(msg, { text }) {
-        msg.delete();
-        let sayEmbed = new Discord.RichEmbed()
-        .setDescription(text);
-        return msg.channel.send(sayEmbed);
-    }
+  run(msg, { text }) {
+    msg.delete();
+    return msg.channel.send(new Discord.RichEmbed().setDescription(text));
+  }
 };
