@@ -17,10 +17,7 @@
 			"error",
 			"double"
 		],
-		"linebreak-style": [
-			"warn",
-			"unix"
-		],
+		"linebreak-style": "off",
 		"semi": [
 			"error",
 			"always"
