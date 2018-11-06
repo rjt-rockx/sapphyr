@@ -1,12 +1,12 @@
 var path = require("path");
-var config = require("./localdata/config.json");
+var config = require("./localdata/config.js");
 var commando = require("discord.js-commando");
 var { initializeServices, removeServices, services } = require("./services");
 var utils = require("./utils");
 const log = require("fancy-log");
 
 var client = new commando.Client({
-	owner: config.bot.owners,
+	owner: config.owners,
 	commandEditableDuration: 0,
 	nonCommandEditable: false,
 	unknownCommandResponse: false,
@@ -54,4 +54,4 @@ client
 		log(`Group ${group.id} ${enabled ? "enabled" : "disabled"} ${guild ? `in guild ${guild.name} (${guild.id})` : "globally"}.`);
 	});
 
-client.login(config.bot.token);
+client.login(config.token);
