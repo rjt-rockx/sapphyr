@@ -7,31 +7,38 @@ class Mee6Api {
     }
 
     async startCaching() {
-        setInterval(() => this.cacheLeaderboard(), this._cacheInterval * 1000);
+        setInterval(() => this.cacheGuilds(), this._cacheInterval * 1000);
+    }
+
+    checkType([name, data, type]) {
+        if (typeof data !== type) throw new Error(`${name} must be a ${type}`);
     }
 
     addGuild(guildId) {
+        this.checkType(["Guild ID", guildId, "string"]);
         if (this._guilds.findIndex(guild => guild.id === guildId) < 0)
             this._guilds.push({ id: guildId });
     }
 
     removeGuild(guildId) {
+        this.checkType(["Guild ID", guildId, "string"]);
         let index = this._guilds.findIndex(guild => guild.id === guildId);
         if (index >= 0)
             this._guilds.splice(index, 1);
     }
 
-    listGuilds() {
-        return [...new Set(this._guilds)];
+    checkIfExists(guildId) {
+        this.checkType(["Guild ID", guildId, "string"]);
+        return this._guilds.findIndex(guild => guild.id === guildId) < 0 ? false : true;
     }
 
-    get guilds() {
-        return this._guilds;
+    listGuilds() {
+        return this._guilds = [...new Set(this._guilds)];
     }
 
     async cacheGuilds() {
         if (!this._guilds) return;
-        this._guilds = await Promise.all(this._guilds.map(async guild => {
+        return this._guilds = await Promise.all(this._guilds.map(async guild => {
             let pageNumber = 0, items = 1000, leaderboard = [];
             while (true) {
                 let page = await this.getLeaderboard(guild.id, items, pageNumber);
@@ -48,12 +55,8 @@ class Mee6Api {
         }));
     }
 
-    async getRoleRewards(guildId) {
-        let { body: { role_rewards } } = await got.get(`https://mee6.xyz/api/plugins/levels/leaderboard/${guildId}?limit=0`, { json: true });
-        return role_rewards.sort((a, b) => a.rank - b.rank);
-    }
-
-    async getLeaderboard(guildId, items, page) {
+    async getLeaderboard(guildId, items = 1000, page = 0) {
+        this.checkType(["Guild ID", guildId, "string"]);
         if (items > 1000)
             throw new Error("Items can't be greater than 1000 due to API restrictions.");
         let { body: { players: members } } = await got.get(`https://mee6.xyz/api/plugins/levels/leaderboard/${guildId}?limit=${items}&page=${page}`, { json: true });
@@ -73,17 +76,40 @@ class Mee6Api {
         });
     }
 
-    async getUserXp(userId, guildId) {
-        if (typeof userId !== "string")
-            throw new Error("User ID must be a string.");
-        if (typeof guildId !== "string")
-            throw new Error("Guild ID must be a string.");
-        if (!this.cachedLeaderboard)
-            await this.cacheLeaderboard();
-        let userXp = this.cachedLeaderboard.filter(user => user.id === userId);
-        if (!userXp)
+    async getRoleRewards(guildId) {
+        this.checkType(["Guild ID", guildId, "string"]);
+        let { body: { role_rewards } } = await got.get(`https://mee6.xyz/api/plugins/levels/leaderboard/${guildId}?limit=0`, { json: true });
+        return role_rewards.sort((a, b) => a.rank - b.rank);
+    }
+
+    async getUserXp(guildId, userId) {
+        this.checkType(["User ID", userId, "string"]);
+        this.checkType(["Guild ID", guildId, "string"]);
+        if (!this.checkIfExists(guildId)) return;
+        let cachedLeaderboard = this.getLeaderboard(guildId);
+        let userXp = cachedLeaderboard.filter(user => user.id === userId);
+        if (!userXp || (Array.isArray(userXp) && userXp.length < 1)) {
             throw new Error("User not found.");
+        }
         return userXp[0];
+    }
+
+    async getCachedLeaderboard(guildId) {
+        if (!this.checkIfExists(guildId)) return;
+        let guild = this._guilds.filter(guild => guild.id === guildId)[0];
+        if (!guild.leaderboard) await this.cacheGuilds();
+        return guild.leaderboard;
+    }
+
+    async getCachedRoleRewards(guildId) {
+        if (!this.checkIfExists(guildId)) return;
+        let guild = this._guilds.filter(guild => guild.id === guildId)[0];
+        if (!guild.roleRewards) await this.cacheGuilds();
+        return guild.roleRewards;
+    }
+
+    async getCachedUserXp(guildId, userId) {
+        return this.getUserXp(guildId, userId);
     }
 }
 
