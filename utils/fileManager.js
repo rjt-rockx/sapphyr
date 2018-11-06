@@ -3,9 +3,12 @@ const jsonbs = require("json-bigint")({ storeAsString: true });
 const path = require("path");
 
 let checkIfExists = async function (pathToFile) {
-    let err = await fs.access(path.resolve(pathToFile), fs.constants.F_OK);
-    if (!err) return true;
-    return false;
+    let err;
+    try {
+        err = await fs.access(path.resolve(pathToFile), fs.constants.F_OK);
+        if (!err) return true;
+    }
+    catch (e) { return false; }
 };
 
 let createIfNotExists = async function (pathToFile, defaultData = "") {
@@ -13,6 +16,7 @@ let createIfNotExists = async function (pathToFile, defaultData = "") {
         defaultData = await jsonbs.stringify(defaultData, null, 4);
     if (!await checkIfExists(pathToFile))
         await fs.writeFile(path.resolve(pathToFile), defaultData, { mode: 777 });
+    return await readJson(pathToFile);
 };
 
 let checkReadable = async function (pathToFile) {
@@ -66,6 +70,7 @@ let writeJson = async function (pathToFile, data = {}) {
     let jsonData = await jsonbs.stringify(data, null, 4);
     let err = await fs.writeFile(path.resolve(pathToFile), jsonData);
     if (err) throw err;
+    return await readJson(pathToFile);
 };
 
 exports.checkIfExists = checkIfExists;

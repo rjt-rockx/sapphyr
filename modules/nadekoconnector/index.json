@@ -1,0 +1,6 @@
+{
+    "name": "Nadekoconnector",
+    "id": "nadekoconnector",
+    "guarded": false,
+    "description": "Integration with NadekoConnector instances."
+}

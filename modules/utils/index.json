@@ -1,0 +1,6 @@
+{
+    "name": "Utils",
+    "id": "utils",
+    "guarded": false,
+    "description": "Utility commands."
+}

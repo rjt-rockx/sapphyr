@@ -1,5 +1,5 @@
 var { Command } = require("discord.js-commando");
-var { RichEmbed } = require('discord.js');
+var { RichEmbed } = require("discord.js");
 module.exports = class AwardCurrencyCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
@@ -30,9 +30,9 @@ module.exports = class AwardCurrencyCommand extends global.utils.baseCommand {
 
     async task(ctx) {
         let noReason = new RichEmbed()
-        .setTitle("Missing Arguments")
-        .setColor("#7959ff")
-        .setDescription("Please provide a reason for the award.");
+            .setTitle("Missing Arguments")
+            .setColor("#7959ff")
+            .setDescription("Please provide a reason for the award.");
         if (!ctx.nadekoConnector)
             return await ctx.send("NadekoConnector configuration not set.");
         let botInfo = await ctx.nadekoConnector.getBotInfo();
@@ -49,16 +49,16 @@ module.exports = class AwardCurrencyCommand extends global.utils.baseCommand {
             response = await ctx.nadekoConnector.addCurrency(ctx.args.user.id, ctx.args.amount, ctx.args.reason);
         if (typeof response.error !== "undefined") return await ctx.send(response.message);
         if (typeof response.error === "undefined") {
-        let Success = new RichEmbed()
-        .setTitle("Success")
-        .setColor("#7959ff")
-        .setDescription(`Successfully awarded ${ctx.args.amount} ${botInfo.bot.currency.sign} to ${ctx.args.user.username}`)
-           await ctx.send(Success);
-           let embed = new RichEmbed()
-           .setTitle("Award")
-           .setColor("#7959ff")
-           .setDescription(`You've been awarded ${ctx.args.amount} ${botInfo.bot.currency.sign} by ${ctx.message.author.tag} with reason ${dmReason}.`)
-        return await ctx.args.user.send(embed);
+            let Success = new RichEmbed()
+                .setTitle("Success")
+                .setColor("#7959ff")
+                .setDescription(`Successfully awarded ${ctx.args.amount} ${botInfo.bot.currency.sign} to ${ctx.args.user.username}`);
+            await ctx.send(Success);
+            let embed = new RichEmbed()
+                .setTitle("Award")
+                .setColor("#7959ff")
+                .setDescription(`You've been awarded ${ctx.args.amount} ${botInfo.bot.currency.sign} by ${ctx.message.author.tag} with reason ${dmReason}.`);
+            return await ctx.args.user.send(embed);
         }
     }
 };
