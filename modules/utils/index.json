@@ -2,5 +2,5 @@
     "name": "Utils",
     "id": "utils",
     "guarded": false,
-    "description": "No description was specified for this module."
+    "description": "Utility commands."
 }

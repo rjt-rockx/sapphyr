@@ -1,6 +1,6 @@
 {
     "name": "Basics",
     "id": "basics",
-    "guarded": false,
-    "description": "No description was specified for this module."
+    "guarded": true,
+    "description": "Essential commands required for Sapphyr."
 }

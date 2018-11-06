@@ -2,5 +2,5 @@
     "name": "Nadekoconnector",
     "id": "nadekoconnector",
     "guarded": false,
-    "description": "No description was specified for this module."
+    "description": "Integration with NadekoConnector instances."
 }
