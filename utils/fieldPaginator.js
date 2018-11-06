@@ -10,6 +10,7 @@ module.exports = class fieldPaginator {
 
         channel.send({ embed: { fields: fields[0], footer: { text: `Page ${this.current + 1} of ${this.total}` } } }).then(async (msg) => {
             this.message = msg;
+            if (this.total < 2) return;
             await this.message.react(this.back);
             await this.message.react(this.next);
             if (this.total > 3)

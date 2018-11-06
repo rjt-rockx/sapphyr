@@ -1,23 +1,23 @@
-const { Command } = require('discord.js-commando');
-const Discord = require('discord.js');
+const { Command } = require("discord.js-commando");
+const Discord = require("discord.js");
 
 module.exports = class PromotionCommand extends Command {
     constructor(client){
         super(client, {
-            name: 'promo',
-            group: 'utils',
-            memberName: 'promo',
-            description: 'Vote to promote a user.',
+            name: "promo",
+            group: "utils",
+            memberName: "promo",
+            description: "Vote to promote a user.",
             userPermissions: ["BAN_MEMBERS"],
-            examples: ['_promo @everyone Should @StaffMember be promoted for xyz, xyz, xyz?'],
+            examples: ["_promo @everyone Should @StaffMember be promoted for xyz, xyz, xyz?"],
             args: [
                 {
-                    key: 'promoDesc',
-                    prompt: 'What to put inside the promotion vote.',
-                    type: 'string'
+                    key: "promoDesc",
+                    prompt: "What to put inside the promotion vote.",
+                    type: "string"
                 }
             ]
-        })
+        });
     }
     async run(msg, { promoDesc }){
         let promoEmbed = new Discord.RichEmbed()
@@ -30,4 +30,4 @@ module.exports = class PromotionCommand extends Command {
        reactTo.react("✅");
        reactTo.react("❌");
     }
-}
+};
