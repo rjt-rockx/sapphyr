@@ -52,7 +52,7 @@ module.exports = class RoleAwardCommand extends global.utils.baseCommand {
         if (!ctx.args.Amount) return await ctx.message.channel.send(missingamount);
         let responce = null;
         if (!ctx.args.Reason) return await ctx.message.channel.send(missingreason);
-        let role = ctx.message.guild.roles.find("name", ctx.args.Role);
+        let role = ctx.message.guild.roles.find(r => r.name === ctx.args.Role);
         let rolemembers = role.members.map(members => members.id);
         let dmReason = ctx.args.Reason;
         ctx.args.Reason = "[Sapphyr] Awarded by " + ctx.message.author + " | " + ctx.args.Reason;
