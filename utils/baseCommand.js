@@ -3,6 +3,7 @@ const { Command } = require("discord.js-commando");
 const datahandler = require("./datahandler.js");
 const guildDatahandler = require("./guildDatahandler.js");
 const nadekoConnector = require("./nadekoConnector.js");
+const { mongoUrl } = require("../localdata/config");
 const log = require("fancy-log");
 
 module.exports = class BaseCommand extends Command {
@@ -10,10 +11,12 @@ module.exports = class BaseCommand extends Command {
         super(client, commandInfo);
     }
 
-    async run(message, args, fromPattern) {
+    async run(message, arguments, fromPattern) {
         let context = {
             message: message,
-            args: args,
+            msg: message,
+            arguments: arguments,
+            args: arguments,
             fromPattern: fromPattern,
             channel: message.channel,
             user: message.member ? message.member : message.author,
@@ -25,7 +28,7 @@ module.exports = class BaseCommand extends Command {
         };
         if (message.guild) context.guild = message.guild;
         if (typeof this.client.datahandler === "undefined") {
-            this.client.datahandler = new datahandler();
+            this.client.datahandler = new datahandler(mongoUrl ? mongoUrl : undefined);
             await this.client.datahandler.initialize();
         }
         if (context.guild && context.guild.id) {
