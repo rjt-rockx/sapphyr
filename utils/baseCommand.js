@@ -14,12 +14,12 @@ module.exports = class BaseCommand extends Command {
         super(client, commandInfo);
     }
 
-    async run(message, arguments, fromPattern) {
+    async run(message, args, fromPattern) {
         let context = {
             message: message,
             msg: message,
-            arguments: arguments,
-            args: arguments,
+            arguments: args,
+            args: args,
             fromPattern: fromPattern,
             channel: message.channel,
             user: message.member ? message.member : message.author,
