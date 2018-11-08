@@ -1,8 +1,7 @@
 const { Command } = require("discord.js-commando");
 const Discord = require("discord.js");
-
-module.exports = class FakeBan extends Command {
-    constructor(client){
+module.exports = class FakeBanCommand extends global.utils.baseCommand {
+    constructor(client) {
         super(client, {
             name: "fakeban",
             group: "fun",
@@ -11,7 +10,7 @@ module.exports = class FakeBan extends Command {
             description: "Fake ban a guild member.",
             args: [
                 {
-                    key: "fUser",
+                    key: "userToFakeban",
                     prompt: "Who to fake ban?",
                     type: "user"
                 },
@@ -23,16 +22,36 @@ module.exports = class FakeBan extends Command {
             ]
         });
     }
-    async run(msg, { fUser, reason }){
-        console.log(fUser);
-        let fakeEmbed = new Discord.RichEmbed()
-        .setTitle("User Banned.")
-        .setDescription(`${fUser} has been banned from ${msg.guild.name}.`)
-        .addField("Action by:", msg.author.tag)
-        .addField("Banned User:", fUser)
-        .addField("Reason", reason);
-        msg.delete();
-        msg.channel.send(fakeEmbed).then(msg.channel.send(`**${fUser}** has left the guild.`));
-        fUser.send(`Lmao! You got ~~fake~~ banned from ${msg.guild.name}!`);
+
+    async task(ctx) {
+        await ctx.message.delete();
+        await ctx.embed({
+            title: "User Banned.",
+            description: `${ctx.args.userToFakeban.tag} has been banned from ${ctx.guild.name}`,
+            fields: [
+                {
+                    name: "Reason",
+                    value: ctx.args.reason,
+                    inline: true
+                },
+                {
+                    name: "Moderator",
+                    value: ctx.user.tag,
+                    inline: true
+                }
+            ]
+        });
+        await ctx.args.userToFakeban.send({
+            embed: {
+                title: `You were banned by ${ctx.user.tag} in ${ctx.guild.name}!`,
+                fields: [{
+                    name: "Reason",
+                    value: ctx.args.reason
+                }],
+                footer: {
+                    text: "This is a fake ban, please don't take it seriously :b"
+                }
+            }
+        });
     }
 };
