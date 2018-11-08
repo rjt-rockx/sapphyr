@@ -1,11 +1,11 @@
 var { Command } = require("discord.js-commando");
 var { RichEmbed } = require("discord.js");
 
-module.exports = class SetChallengerRewardCommand extends global.utils.baseCommand {
+module.exports = class SetChallengeRewardCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
-            name: "setchallengerreward",
-            memberName: "src",
+            name: "setchallengereward",
+            memberName: "setchallengereward",
             userPermissions: ["ADMINISTRATOR"],
             group: "challenges",
             description: "Set a challenge submitter reward for one of 3 difficulties.",
