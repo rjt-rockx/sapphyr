@@ -14,23 +14,17 @@ class dataHandler {
         this._databaseName = databaseName;
         this.mongoClient = new MongoClient(this._host, { useNewUrlParser: true });
         this.initialized = false;
+        this.globalInitialized = false;
     }
 
     /**
      * Initialize the MongoClient and the database.
      */
     async initialize() {
-        try {
-            await this.mongoClient.connect();
-            this.db = this.mongoClient.db(this._databaseName);
-        }
-        catch (err) {
-            console.err(err);
-        }
-        finally {
-            if (this.db)
-                this.initialized = true;
-        }
+        await this.mongoClient.connect();
+        this.db = this.mongoClient.db(this._databaseName);
+        if (this.db)
+            this.initialized = true;
     }
 
     /**
@@ -39,6 +33,10 @@ class dataHandler {
      */
     get isInitialized() {
         return this.initialized;
+    }
+
+    checkInitialized() {
+        if (!this.initialized) throw new Error("Datahandler is not initialized. Please call initialize() first.");
     }
 
     /**
@@ -54,6 +52,7 @@ class dataHandler {
      * @returns Array of all guilds.
      */
     async getGuilds() {
+        this.checkInitialized();
         let guilds = await this.db.collection("guilds");
         return await guilds.find().toArray();
     }
@@ -64,6 +63,7 @@ class dataHandler {
      * @returns Guild data object or empty array if not found.
      */
     async getGuild(guild) {
+        this.checkInitialized();
         let guilds = await this.db.collection("guilds");
         let results = await guilds.find({ id: guild.id }).toArray();
         return Array.isArray(results) ? results[0] : results;
@@ -75,6 +75,7 @@ class dataHandler {
      * @returns Guild data object.
      */
     async getOrAddGuild(guild) {
+        this.checkInitialized();
         let guildData = await this.getGuild(guild);
         if (Array.isArray(guildData) && guildData.length < 1)
             await this.addGuild(guild);
@@ -88,6 +89,7 @@ class dataHandler {
      * @returns Added guild data object.
      */
     async addGuild(guild) {
+        this.checkInitialized();
         let guilds = await this.db.collection("guilds");
         return await guilds.insertOne({
             id: guild.id,
@@ -105,6 +107,7 @@ class dataHandler {
      * @returns Removed guild data object.
      */
     async removeGuild(guild) {
+        this.checkInitialized();
         let guilds = await this.db.collection("guilds");
         if (typeof guild.id === "undefined") return;
         return await guilds.deleteMany({ id: guild.id });
@@ -115,6 +118,7 @@ class dataHandler {
      * @returns Removed guild data object.
      */
     async removeAllGuilds() {
+        this.checkInitialized();
         let guilds = await this.db.collection("guilds");
         return await guilds.deleteMany({});
     }
@@ -127,11 +131,48 @@ class dataHandler {
      * @returns Updated guild data object.
      */
     async editGuild(guild, settings = {}, removeSettings = false) {
+        this.checkInitialized();
         let guilds = await this.db.collection("guilds");
         if (typeof removeSettings !== "boolean") return;
         if (removeSettings)
             return await guilds.updateOne({ id: guild.id }, { $unset: settings });
         return await guilds.updateOne({ id: guild.id }, { $set: settings });
+    }
+
+
+    /**
+     * Get or create a global data object.
+     * @returns Global data object.
+     */
+    async getOrCreateGlobal() {
+        this.checkInitialized();
+        let globalData = await this.db.collection("global");
+        let existingData = await globalData.find().toArray();
+        if (existingData.length < 1) {
+            await globalData.insertOne({
+                prefix: "_",
+                permissions: []
+            });
+            existingData = await globalData.find().toArray();
+        }
+        if (existingData.length > 0)
+            this.globalInitialized = true;
+        return existingData[0];
+    }
+
+    /**
+     * Edit the global data object.
+     * @param {Object} settings Settings to store/remove.
+     * @param {Boolean} removeSettings True if settings are to be removed.
+     */
+    async editGlobal(settings = {}, removeSettings = false) {
+        this.checkInitialized();
+        if (!this.globalInitialized) throw new Error("Global data has not been initialized. Please call initializeGlobal() first.");
+        let globalData = await this.db.collection("global");
+        if (typeof removeSettings !== "boolean") return;
+        if (removeSettings)
+            return await globalData.updateOne({}, { $unset: settings });
+        return await globalData.updateOne({}, { $set: settings });
     }
 }
 
