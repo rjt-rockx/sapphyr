@@ -6,6 +6,7 @@ module.exports = class SaveDataCommand extends global.utils.baseCommand {
             description: "Removes stored data",
             group: "utils",
             memberName: "removedata",
+            userPermissions: ["ADMINISTRATOR"],
             args: [
                 {
                     key: "key",

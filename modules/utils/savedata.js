@@ -6,6 +6,7 @@ module.exports = class SaveDataCommand extends global.utils.baseCommand {
             description: "Saves some data for this guild",
             group: "utils",
             memberName: "savedata",
+            userPermissions: ["ADMINISTRATOR"],
             args: [
                 {
                     key: "key",
