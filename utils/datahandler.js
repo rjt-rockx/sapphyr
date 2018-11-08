@@ -40,7 +40,8 @@ class dataHandler {
 
     async getGuild(guild) {
         let guilds = await this.db.collection("guilds");
-        return await guilds.find({ id: guild.id }).toArray();
+        let results = await guilds.find({ id: guild.id }).toArray();
+        return Array.isArray(results) ? results[0] : results;
     }
 
     async getOrAddGuild(guild) {
