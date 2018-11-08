@@ -6,14 +6,22 @@ class dataHandler {
             host = "localhost:" + host;
         this._host = "mongodb://" + host;
         this._databaseName = databaseName;
-        this.client = new MongoClient(this._host, { useNewUrlParser: true });
+        this.mongoClient = new MongoClient(this._host, { useNewUrlParser: true });
         this.initialized = false;
     }
 
     async initialize() {
-        await this.client.connect();
-        this.db = this.client.db(this._databaseName);
-        this.initialized = true;
+        try {
+            await this.mongoClient.connect();
+            this.db = this.mongoClient.db(this._databaseName);
+        }
+        catch (err) {
+            console.err(err);
+        }
+        finally {
+            if (this.db)
+                this.initialized = true;
+        }
     }
 
     get isInitialized() {
@@ -21,7 +29,7 @@ class dataHandler {
     }
 
     async close() {
-        await this.client.close();
+        await this.mongoClient.close();
         this.db = null;
     }
 
