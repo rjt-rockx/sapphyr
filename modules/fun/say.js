@@ -1,5 +1,4 @@
-const { Command } = require("discord.js-commando");
-const Discord = require("discord.js");
+const { Command } = require("discord.js-commando"), Discord = require("discord.js");
 module.exports = class SayCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
