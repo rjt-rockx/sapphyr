@@ -1,6 +1,4 @@
-var { Command } = require("discord.js-commando");
-var { RichEmbed } = require("discord.js");
-var log = require("fancy-log");
+const { Command } = require("discord.js-commando"), { RichEmbed } = require("discord.js"), log = require("fancy-log");
 
 module.exports = class AwardRoleCommand extends global.utils.baseCommand {
     constructor(client) {
