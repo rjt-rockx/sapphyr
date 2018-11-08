@@ -34,7 +34,7 @@ exports.initializeModules = async function initializeModules(client) {
                 await writeJson(indexPath, fixedData);
                 group = fixedData;
             }
-            await client.registry.registerGroup(new global.utils.baseCommand(client, group));
+            await client.registry.registerGroup(new global.utils.baseModule(client, group));
             readdirSync(join(__dirname, mdl)).map(filename => {
                 if (filename.match(/\.js$/) !== null && filename !== "index.js") {
                     client.registry.registerCommand(require(join(__dirname, mdl, filename)));

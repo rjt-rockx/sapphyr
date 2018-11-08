@@ -64,7 +64,7 @@ module.exports = class globalDatahandler {
             data[keyOrObject] = null;
         }
         delete data["_id"];
-        await this.datahandler.editGuild(this.guild, data, true);
+        await this.datahandler.editGlobal(data, true);
         return await this.reload();
     }
 };

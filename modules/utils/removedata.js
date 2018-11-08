@@ -1,5 +1,5 @@
 const { Command } = require("discord.js-commando");
-module.exports = class SaveDataCommand extends global.utils.baseCommand {
+module.exports = class RemoveDataCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
             name: "removedata",
@@ -19,7 +19,7 @@ module.exports = class SaveDataCommand extends global.utils.baseCommand {
     }
 
     async task(ctx) {
-        let data = await ctx.db.remove(ctx.args.key);
+        await ctx.db.remove(ctx.args.key);
         await ctx.message.channel.send("Data successfully removed!");
     }
 };

@@ -1,13 +1,9 @@
-const Discord = require("discord.js");
-const { Command } = require("discord.js-commando");
-const datahandler = require("./datahandler.js");
-const guildDatahandler = require("./guildDatahandler.js");
-const globalDatahandler = require("./globalDatahandler.js");
-const nadekoConnector = require("./nadekoConnector.js");
-const mee6api = require("./mee6.js");
+const Discord = require("discord.js"), { Command } = require("discord.js-commando"), 
+      datahandler = require("./datahandler.js"), guildDatahandler = require("./guildDatahandler.js"), 
+      globalDatahandler = require("./globalDatahandler.js"), nadekoConnector = require("./nadekoConnector.js"),
+      mee6api = require("./mee6.js"), { mongoUrl } = require("../localdata/config"), 
+      log = require("fancy-log");
 const mee6 = new mee6api(undefined, 150);
-const { mongoUrl } = require("../localdata/config");
-const log = require("fancy-log");
 
 module.exports = class BaseCommand extends Command {
     constructor(client, commandInfo) {

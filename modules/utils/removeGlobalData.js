@@ -1,11 +1,11 @@
 var { Command } = require("discord.js-commando");
-module.exports = class ShowDataCommand extends global.utils.baseCommand {
+module.exports = class RemoveGlobalDataCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
-            name: "showdata",
-            description: "Shows stored data",
+            name: "removeglobaldata",
+            description: "Removes stored data globally",
             group: "utils",
-            memberName: "showdata",
+            memberName: "removeglobaldata",
             userPermissions: ["ADMINISTRATOR"],
             args: [
                 {
@@ -19,9 +19,7 @@ module.exports = class ShowDataCommand extends global.utils.baseCommand {
     }
 
     async task(ctx) {
-        let data = await ctx.db.get(ctx.args.key);
-        if (typeof data === "undefined")
-            data = "No value was set for this key!";
-        await ctx.message.channel.send(typeof data === "string" ? data : JSON.stringify(data));
+        await ctx.globalDb.remove(ctx.args.key);
+        await ctx.message.channel.send("Data successfully removed!");
     }
 };
