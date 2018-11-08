@@ -28,7 +28,7 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 			return new fieldPaginator(channel, user, fields, 30);
 		}
 		let commandData = getCommandData(args.command, client);
-		var fields = [];
+		let fields = [];
 		if (commandData.arguments.length > 0)
 			fields.push({ name: "Arguments", value: commandData.arguments });
 		if (commandData.userperms.length > 0)
