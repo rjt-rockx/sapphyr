@@ -1,6 +1,4 @@
-var got = require("got");
-var jwt = require("jsonwebtoken");
-var jsonbs = require("json-bigint")({ storeAsString: true });
+const got = require("got"), jwt = require("jsonwebtoken"), jsonbs = require("json-bigint")({ storeAsString: true });
 
 class NadekoConnectorClient {
 
