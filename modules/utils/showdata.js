@@ -1,5 +1,5 @@
 var { Command } = require("discord.js-commando");
-module.exports = class SaveDataCommand extends global.utils.baseCommand {
+module.exports = class ShowDataCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
             name: "showdata",
