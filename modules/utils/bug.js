@@ -1,5 +1,4 @@
-const Discord = require("discord.js");
-const { Command } = require("discord.js-commando");
+const Discord = require("discord.js"), { Command } = require("discord.js-commando");
 
 module.exports = class BugCommand extends global.utils.baseCommand {
     constructor(client){
@@ -28,8 +27,8 @@ module.exports = class BugCommand extends global.utils.baseCommand {
             ctx.message.channel.send("Bug has been successfully reported. :thumbsup:");
             return;
         }
-        let attachment = ctx.message.attachments.first().url;
-        let bEmbed = new Discord.RichEmbed()
+        let attachment = ctx.message.attachments.first().url,
+            bEmbed = new Discord.RichEmbed()
         .setTitle("Bug Report")
         .setDescription(ctx.args.desc)
         .setImage(attachment);

@@ -1,5 +1,4 @@
-var { Command } = require("discord.js-commando");
-var { RichEmbed } = require("discord.js");
+const { Command } = require("discord.js-commando"), { RichEmbed } = require("discord.js");
 
 module.exports = class SetChallengeRewardCommand extends global.utils.baseCommand {
     constructor(client) {

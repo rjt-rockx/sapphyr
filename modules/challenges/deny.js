@@ -1,5 +1,4 @@
-var { Command } = require("discord.js-commando");
-var { RichEmbed } = require("discord.js");
+const { Command } = require("discord.js-commando"), { RichEmbed } = require("discord.js");
 
 module.exports = class DenyCommand extends global.utils.baseCommand {
     constructor(client) {
@@ -21,14 +20,13 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
         let noApprover = new RichEmbed()
             .setTitle("Missing Approver")
             .setColor("#7959ff")
-            .setDescription("You need to have role: `Challenge Approver` to do this.");
-
-        let role = ctx.message.guild.roles.find("name", "Challenge Approver");
+            .setDescription("You need to have role: `Challenge Approver` to do this."),
+            role = ctx.message.guild.roles.find("name", "Challenge Approver");
         if (!ctx.message.member.roles.has(role.id)) return await ctx.send(noApprover);
         if (!ctx.args.id) return;
         let appTch = ctx.client.channels.get("455252710732595211");
-        let message = await appTch.fetchMessage(ctx.args.id);
-        let embed = new RichEmbed()
+        let message = await appTch.fetchMessage(ctx.args.id),
+            embed = new RichEmbed()
             .setTitle("Denied.")
             .setColor("#7959ff")
             .setDescription("Your challenge submission has been denied.");

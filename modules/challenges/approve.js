@@ -1,5 +1,4 @@
-var { Command } = require("discord.js-commando");
-var { RichEmbed } = require("discord.js");
+const { Command } = require("discord.js-commando"), { RichEmbed } = require("discord.js");
 
 module.exports = class ApproveCommand extends global.utils.baseCommand {
     constructor(client) {
@@ -24,22 +23,22 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
         });
     }
     async task(ctx) {
-        let botInfo = await ctx.nadekoConnector.getBotInfo();
-        let noApprover = new RichEmbed()
+        let botInfo = await ctx.nadekoConnector.getBotInfo(),
+            noApprover = new RichEmbed()
             .setTitle("Missing Approver")
             .setColor("#7959ff")
-            .setDescription("You need to have role: `Challenge Approver` to do this.");
-        let channel = new RichEmbed()
+            .setDescription("You need to have role: `Challenge Approver` to do this."),
+            channel = new RichEmbed()
             .setTitle("Incorrect Channel.")
             .setColor("#7959ff")
-            .setDescription("Please use #challenge-approval.");
-        let role = ctx.message.guild.roles.find("name", "Challenge Approver");
+            .setDescription("Please use #challenge-approval."),
+            role = ctx.message.guild.roles.find("name", "Challenge Approver");
         if (!ctx.message.member.roles.has(role.id)) return await ctx.send(noApprover);
         if (!ctx.args.ID) return;
-        let appTch = ctx.client.channels.get("455252710732595211");
-        let message = await appTch.fetchMessage(ctx.args.ID);
-        let rewardAmount = await ctx.db.get(`challenges/${ctx.args.difficulty}`);
-        let approved = new RichEmbed()
+        let appTch = ctx.client.channels.get("455252710732595211"),
+            message = await appTch.fetchMessage(ctx.args.ID),
+            rewardAmount = await ctx.db.get(`challenges/${ctx.args.difficulty}`),
+            approved = new RichEmbed()
             .setTitle("Challenge Approved!")
             .addField("Challenge Approved By:", ctx.message.author)
             .addField("Challenge:", message.content)
@@ -47,8 +46,8 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
             .addField("Difficulty:", ctx.args.Difficulty)
             .addField("Money Rewarded:", `${rewardAmount} ${botInfo.bot.currency.sign}`)
             .setColor("#7959ff")
-            .setTimestamp();
-        let approved2 = new RichEmbed()
+            .setTimestamp(),
+            approved2 = new RichEmbed()
             .setTitle("Challenge Approved")
             .setDescription("Your challenge has been approved.")
             .addField("Challenge:", message.content)

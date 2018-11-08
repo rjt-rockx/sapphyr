@@ -1,5 +1,4 @@
-var { Command } = require("discord.js-commando");
-var { RichEmbed } = require("discord.js");
+const { Command } = require("discord.js-commando"), { RichEmbed } = require("discord.js");
 module.exports = class CashCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
@@ -26,9 +25,9 @@ module.exports = class CashCommand extends global.utils.baseCommand {
         console.log(botInfo);
         if (typeof botInfo.bot.currency.sign === "undefined")
             return await ctx.send("Unable to parse NadekoConnector information.");
-        let targetUser = ctx.args.user === "self" ? ctx.message.author : ctx.args.user;
-        let currency = await ctx.nadekoConnector.getCurrency(targetUser.id);
-        let embed = new RichEmbed()
+        let targetUser = ctx.args.user === "self" ? ctx.message.author : ctx.args.user,
+            currency = await ctx.nadekoConnector.getCurrency(targetUser.id),
+            embed = new RichEmbed()
         .setColor("#7959ff")
         .setDescription(`**${targetUser.tag}** has ${currency.currency} ${botInfo.bot.currency.sign}`);
         await ctx.send(embed);
