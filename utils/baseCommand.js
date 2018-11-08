@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const { Command } = require("discord.js-commando");
 const datahandler = require("./datahandler.js");
 const guildDatahandler = require("./guildDatahandler.js");
+const globalDatahandler = require("./globalDatahandler.js");
 const nadekoConnector = require("./nadekoConnector.js");
 const mee6api = require("./mee6.js");
 const mee6 = new mee6api();
@@ -43,6 +44,8 @@ module.exports = class BaseCommand extends Command {
         if (typeof this.client.datahandler === "undefined") {
             this.client.datahandler = new datahandler(mongoUrl ? mongoUrl : undefined);
             await this.client.datahandler.initialize();
+            context.globalDb = new globalDatahandler(this.client.datahandler);
+            await context.globalDb.reload();
         }
         if (context.guild && context.guild.id) {
             context.db = new guildDatahandler(this.client.datahandler, context.guild.id);
