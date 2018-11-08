@@ -1,14 +1,14 @@
-var { Command } = require('discord.js-commando');
-var { RichEmbed } = require('discord.js');
+var { Command } = require("discord.js-commando");
+var { RichEmbed } = require("discord.js");
 
 module.exports = class ShopCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
-            name: 'shop',
-            memberName: 'shop',
-            group: 'nadekoconnector',
-            description: 'Open the shop.'
-        })
+            name: "shop",
+            memberName: "shop",
+            group: "nadekoconnector",
+            description: "Open the shop."
+        });
     }
     async task(ctx) {
         let embed = new RichEmbed()
@@ -27,4 +27,4 @@ module.exports = class ShopCommand extends global.utils.baseCommand {
         
     ctx.send(embed);
     }
-}
+};

@@ -1,22 +1,22 @@
-var { Command } = require('discord.js-commando');
-var { RichEmbed } = require('discord.js');
-var ms = require('ms');
+var { Command } = require("discord.js-commando");
+var { RichEmbed } = require("discord.js");
+var ms = require("ms");
 
 module.exports = class BuyCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
-            name: 'buy',
-            memberName: 'buy',
-            group: 'nadekoconnector',
-            description: 'Buy a color role. Ex. [prefix]buy <id>',
+            name: "buy",
+            memberName: "buy",
+            group: "nadekoconnector",
+            description: "Buy a color role. Ex. [prefix]buy <id>",
             args: [
                 {
-                    key: 'RoleID',
-                    prompt: 'The number/ID of the role to buy.',
-                    type: 'string'
+                    key: "RoleID",
+                    prompt: "The number/ID of the role to buy.",
+                    type: "string"
                 }
             ]
-        })
+        });
     }
     async task(ctx) {
         let rstring;
@@ -195,4 +195,4 @@ module.exports = class BuyCommand extends global.utils.baseCommand {
         return await ctx.send(success);
         }
     }
-}
+};

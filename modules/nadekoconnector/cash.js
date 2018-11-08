@@ -1,5 +1,5 @@
 var { Command } = require("discord.js-commando");
-var { RichEmbed } = require('discord.js');
+var { RichEmbed } = require("discord.js");
 module.exports = class CashCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {

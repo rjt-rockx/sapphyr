@@ -1,33 +1,33 @@
-var { Command } = require('discord.js-commando');
-var { RichEmbed } = require('discord.js');
-var log = require('fancy-log');
+var { Command } = require("discord.js-commando");
+var { RichEmbed } = require("discord.js");
+var log = require("fancy-log");
 
 module.exports = class RoleAwardCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
-            name: 'roleaward',
-            memberName: 'roleaward',
+            name: "roleaward",
+            memberName: "roleaward",
             userPermissions: ["ADMINISTRATOR"],
-            group: 'nadekoconnector',
-            description: 'Award money to a role. Ex. <award <role> <amount> <reason>',
+            group: "nadekoconnector",
+            description: "Award money to a role. Ex. <award <role> <amount> <reason>",
             args: [
                 {
-                    key: 'Role',
-                    prompt: 'The role to award.',
-                    type: 'string'
+                    key: "Role",
+                    prompt: "The role to award.",
+                    type: "string"
                 },
                 {
-                    key: 'Amount',
-                    prompt: 'Amount of money to reward.',
-                    type: 'integer'
+                    key: "Amount",
+                    prompt: "Amount of money to reward.",
+                    type: "integer"
                 },
                 {
-                    key: 'Reason',
-                    prompt: 'Reason for the award useage.',
-                    type: 'string'
+                    key: "Reason",
+                    prompt: "Reason for the award useage.",
+                    type: "string"
                 }
             ]
-        })
+        });
     }
     async task(ctx) {
         let botInfo = await ctx.nadekoConnector.getBotInfo();
@@ -80,4 +80,4 @@ module.exports = class RoleAwardCommand extends global.utils.baseCommand {
         });
     return ctx.message.channel.send(successEmbed);
     }
-}
+};
