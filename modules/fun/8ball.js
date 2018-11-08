@@ -1,5 +1,4 @@
-const { Command } = require("discord.js-commando");
-const Discord = require("discord.js");
+const { Command } = require("discord.js-commando"), Discord = require("discord.js");
 const choices = [
     "Yes.",
     "No.",
