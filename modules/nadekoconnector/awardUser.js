@@ -1,27 +1,27 @@
 var { Command } = require("discord.js-commando");
 var { RichEmbed } = require("discord.js");
-module.exports = class AwardCurrencyCommand extends global.utils.baseCommand {
+module.exports = class AwardUserCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
-            name: "award",
+            name: "awarduser",
             description: "Awards a certain amount of currency to a user.",
             group: "nadekoconnector",
-            memberName: "award",
+            memberName: "awarduser",
             userPermissions: ["ADMINISTRATOR"],
             args: [
                 {
                     key: "user",
-                    prompt: "User to award currency to",
+                    prompt: "User to award currency to.",
                     type: "user"
                 },
                 {
                     key: "amount",
-                    prompt: "Amount of currency to award",
+                    prompt: "Amount of currency to award.",
                     type: "integer"
                 },
                 {
                     key: "reason",
-                    prompt: "Reason to award the currency",
+                    prompt: "Reason to award the currency.",
                     type: "string"
                 }
             ]
