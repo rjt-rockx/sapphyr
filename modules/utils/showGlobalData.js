@@ -1,4 +1,4 @@
-var { Command } = require("discord.js-commando");
+const { Command } = require("discord.js-commando");
 module.exports = class SaveDataCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
