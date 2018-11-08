@@ -1,45 +1,81 @@
 module.exports = class guildDataHandler {
+
+    /**
+     * Initialize a guildDataHandler.
+     * @param {Object} datahandler A datahandler instance to use.
+     * @param {String} id ID of the guild.
+     */
     constructor(datahandler, id) {
         this.datahandler = datahandler;
         this.id = id;
     }
 
+    /**
+     * Get the latest data stored for this guild.
+     * @returns Guild data.
+     */
     async reload() {
         return this.guild = await this.datahandler.getOrAddGuild({ id: this.id });
     }
 
-    async get(setting) {
+    /**
+     * Get guild data, or the data stored under a key if specified.
+     * @param {String} [key] Key under which the data is stored.
+     * @returns Guild data.
+     */
+    async get(key) {
         await this.reload();
-        if (typeof setting === "undefined")
+        if (typeof key === "undefined")
             return this.guild;
-        if (setting === "_id") return;
-        return this.guild[setting];
+        if (key === "_id") return;
+        return this.guild[key];
     }
 
-    async set(setting, value) {
+    /**
+     * Set guild data for a key or multiple keys.
+     * @param {String|Object} keyOrObject Key to store the data under, or object containing key/value pairs.
+     * @param {*} [value] Data to store under the key if a key is specified.
+     * @returns Guild data.
+     */
+    async set(keyOrObject, value) {
         await this.reload();
-        let data = setting;
-        if (typeof setting === "undefined") return;
-        if (["string", "number"].includes(typeof setting)) {
+        let data = keyOrObject;
+        if (typeof keyOrObject === "undefined") return;
+        if (["string", "number"].includes(typeof keyOrObject)) {
             if (typeof value === "undefined") return;
-            if (setting === "_id") return;
+            if (keyOrObject === "_id") return;
             data = {};
-            data[setting] = value;
+            data[keyOrObject] = value;
         }
         delete data["_id"];
         await this.datahandler.editGuild(this.guild, data);
         return await this.reload();
     }
 
-    async remove(setting) {
-        let data = {};
+    /**
+     * Remove guild data for a key or multiple keys.
+     * @param {String|Object} keyOrObject Key the data is stored under, or multiple keys in an object.
+     * @returns Guild data.
+     */
+    async remove(keyOrObject) {
+        let data = keyOrObject;
         await this.reload();
-        if (typeof setting === "undefined") return;
-        if (["string", "number"].includes(typeof setting)) {
-            if (setting === "_id") return;
-            data[setting] = null;
+        if (typeof keyOrObject === "undefined") return;
+        if (["string", "number"].includes(typeof keyOrObject)) {
+            data = {};
+            data[keyOrObject] = null;
         }
+        delete data["_id"];
         await this.datahandler.editGuild(this.guild, data, true);
         return await this.reload();
+    }
+
+    /**
+     * Delete all data for this guild.
+     * @returns Guild data.
+     */
+    async delete() {
+        await this.reload();
+        return await this.datahandler.removeGuild(this.guild);
     }
 };
