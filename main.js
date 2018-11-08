@@ -1,11 +1,8 @@
-var path = require("path");
-var config = require("./localdata/config.js");
-var commando = require("discord.js-commando");
-var { initializeServices, removeServices, services } = require("./services");
-var utils = require("./utils");
-const log = require("fancy-log");
+const path = require("path"), config = require("./localdata/config.js"),
+      commando = require("discord.js-commando"), { initializeServices, removeServices, services } = require("./services"),
+      utils = require("./utils"), log = require("fancy-log");
 
-var client = new commando.Client({
+let client = new commando.Client({
 	owner: config.owners,
 	commandEditableDuration: 0,
 	nonCommandEditable: false,
