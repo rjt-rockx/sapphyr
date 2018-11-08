@@ -1,6 +1,5 @@
 const { lstatSync, readdirSync } = require("fs");
 const { join, parse } = require("path");
-const { CommandGroup } = require("discord.js-commando");
 const { checkIfExists, createIfNotExists, readJson, writeJson } = global.utils.fileManager;
 
 const isDirectory = source => lstatSync(source).isDirectory() && !source.startsWith(".");
@@ -35,7 +34,7 @@ exports.initializeModules = async function initializeModules(client) {
                 await writeJson(indexPath, fixedData);
                 group = fixedData;
             }
-            await client.registry.registerGroup(new global.utils.commandModule(client, group));
+            await client.registry.registerGroup(new global.utils.baseCommand(client, group));
             readdirSync(join(__dirname, mdl)).map(filename => {
                 if (filename.match(/\.js$/) !== null && filename !== "index.js") {
                     client.registry.registerCommand(require(join(__dirname, mdl, filename)));
