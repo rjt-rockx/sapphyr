@@ -1,4 +1,4 @@
-var got = require("got");
+const got = require("got");
 
 class Mee6Api {
     constructor(guilds = [], cacheInterval = 60) {
