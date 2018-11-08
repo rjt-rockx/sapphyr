@@ -11,6 +11,6 @@ module.exports = class PingCommand extends global.utils.baseCommand {
 
     async task({ message }) {
         let pingMsg = await message.channel.send("🔁 | Pinging ...");
-        return await pingMsg.edit(`✅ | ${pingMsg.createdTimestamp - message.createdTimestamp}ms.`);
+        return await pingMsg.edit(`✅ | ${pingMsg.createdTimestamp - message.createdTimestamp}ms.\nWebsocket Ping: ${client.ping} ms`);
     }
 };
