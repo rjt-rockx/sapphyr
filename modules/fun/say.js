@@ -18,7 +18,7 @@ module.exports = class SayCommand extends global.utils.baseCommand {
     }
 
     async task(ctx) {
-        if (ctx.args.text.length > 1000) return ctx.message.channel.send("Please enter less than 1,000 characters while using this command");
+        if (ctx.args.text.length > 1000) return ctx.send("Please enter less than 1,000 characters while using this command");
         await ctx.message.delete();
         return await ctx.embed({ description: ctx.args.text });
     }
