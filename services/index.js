@@ -1,72 +1,83 @@
-const fs = require("fs");
+const { readdirSync } = require("fs");
+const { join } = require("path");
+const onText = str => str.replace(/\w\S*/g, txt => "on" + txt.charAt(0).toUpperCase() + txt.substr(1));
 
-let services = [];
-fs.readdirSync(__dirname + "/").forEach(filename => {
-	if (filename.match(/\.js$/) !== null && filename !== "index.js") {
-		let name = filename.replace(new RegExp(/\.js$/, "g"), "");
-		services.push(require("./" + name));
-	}
-});
+module.exports = class serviceHandler {
+    constructor(client) {
+        this.client = client;
+        this.services = [];
+        this.events = [
+            "channelCreate",
+            "channelDelete",
+            "channelPinsUpdate",
+            "channelUpdate",
+            "emojiCreate",
+            "emojiDelete",
+            "emojiUpdate",
+            "guildBanAdd",
+            "guildBanRemove",
+            "guildCreate",
+            "guildDelete",
+            "guildIntegrationsUpdate",
+            "guildMemberAdd",
+            "guildMemberAvailable",
+            "guildMemberRemove",
+            "guildMemberSpeaking",
+            "guildMemberUpdate",
+            "guildUnavailable",
+            "guildUpdate",
+            "message",
+            "messageDelete",
+            "messageDeleteBulk",
+            "messageReactionAdd",
+            "messageReactionRemove",
+            "messageReactionRemoveAll",
+            "messageUpdate",
+            "presenceUpdate",
+            "roleCreate",
+            "roleDelete",
+            "roleUpdate",
+            "typingStart",
+            "typingStop",
+            "userUpdate",
+            "voiceStateUpdate",
+            "webhookUpdate"
+        ];
+    }
 
-let events = {
-	channelCreate: [],
-	channelDelete: [],
-	channelPinsUpdate: [],
-	channelUpdate: [],
-	emojiCreate: [],
-	emojiDelete: [],
-	emojiUpdate: [],
-	guildBanAdd: [],
-	guildBanRemove: [],
-	guildCreate: [],
-	guildDelete: [],
-	guildIntegrationsUpdate: [],
-	guildMemberAdd: [],
-	guildMemberAvailable: [],
-	guildMemberRemove: [],
-	guildMemberSpeaking: [],
-	guildMemberUpdate: [],
-	guildUnavailable: [],
-	guildUpdate: [],
-	message: [],
-	messageDelete: [],
-	messageDeleteBulk: [],
-	messageReactionAdd: [],
-	messageReactionRemove: [],
-	messageReactionRemoveAll: [],
-	messageUpdate: [],
-	presenceUpdate: [],
-	roleCreate: [],
-	roleDelete: [],
-	roleUpdate: [],
-	typingStart: [],
-	typingStop: [],
-	userUpdate: [],
-	voiceStateUpdate: [],
-	webhookUpdate: []
+    checkIfValid(service) {
+        return service.prototype instanceof global.utils.baseService;
+    }
+
+    addService(service) {
+        if (!this.checkIfValid(service)) return;
+        let serviceToAdd = new service(this.client);
+        if (this.services.some(existingService => existingService.id === serviceToAdd.id)) return;
+        this.services.push(serviceToAdd);
+    }
+
+    addServicesIn(folder) {
+        readdirSync(folder).map(filename => {
+            if (filename.match(/\.js$/) !== null && filename !== "index.js") {
+                let service = require(join(folder, filename));
+                this.addService(service);
+            }
+        });
+    }
+
+    removeService(service) {
+        this.services = this.services.filter(existingService => existingService.id !== service.id);
+    }
+
+    removeAllServices() {
+        this.services = [];
+    }
+
+    runServiceEvent(event, args) {
+        this.services.map(service => typeof service[onText(event)] === "function" ? service[onText(event)](args) : undefined);
+    }
+
+    registerEventsWithClient(eventList = this.events) {
+        eventList.map(event => this.client.on(event, ...args => this.runServiceEvent(event, ...args)));
+    }
 };
-let eventList = Object.keys(events);
-
-function isEventBased(service) {
-	if (typeof service.type === "undefined") return false;
-	if (typeof service.type === "string" && service.type !== "event") return false;
-	if (Array.isArray(service.type) && (service.type.includes("event") === false)) return false;
-	return true;
-}
-
-exports.initializeServices = async client => {
-	await Promise.all(services.map(async service => {
-		if (typeof service.initialize !== "undefined")
-			await service.initialize(client);
-		if (isEventBased(service) && typeof service.on === "object" && Object.keys(service.on).length > 0)
-			for (let eventName of Object.keys(service.on))
-				if (eventList.includes(eventName))
-					events[eventName].push(service.on[eventName]);
-	}));
-	for (let eventName of eventList)
-		client.on(eventName, (...args) => events[eventName].map(listener => listener(...args)));
-};
-
-exports.removeServices = () => eventList.map(eventName => events[eventName] = []);
-
-exports.services = services;
