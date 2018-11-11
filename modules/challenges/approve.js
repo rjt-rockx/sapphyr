@@ -36,7 +36,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
         if (!ctx.message.member.roles.has(role.id)) return await ctx.send(noApprover);
         if (!ctx.args.id) return;
         let appTch = ctx.client.channels.get("455252710732595211"),
-            message = await appTch.fetchMessage(ctx.args.ID),
+            message = await appTch.fetchMessage(ctx.args.id),
             rewardAmount = await ctx.db.get(`challenges/${ctx.args.difficulty}`),
             approved = new RichEmbed()
             .setTitle("Challenge Approved!")
@@ -59,7 +59,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
         await message.delete();
         await message.author.send(approved2);
         await ctx.client.channels.get("507667784285552640").send(approved);
-        let reason = "[Sapphyr Challenges] " + ctx.message.author + " approved " + ctx.args.ID + " with amount: " + rewardAmount + botInfo.bot.currency.sign;
+        let reason = "[Sapphyr Challenges] " + ctx.message.author + " approved " + ctx.args.id + " with amount: " + rewardAmount + botInfo.bot.currency.sign;
         return await ctx.nadekoConnector.addCurrency(message.author.id, rewardAmount, reason);
     }
 };
