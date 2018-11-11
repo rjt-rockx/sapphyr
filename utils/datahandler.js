@@ -65,7 +65,8 @@ class dataHandler {
     async getGuild(guild) {
         this.checkInitialized();
         let guilds = await this.db.collection("guilds");
-        return await guilds.find({ id: guild.id }).toArray();
+        let result = await guilds.find({ id: guild.id }).toArray();
+        return Array.isArray(result) && result.length > 0 ? result[0] : result;
     }
 
     /**
