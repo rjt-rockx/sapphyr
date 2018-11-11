@@ -22,7 +22,6 @@ module.exports = class CashCommand extends global.utils.baseCommand {
         if (!ctx.nadekoConnector)
             return await ctx.send("NadekoConnector configuration not set.");
         let botInfo = await ctx.nadekoConnector.getBotInfo();
-        console.log(botInfo);
         if (typeof botInfo.bot.currency.sign === "undefined")
             return await ctx.send("Unable to parse NadekoConnector information.");
         let targetUser = ctx.args.user === "self" ? ctx.message.author : ctx.args.user,
