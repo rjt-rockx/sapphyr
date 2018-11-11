@@ -39,7 +39,7 @@ class Mee6Api {
     async cacheGuilds() {
         if (!this._guilds) return;
         return this._guilds = await Promise.all(this._guilds.map(async guild => {
-            let pageNumber = 0, items = 1000, leaderboard = [];
+            let pageNumber = 0, items = 999, leaderboard = [];
             while (true) {
                 let page = await this.getLeaderboard(guild.id, items, pageNumber);
                 if (!Array.isArray(page))
@@ -55,10 +55,10 @@ class Mee6Api {
         }));
     }
 
-    async getLeaderboard(guildId, items = 1000, page = 0) {
+    async getLeaderboard(guildId, items = 999, page = 0) {
         this.checkType(["Guild ID", guildId, "string"]);
-        if (items > 1000)
-            throw new Error("Items can't be greater than 1000 due to API restrictions.");
+        if (items > 999)
+            throw new Error("Items can't be greater than 999 due to API restrictions.");
         let { body: { players: members } } = await got.get(`https://mee6.xyz/api/plugins/levels/leaderboard/${guildId}?limit=${items}&page=${page}`, { json: true });
         return members.map((user, index) => {
             return {
