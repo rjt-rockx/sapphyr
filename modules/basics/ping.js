@@ -1,4 +1,5 @@
-const { Command } = require("discord.js-commando");
+var { Command } = require("discord.js-commando");
+var { RichEmbed } = require("discord.js");
 module.exports = class PingCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
@@ -9,8 +10,12 @@ module.exports = class PingCommand extends global.utils.baseCommand {
         });
     }
 
-    async task({ message, client }) {
-        let pingMsg = await message.channel.send("🔁 | Pinging ...");
-        return await pingMsg.edit(`✅ | ${pingMsg.createdTimestamp - message.createdTimestamp}ms.\nWebsocket Ping: ${client.ping} ms`);
+    async task(ctx) {
+        var embed = new RichEmbed()
+        .setDescription("🔁 | Pinging...");
+        let pingMsg = await ctx.send(embed);
+        var completed = new RichEmbed()
+        .setDescription(`✅ | ${pingMsg.createdTimestamp - ctx.message.createdTimestamp}ms.\nWebsocket Ping: ${ctx.client.ping} ms`);
+        return await pingMsg.edit(completed);
     }
 };
