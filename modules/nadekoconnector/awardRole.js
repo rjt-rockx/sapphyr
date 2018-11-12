@@ -49,10 +49,9 @@ module.exports = class AwardRoleCommand extends global.utils.baseCommand {
             .setColor("#7959ff")
             .setDescription(`Successfully awarded ${ctx.args.amount} ${botInfo.bot.currency.sign} to role ${ctx.args.role}`);
         
-        // I hate embeds, feels good to get back to the actual code.
-        if (!ctx.message.guild.roles.find("name", ctx.args.role)) return await ctx.message.channel.send(missingroles);
-        if (!ctx.args.amount) return await ctx.message.channel.send(missingamount);
-        if (!ctx.args.reason) return await ctx.message.channel.send(missingreason);
+        if (!ctx.message.guild.roles.find(role => role.name === ctx.args.role)) return await ctx.send(missingroles);
+        if (!ctx.args.amount) return await ctx.send(missingamount);
+        if (!ctx.args.reason) return await ctx.send(missingreason);
 
         let role = ctx.message.guild.roles.find(r => r.name === ctx.args.role);
         ctx.args.reason = "[Sapphyr] Awarded by " + ctx.user + " | " + ctx.args.reason;
