@@ -1,6 +1,6 @@
 {
 	"name": "sapphyr",
-	"version": "0.0.3",
+	"version": "0.1.1",
 	"description": "A community oriented Discord bot",
 	"main": "main.js",
 	"scripts": {
