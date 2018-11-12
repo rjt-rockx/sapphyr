@@ -60,6 +60,7 @@ class Mee6Api {
         if (items > 999)
             throw new Error("Items can't be greater than 999 due to API restrictions.");
         let { body: { players: members } } = await got.get(`https://mee6.xyz/api/plugins/levels/leaderboard/${guildId}?limit=${items}&page=${page}`, { json: true });
+        if (!members) return;
         return members.map((user, index) => {
             return {
                 id: user.id,
@@ -79,6 +80,7 @@ class Mee6Api {
     async getRoleRewards(guildId) {
         this.checkType(["Guild ID", guildId, "string"]);
         let { body: { roleRewards } } = await got.get(`https://mee6.xyz/api/plugins/levels/leaderboard/${guildId}?limit=1&page=0`, { json: true });
+        if (!roleRewards) return;
         return roleRewards.sort((a, b) => a.rank - b.rank);
     }
 
