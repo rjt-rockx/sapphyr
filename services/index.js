@@ -1,8 +1,17 @@
 const { readdirSync } = require("fs"), { join } = require("path"), { mongoUrl } = require("../localdata/config");
 const onText = str => str.replace(/\w\S*/g, txt => "on" + txt.charAt(0).toUpperCase() + txt.substr(1));
+const everyText = str => str.replace(/\w\S*/g, txt => "every" + txt.charAt(0).toUpperCase() + txt.substr(1));
 const deepProps = x => x && x !== Object.prototype && Object.getOwnPropertyNames(x).concat(deepProps(Object.getPrototypeOf(x)) || []);
 const deepFunctions = x => deepProps(x).filter(name => typeof x[name] === "function");
 const userFunctions = x => new Set(deepFunctions(x).filter(name => name !== "constructor" && !~name.indexOf("__")));
+const intervals = {
+    minute: 60,
+    fiveMinutes: 300,
+    fifteenMinutes: 900,
+    halfAnHour: 1800,
+    hour: 3600,
+    day: 86400
+};
 
 module.exports = class serviceHandler {
     constructor(client) {
@@ -72,23 +81,45 @@ module.exports = class serviceHandler {
         this.services = [];
     }
 
-    async runServiceEvent(event, args) {
+    async runClientEvent(event, args) {
         for (let service of this.services)
             if (typeof service[onText(event)] === "function")
                 service[onText(event)](await fetchContext(this.client, event, args));
     }
 
-    registerEventsWithClient() {
+    async runTimedEvent(event, args) {
+        for (let service of this.services)
+            if (typeof service[everyText(event)] === "function")
+                service[everyText(event)](await fetchContext(this.client, event, args));
+    }
+
+    registerClientEvents() {
         this.usedEvents = this.services.reduce((events, service) => events.concat([...userFunctions(service)]), []);
-        this.eventsToListen = this.events.filter(event => this.usedEvents.includes(onText(event)));
-        for (let event of this.eventsToListen)
-            this.client.on(event, (...args) => this.runServiceEvent(event, args));
+        this.clientEvents = this.events.filter(event => this.usedEvents.includes(onText(event)));
+        for (let event of this.clientEvents)
+            this.client.on(event, (...args) => this.runClientEvent(event, args));
+    }
+
+    registerTimedEvents() {
+        this.timedEvents = Object.keys(intervals).filter(interval => this.usedEvents.includes(everyText(interval)));
+        for (let event of this.timedEvents)
+            setInterval(() => this.runTimedEvent(event, []), intervals[event] * 1000);
+    }
+
+    initialize(folder) {
+        this.addServicesIn(folder);
+        this.registerClientEvents();
+        this.registerTimedEvents();
     }
 };
 
 let fetchContext = async function (client, event, args) {
     let context = { client: client };
     await attachDatahandler(client, context);
+    if (Object.keys(intervals).includes(event)) {
+        context.currentTime = new Date(Date.now());
+        return context;
+    }
     if (event === "channelCreate" || event === "channelDelete") {
         [context.channel] = args;
         await getGuild(context);

@@ -23,8 +23,7 @@ try {
 			global.utils = utils;
 			// Initialize services
 			const services = new serviceHandler(client);
-			services.addServicesIn(resolve("./services/"));
-			services.registerEventsWithClient();
+			services.initialize(resolve("./services/"));
 			global.services = services;
 			log("Services initialized.");
 			// Register modules, commands and argument types.
