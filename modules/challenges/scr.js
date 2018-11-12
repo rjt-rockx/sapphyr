@@ -4,7 +4,7 @@ module.exports = class SetChallengeRewardCommand extends global.utils.baseComman
     constructor(client) {
         super(client, {
             name: "setchallengereward",
-            memberName: "setchallengereward",
+            memberName: "scr",
             userPermissions: ["ADMINISTRATOR"],
             group: "challenges",
             description: "Set a challenge submitter reward for one of 3 difficulties.",
