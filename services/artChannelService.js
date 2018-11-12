@@ -3,10 +3,10 @@ module.exports = class ArtChannelService extends global.utils.baseService {
 		super(client);
 	}
 
-	onMessage(message) {
-		if (message.guild.channels.find(c => c.name === "art"))
-			if (message.channel.id === message.guild.channels.find(c => c.name === "art").id && message.attachments.size > 0)
-				message.react("🔺");
+	onMessage(ctx) {
+		if (ctx.guild.channels.find(c => c.name === "art"))
+			if (ctx.channel.id === ctx.guild.channels.find(c => c.name === "art").id && ctx.message.attachments.size > 0)
+				ctx.message.react("🔺");
 	}
 };
 
