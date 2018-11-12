@@ -1,4 +1,5 @@
 const { readdirSync } = require("fs"), { join } = require("path"), { mongoUrl } = require("../localdata/config");
+const mee6api = require("../utils/mee6.js"), mee6 = new mee6api(undefined, 150);
 const onText = str => str.replace(/\w\S*/g, txt => "on" + txt.charAt(0).toUpperCase() + txt.substr(1));
 const everyText = str => str.replace(/\w\S*/g, txt => "every" + txt.charAt(0).toUpperCase() + txt.substr(1));
 const deepProps = x => x && x !== Object.prototype && Object.getOwnPropertyNames(x).concat(deepProps(Object.getPrototypeOf(x)) || []);
@@ -283,8 +284,24 @@ let getGuild = async context => {
         if (context.role)
             context.guild = context.role.guild;
     }
-    if (context.guild)
+    if (context.guild) {
         await attachGuildDatahandler(context);
+        await attachMee6(context);
+    }
+};
+
+let attachMee6 = async (context) => {
+    if (context.guild && context.guild.id && context.guild.member("159985870458322944")) {
+        if (!mee6.checkIfExists(context.guild.id))
+            mee6.addGuild(context.guild.id);
+        mee6.startCaching();
+        context.mee6 = {
+            refreshCache: () => mee6.cacheGuilds(),
+            leaderboard: () => mee6.getCachedLeaderboard(context.guild.id),
+            roleRewards: () => mee6.getCachedRoleRewards(context.guild.id),
+            userXp: userId => mee6.getUserXp(context.guild.id, userId)
+        };
+    }
 };
 
 let attachDatahandler = async (client, context) => {
