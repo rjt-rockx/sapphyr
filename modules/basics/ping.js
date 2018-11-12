@@ -9,7 +9,7 @@ module.exports = class PingCommand extends global.utils.baseCommand {
     }
 
     async task(ctx) {
-        let pingMsg = await ctx.send("🔁 | Pinging ...");
-        return await pingMsg.edit(`✅ | ${pingMsg.createdTimestamp - message.createdTimestamp}ms.\nWebsocket Ping: ${client.ping} ms`);
+        let pingMsg = await ctx.send("Pinging ...");
+        return await pingMsg.edit(`Message Ping: ${pingMsg.createdTimestamp - ctx.message.createdTimestamp}ms | Websocket Ping: ${ctx.client.ping}ms`);
     }
 };
