@@ -1,8 +1,12 @@
 const urlRegex = require("url-regex-local")({ exact: false, strict: false });
 
-module.exports = class ArtChannelService extends global.utils.baseService {
+module.exports = class ArtChannel extends global.utils.baseService {
 	constructor(client) {
-		super(client);
+		super(client, {
+			name: "Art Channel Service",
+			description: "Adds upvote/downvote/like/dislike reactions on messages containing a link, embed or attachment.",
+			enabled: true
+		});
 	}
 
 	async onMessage(ctx) {

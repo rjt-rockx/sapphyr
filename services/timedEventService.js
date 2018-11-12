@@ -1,9 +1,12 @@
 const log = require("fancy-log");
 
-module.exports = class TimedEventService extends global.utils.baseService {
+module.exports = class TimedEvent extends global.utils.baseService {
     constructor(client) {
-        super(client);
-        this.enabled = false;
+        super(client, {
+            name: "Timed Event Service",
+            description: "Prints 'Hello from the other side.' in console every minute.",
+            enabled: false
+        });
     }
 
     everyMinute() {

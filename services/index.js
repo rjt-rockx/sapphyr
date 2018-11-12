@@ -89,6 +89,16 @@ module.exports = class serviceHandler {
                 service.disable();
     }
 
+    getServiceInfo(id) {
+        for (let service of this.services)
+            if (service.id === id)
+                return {
+                    name: service.name,
+                    description: service.description,
+                    enabled: service.enabled
+                };
+    }
+
     removeService(service) {
         this.services = this.services.filter(existingService => existingService.id !== service.id);
     }
