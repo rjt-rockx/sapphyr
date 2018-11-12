@@ -216,6 +216,10 @@ let fetchContext = async function (client, event, args) {
         context.role = context.newRole;
         await getGuild(context);
     }
+    else if (event === "typingStart" || event === "typingStop") {
+        [context.channel, context.user] = args;
+        await getGuild(context);
+    }
     else if (event === "userUpdate") {
         [context.oldUser, context.newUser] = args;
         getUser(context);
