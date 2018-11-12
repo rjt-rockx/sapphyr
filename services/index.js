@@ -1,5 +1,8 @@
 const { readdirSync } = require("fs"), { join } = require("path"), { mongoUrl } = require("../localdata/config");
 const onText = str => str.replace(/\w\S*/g, txt => "on" + txt.charAt(0).toUpperCase() + txt.substr(1));
+const deepProps = x => x && x !== Object.prototype && Object.getOwnPropertyNames(x).concat(deepProps(Object.getPrototypeOf(x)) || []);
+const deepFunctions = x => deepProps(x).filter(name => typeof x[name] === "function");
+const userFunctions = x => new Set(deepFunctions(x).filter(name => name !== "constructor" && !~name.indexOf("__")));
 
 module.exports = class serviceHandler {
     constructor(client) {
@@ -76,7 +79,9 @@ module.exports = class serviceHandler {
     }
 
     registerEventsWithClient() {
-        for (let event of this.events)
+        this.usedEvents = this.services.reduce((events, service) => events.concat([...userFunctions(service)]), []);
+        this.eventsToListen = this.events.filter(event => this.usedEvents.includes(onText(event)));
+        for (let event of this.eventsToListen)
             this.client.on(event, (...args) => this.runServiceEvent(event, args));
     }
 };
