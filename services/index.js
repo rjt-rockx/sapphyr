@@ -1,6 +1,4 @@
-const { readdirSync } = require("fs");
-const { join } = require("path");
-const { mongoUrl } = require("../localdata/config");
+const { readdirSync } = require("fs"), { join } = require("path"), { mongoUrl } = require("../localdata/config");
 const onText = str => str.replace(/\w\S*/g, txt => "on" + txt.charAt(0).toUpperCase() + txt.substr(1));
 
 module.exports = class serviceHandler {
