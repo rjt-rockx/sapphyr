@@ -10,6 +10,7 @@ module.exports = class ArtChannel extends global.utils.baseService {
 	}
 
 	async onMessage(ctx) {
+		if (ctx.message.author === this.client.user) return;
 		let artchannels = await ctx.globalDb.get("artchannels");
 		if (!artchannels)
 			return await ctx.globalDb.set("artchannels", []);
