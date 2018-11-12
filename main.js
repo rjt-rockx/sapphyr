@@ -1,6 +1,6 @@
-const path = require("path"), config = require("./localdata/config.js"),
-      commando = require("discord.js-commando"), { initializeServices, removeServices, services } = require("./services"),
-      utils = require("./utils"), log = require("fancy-log");
+const { resolve } = require("path"), config = require("./localdata/config.js"),
+	commando = require("discord.js-commando"), serviceHandler = require("./services"),
+	utils = require("./utils"), log = require("fancy-log");
 
 let client = new commando.Client({
 	owner: config.owners,
@@ -19,13 +19,13 @@ try {
 			client.datahandler = new utils.datahandler();
 			await client.datahandler.initialize();
 			log("Datahandler initialized.");
-			// Initialize services
-			await initializeServices(client);
-			log("Services initialized.");
-			// Attach to global object
-			global.services = services;
+			// Initialize utils
 			global.utils = utils;
-			log("Global variables initialized.");
+			// Initialize services
+			const services = new serviceHandler(client);
+			services.initialize(resolve("./services/"));
+			global.services = services;
+			log("Services initialized.");
 			// Register modules, commands and argument types.
 			client.registry.registerDefaultTypes();
 			log("Default types initialized.");
