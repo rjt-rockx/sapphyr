@@ -73,6 +73,22 @@ module.exports = class serviceHandler {
             }
     }
 
+    listServices() {
+        return this.services.map(service => { return { id: service.id, enabled: service.enabled }; });
+    }
+
+    enableService(id) {
+        for (let service of this.services)
+            if (service.id === id && !service.enabled)
+                service.enable();
+    }
+
+    disableService(id) {
+        for (let service of this.services)
+            if (service.id === id && service.enabled)
+                service.disable();
+    }
+
     removeService(service) {
         this.services = this.services.filter(existingService => existingService.id !== service.id);
     }
@@ -83,13 +99,13 @@ module.exports = class serviceHandler {
 
     async runClientEvent(event, args) {
         for (let service of this.services)
-            if (typeof service[onText(event)] === "function")
+            if (typeof service[onText(event)] === "function" && service.enabled)
                 service[onText(event)](await fetchContext(this.client, event, args));
     }
 
     async runTimedEvent(event, args) {
         for (let service of this.services)
-            if (typeof service[everyText(event)] === "function")
+            if (typeof service[everyText(event)] === "function" && service.enabled)
                 service[everyText(event)](await fetchContext(this.client, event, args));
     }
 
