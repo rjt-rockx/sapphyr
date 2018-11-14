@@ -7,6 +7,7 @@ module.exports = class ClearCommand extends global.utils.baseCommand {
             memberName: "clear",
             group: "basics",
             userPermissions: ["MANAGE_MESSAGES"],
+            clientPermissions: ["MANAGE_MESSAGES"],
             description: "Clear xyz amount of messages.",
             args: [{
                 key: "messages",
@@ -18,7 +19,7 @@ module.exports = class ClearCommand extends global.utils.baseCommand {
     }
     async task(ctx) {
         let embed = new RichEmbed()
-        .setDescription(`Successfully cleared **${ctx.args.messages}** messages.`);
+            .setDescription(`Successfully cleared **${ctx.args.messages}** messages.`);
         await ctx.message.channel.bulkDelete(ctx.args.messages);
         ctx.send(embed);
     }
