@@ -3,7 +3,7 @@ const { Command } = require("discord.js-commando"), { RichEmbed } = require("dis
 module.exports = class SetChallengeRewardCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
-            name: "setchallengereward",
+            name: "scr",
             memberName: "scr",
             userPermissions: ["ADMINISTRATOR"],
             group: "challenges",
@@ -24,7 +24,27 @@ module.exports = class SetChallengeRewardCommand extends global.utils.baseComman
         });
     }
     async task(ctx) {
-        await ctx.db.set(`challenges/${ctx.args.difficulty}`, ctx.args.amount);
+        let difrewards = {
+            easy: 50,
+            medium: 100,
+            hard: 150
+        };
+        try {
+            let document = await ctx.db.get("difrewards");
+            if (!document) {
+                document = await ctx.db.set("difrewards", difrewards);
+            } else {
+                await Object.defineProperty(difrewards, ctx.args.difficulty, {
+                    value: ctx.args.amount,
+                    writable: true,
+                    configurable: true,
+                    enumerable: true
+                });
+                await ctx.db.set("difrewards", difrewards);
+            }
+        } catch (e) {
+            console.error(e);
+        }
         return await ctx.send("Success!");
     }
 };
