@@ -30,7 +30,6 @@ module.exports = class BugReportCommand extends global.utils.baseCommand {
         await ctx.client.channels.get("477644168299151375").send({embed});
         ctx.embed({
             description: "Success! Thank you.",
-            footer: "Any false reports will result in a blacklist from utilizing the `bug` command."
         });
     }
 };
