@@ -34,9 +34,9 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
             lastResult = this.lastResult;
 		const doReply = val => {
 			if(val instanceof Error) {
-				ctx.send(`Callback error: \`${val}\``);
+				ctx.reply(`Callback error: \`${val}\``);
 			} else {
-				const result = this.makeResultMessages(this.lastResult, hrDiff, ctx.args.script, ctx);
+                const result = this.makeResultMessages(val, process.hrtime(this.hrStart), null, ctx);
 				if(Array.isArray(result)) {
 					for(const item of result) ctx.send(item);
 				} else {
@@ -57,7 +57,7 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 		this.hrStart = process.hrtime();
 		const result = this.makeResultMessages(this.lastResult, hrDiff, ctx.args.script, ctx);
 		if(Array.isArray(result)) {
-			return result.map(item => ctx.send(item));
+			return result.map(item => ctx.reply(item));
 		} else {
 			return ctx.send(result);
 		}
