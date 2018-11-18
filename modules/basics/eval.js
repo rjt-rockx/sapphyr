@@ -36,7 +36,7 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 			if(val instanceof Error) {
 				ctx.send(`Callback error: \`${val}\``);
 			} else {
-				const result = this.makeResultMessages(val, process.hrtime(this.hrStart));
+				const result = this.makeResultMessages(this.lastResult, hrDiff, ctx.args.script, ctx);
 				if(Array.isArray(result)) {
 					for(const item of result) ctx.send(item);
 				} else {
