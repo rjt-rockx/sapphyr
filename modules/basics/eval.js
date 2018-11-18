@@ -55,7 +55,7 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 		}
 
 		this.hrStart = process.hrtime();
-		const result = this.makeResultMessages(this.lastResult, hrDiff, ctx.args.script);
+		const result = this.makeResultMessages(this.lastResult, hrDiff, ctx.args.script, ctx);
 		if(Array.isArray(result)) {
 			return result.map(item => ctx.reply(item));
 		} else {
@@ -63,10 +63,10 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 		}
 	}
 
-	makeResultMessages(result, hrDiff, input = null) {
+	makeResultMessages(result, hrDiff, input = null, ctx) {
 		const inspected = util.inspect(result, { depth: 0 })
 			.replace(nlPattern, "\n")
-			.replace(this.sensitivePattern, "--snip--");
+			.replace(this.sensitivePattern(ctx), "--snip--");
 		const split = inspected.split("\n");
 		const last = inspected.length - 1;
 		const prependPart = inspected[0] !== "{" && inspected[0] !== "[" && inspected[0] !== "'" ? split[0] : inspected[0];
