@@ -48,7 +48,11 @@ function getCommandData(command, client) {
 	}
 	let arguments = [];
 	if (command.argsCollector && command.argsCollector.args && Array.isArray(command.argsCollector.args)) {
-		let argKeys = command.argsCollector.args.map(arg => `${arg.default ? "[" + arg.key + "]" : "<" + arg.key + ">"}`);
+		let argKeys = command.argsCollector.args.map(arg => {
+			let argName = arg.key;
+			if (arg.oneOf && arg.oneOf.length < 4) argName = arg.oneOf.join("/");
+			return `${arg.default ? `[${argName}]` : `<${argName}>`}`;
+		});
 		commandName += " " + argKeys.join(" ");
 		arguments = command.argsCollector.args.map(arg => `**${toTitleCase(arg.key)}** - ${arg.prompt} ${arg.default ? `(Default: ${arg.default})` : ""}`).join("\n");
 	}
