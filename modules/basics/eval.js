@@ -25,7 +25,7 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 	}
 
 	async task(ctx) {
-		const doReply = val => {
+		this.doReply = val => {
 			if (val instanceof Error)
 				ctx.send(`Callback error: \`${val}\``);
 			else {
@@ -33,7 +33,7 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 				return Array.isArray(result) ? result.map(item => ctx.send(item)) : ctx.send(result);
 			}
 		};
-		
+
 		let hrDiff;
 		try {
 			const hrStart = process.hrtime();
@@ -50,9 +50,10 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 	}
 
 	makeResultMessages(result, hrDiff, input = null, ctx) {
-		const inspected = inspect(result, { depth: 0 })
-			.replace(nlPattern, "\n")
-			.replace(this.sensitivePattern(ctx), "--snip--");
+		let inspected = inspect(result, { depth: 0 })
+			.replace(nlPattern, "\n");
+		for (const pattern of this.getSensitivePatterns(ctx))
+			inspected = inspected.replace(pattern, "[CENSORED]");
 		const split = inspected.split("\n");
 		const lastInspected = inspected[inspected.length - 1];
 		const prependPart = inspected[0] !== "{" && inspected[0] !== "[" && inspected[0] !== "'" ? split[0] : inspected[0];
@@ -76,11 +77,13 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 		}
 	}
 
-	sensitivePattern({ client }) {
-		if (!this._sensitivePattern) {
-			let pattern = "";
-			if (client.token) pattern += escapeRegex(client.token);
-			this._sensitivePattern = new RegExp(pattern, "gi");
+	getSensitivePatterns(ctx) {
+		if (!this._sensitivePattern || !Array.isArray(this._sensitivePattern)) {
+			this._sensitivePattern = [];
+			if (ctx.client.token)
+				this._sensitivePattern.push(new RegExp(escapeRegex(ctx.client.token), "gi"));
+			if (ctx.nadekoConnector)
+				this._sensitivePattern.push(new RegExp(escapeRegex(ctx.nadekoConnector.password), "gi"));
 		}
 		return this._sensitivePattern;
 	}
