@@ -130,7 +130,9 @@ module.exports = class serviceHandler {
     }
 
     registerClientEvents() {
-        this.usedEvents = this.services.reduce((events, service) => events.concat([...userFunctions(service)]), []);
+        this.usedEvents = this.services.reduce((events, service) => events.concat([...userFunctions(service)]), [])
+            .filter(eventName => eventName.startsWith("on") || eventName.startsWith("every"))
+            .sort().filter((eventName, index, self) => self.indexOf(eventName) === index);
         this.clientEvents = this.events.filter(event => this.usedEvents.includes(onText(event)));
         for (let event of this.clientEvents)
             this.client.on(event, (...args) => this.runClientEvent(event, args));
