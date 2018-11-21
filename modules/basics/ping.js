@@ -4,7 +4,8 @@ module.exports = class PingCommand extends global.utils.baseCommand {
             name: "ping",
             description: "Checks the bot's ping.",
             group: "basics",
-            memberName: "ping"
+            memberName: "ping",
+            clientPermissions: ["SEND_MESSAGES"]
         });
     }
 

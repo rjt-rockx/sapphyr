@@ -6,6 +6,7 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 			description: "Gives help for a command.",
 			group: "basics",
 			memberName: "help",
+			clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
 			args: [
 				{
 					key: "command",

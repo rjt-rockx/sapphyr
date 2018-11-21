@@ -7,7 +7,7 @@ module.exports = class ClearCommand extends global.utils.baseCommand {
             memberName: "clear",
             group: "basics",
             userPermissions: ["MANAGE_MESSAGES"],
-            clientPermissions: ["MANAGE_MESSAGES"],
+            clientPermissions: ["SEND_MESSAGES", "MANAGE_MESSAGES", "EMBED_LINKS"],
             description: "Clear xyz amount of messages.",
             args: [{
                 key: "messages",
