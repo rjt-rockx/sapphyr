@@ -1,8 +1,6 @@
-const { inspect } = require("util"),
-	{ splitMessage } = require("discord.js"),
-	{ stripIndents } = require("common-tags"),
-	escapeRegex = require("escape-string-regexp"),
-	nlPattern = new RegExp("!!NL!!", "g");
+const { inspect } = require("util"), { splitMessage } = require("discord.js"), { stripIndents } = require("common-tags"),
+	escapeRegex = require("escape-string-regexp");
+const nlPattern = new RegExp("!!NL!!", "g");
 
 module.exports = class EvalCommand extends global.utils.baseCommand {
 	constructor(client) {
@@ -25,6 +23,7 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 	}
 
 	async task(ctx) {
+		if(ctx.msg.content.includes("token")) return ctx.msg.send("Yea no. Don't be an idiot. We don't use code like that here.");
 		this.doReply = val => {
 			if (val instanceof Error)
 				ctx.send(`Callback error: \`${val}\``);
@@ -58,19 +57,19 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 		const lastInspected = inspected[inspected.length - 1];
 		const prependPart = inspected[0] !== "{" && inspected[0] !== "[" && inspected[0] !== "'" ? split[0] : inspected[0];
 		const appendPart = lastInspected !== "}" && lastInspected !== "]" && lastInspected !== "'" ? split[split.length - 1] : lastInspected;
-		const prepend = `\`\`\`javascript\n${prependPart}\n`;
+		const prepend = `\`\`\`js\n${prependPart}\n`;
 		const append = `\n${appendPart}\n\`\`\``;
 		if (input)
 			return splitMessage(stripIndents`
 				*Executed in ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ""}${hrDiff[1] / 1000000}ms.*
-				\`\`\`javascript
+				\`\`\`js
 				${inspected}
 				\`\`\`
 			`, { maxLength: 1900, prepend, append });
 		else {
 			return splitMessage(stripIndents`
 				*Callback executed after ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ""}${hrDiff[1] / 1000000}ms.*
-				\`\`\`javascript
+				\`\`\`js
 				${inspected}
 				\`\`\`
 			`, { maxLength: 1900, prepend, append });
@@ -87,4 +86,4 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 		}
 		return this._sensitivePattern;
 	}
-}; 
+};
