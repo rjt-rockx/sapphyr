@@ -6,6 +6,7 @@ module.exports = class SetChallengeRewardCommand extends global.utils.baseComman
             name: "scr",
             memberName: "scr",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES"],
             group: "challenges",
             description: "Set a challenge submitter reward for one of 3 difficulties.",
             args: [

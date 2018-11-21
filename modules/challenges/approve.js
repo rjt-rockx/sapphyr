@@ -7,6 +7,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
             memberName: "approve",
             group: "challenges",
             description: "Approve a challenge and award the submitter.",
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             args: [
                 {
                     key: "id",

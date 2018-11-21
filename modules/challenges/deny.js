@@ -7,6 +7,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
             memberName: "deny",
             group: "challenges",
             description: "Deny a challenge.",
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             args: [
                 {
                     key: "id",
