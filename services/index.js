@@ -119,14 +119,20 @@ module.exports = class serviceHandler {
 
     async runClientEvent(event, args) {
         for (let service of this.services)
-            if (typeof service[onText(event)] === "function" && service.enabled)
-                service[onText(event)](await fetchContext(this.client, event, args));
+            if (typeof service[onText(event)] === "function" && service.enabled) {
+                let context = await fetchContext(this.client, event, args);
+                if (typeof context !== "undefined")
+                    service[onText(event)](context);
+            }
     }
 
     async runTimedEvent(event, args) {
         for (let service of this.services)
-            if (typeof service[everyText(event)] === "function" && service.enabled)
-                service[everyText(event)](await fetchContext(this.client, event, args));
+            if (typeof service[everyText(event)] === "function" && service.enabled) {
+                let context = await fetchContext(this.client, event, args);
+                if (typeof context !== "undefined")
+                    service[everyText(event)](context);
+            }
     }
 
     registerClientEvents() {
