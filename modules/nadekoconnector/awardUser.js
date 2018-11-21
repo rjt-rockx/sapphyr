@@ -7,6 +7,7 @@ module.exports = class AwardUserCommand extends global.utils.baseCommand {
             group: "nadekoconnector",
             memberName: "awarduser",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             args: [
                 {
                     key: "user",

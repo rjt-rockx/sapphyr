@@ -6,6 +6,7 @@ module.exports = class CashCommand extends global.utils.baseCommand {
             description: "Gets the currency balance of a user.",
             group: "nadekoconnector",
             memberName: "cash",
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             aliases: ["$", "currency"],
             args: [
                 {

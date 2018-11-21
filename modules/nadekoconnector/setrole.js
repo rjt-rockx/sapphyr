@@ -7,6 +7,7 @@ module.exports = class SetRoleCommand extends global.utils.baseCommand {
             memberName: "setrole",
             group: "nadekoconnector",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             description: "Add a role to the shop.",
             args: [{
                 key: "role",

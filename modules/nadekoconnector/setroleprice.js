@@ -7,6 +7,7 @@ module.exports = class SetRolePriceCommand extends global.utils.baseCommand {
             memberName: "setroleprice",
             group: "nadekoconnector",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             description: "Set the global price for all the roles in the shop.",
             args: [{
                 key: "price",

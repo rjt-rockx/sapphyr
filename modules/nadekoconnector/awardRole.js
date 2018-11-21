@@ -6,6 +6,7 @@ module.exports = class AwardRoleCommand extends global.utils.baseCommand {
             name: "awardrole",
             memberName: "awardrole",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             group: "nadekoconnector",
             description: "Award money to a role.",
             args: [
@@ -48,7 +49,7 @@ module.exports = class AwardRoleCommand extends global.utils.baseCommand {
             .setTitle("Success")
             .setColor("#7959ff")
             .setDescription(`Successfully awarded ${ctx.args.amount} ${botInfo.bot.currency.sign} to role ${ctx.args.role}`);
-        
+
         if (!ctx.message.guild.roles.find(role => role.name === ctx.args.role)) return await ctx.send(missingroles);
         if (!ctx.args.amount) return await ctx.send(missingamount);
         if (!ctx.args.reason) return await ctx.send(missingreason);
@@ -72,7 +73,7 @@ module.exports = class AwardRoleCommand extends global.utils.baseCommand {
             if (ctx.args.amount > 0) {
                 response = await ctx.nadekoConnector.addCurrency(member.id, ctx.args.amount, ctx.args.reason);
                 if (response.error) return await ctx.embed(nadekoError.setDescription(response.message));
-                
+
                 log("Currency added to role " + ctx.args.role + " with reason " + ctx.args.reason + "\n Currency added: " + ctx.args.amount);
                 return embed.setTitle("Currency Added")
                     .setColor("#7959ff")
