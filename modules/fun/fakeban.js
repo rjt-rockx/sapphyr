@@ -1,4 +1,3 @@
-const { Command } = require("discord.js-commando"), Discord = require("discord.js");
 module.exports = class FakeBanCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
@@ -7,6 +6,7 @@ module.exports = class FakeBanCommand extends global.utils.baseCommand {
             memberName: "fakeban",
             examples: ["_fakeban @user LoLoLoLoL"],
             description: "Fake ban a guild member.",
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             args: [
                 {
                     key: "userToFakeban",

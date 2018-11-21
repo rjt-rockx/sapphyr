@@ -1,4 +1,3 @@
-const { Command } = require("discord.js-commando"), Discord = require("discord.js");
 module.exports = class SayCommand extends global.utils.baseCommand {
     constructor(client) {
         super(client, {
@@ -7,6 +6,7 @@ module.exports = class SayCommand extends global.utils.baseCommand {
             memberName: "say",
             description: "Make the bot say something.",
             userPermissions: ["MANAGE_MESSAGES"],
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             args: [
                 {
                     key: "text",
