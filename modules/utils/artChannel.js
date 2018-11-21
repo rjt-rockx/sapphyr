@@ -1,4 +1,3 @@
-
 const reactionMap = {
     like: ["👍"],
     dislike: ["👎"],
@@ -16,6 +15,7 @@ module.exports = class ArtChannelCommand extends global.utils.baseCommand {
             group: "utils",
             memberName: "artchannel",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             args: [
                 {
                     key: "enabled",

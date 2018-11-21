@@ -7,6 +7,7 @@ module.exports = class BugReportCommand extends global.utils.baseCommand {
             memberName: "bug",
             group: "utils",
             description: "Report a bug to the developers of Sapphyr.",
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             args: [
                 {
                     key: "context",
@@ -18,9 +19,7 @@ module.exports = class BugReportCommand extends global.utils.baseCommand {
     }
     async task(ctx) {
         let url = "https://cdn.discordapp.com/attachments/448913068680806410/513400134223265802/unknown.png";
-        if(ctx.message.attachments.size >= 1) {
-            url = ctx.message.attachments.first().url;
-        }
+        if(ctx.message.attachments.size >= 1) url = ctx.message.attachments.first().url;
         let embed = new RichEmbed()
             .setColor(purple)
             .setAuthor(ctx.message.author.tag + " | " + ctx.message.author.id)
@@ -28,8 +27,6 @@ module.exports = class BugReportCommand extends global.utils.baseCommand {
             .addField("Visual:", `URL: [Here](${url}) | Image:`)
             .setImage(url);
         await ctx.client.channels.get("477644168299151375").send({embed});
-        ctx.embed({
-            description: "Success! Thank you.",
-        });
+        ctx.embed({description: "Success! Thank you."});
     }
 };

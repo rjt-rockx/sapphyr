@@ -7,6 +7,7 @@ module.exports = class SaveGlobalDataCommand extends global.utils.baseCommand {
             group: "utils",
             memberName: "saveglobaldata",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES"],
             args: [
                 {
                     key: "key",

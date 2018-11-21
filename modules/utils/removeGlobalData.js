@@ -7,6 +7,7 @@ module.exports = class RemoveGlobalDataCommand extends global.utils.baseCommand 
             group: "utils",
             memberName: "removeglobaldata",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES"],
             args: [
                 {
                     key: "key",

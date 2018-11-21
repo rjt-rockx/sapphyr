@@ -6,6 +6,7 @@ module.exports = class DisableServiceCommand extends global.utils.baseCommand {
             group: "utils",
             memberName: "disableservice",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             args: [
                 {
                     key: "id",

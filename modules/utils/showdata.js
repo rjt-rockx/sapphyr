@@ -7,6 +7,7 @@ module.exports = class ShowDataCommand extends global.utils.baseCommand {
             group: "utils",
             memberName: "showdata",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES"],
             args: [
                 {
                     key: "key",

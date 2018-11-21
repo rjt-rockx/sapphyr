@@ -6,6 +6,7 @@ module.exports = class EnableServiceCommand extends global.utils.baseCommand {
             group: "utils",
             memberName: "serviceinfo",
             userPermissions: ["ADMINISTRATOR"],
+            clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
             args: [
                 {
                     key: "id",
