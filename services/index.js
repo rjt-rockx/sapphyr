@@ -5,6 +5,15 @@ const everyText = str => str.replace(/\w\S*/g, txt => "every" + txt.charAt(0).to
 const deepProps = x => x && x !== Object.prototype && Object.getOwnPropertyNames(x).concat(deepProps(Object.getPrototypeOf(x)) || []);
 const deepFunctions = x => deepProps(x).filter(name => typeof x[name] === "function");
 const userFunctions = x => new Set(deepFunctions(x).filter(name => name !== "constructor" && !~name.indexOf("__")));
+const camelCase = data => data.replace(/(_\w)/g, text => text[1].toUpperCase());
+const camelCaseKeys = obj => {
+    var newObj = {};
+    for (let data in obj) {
+        if (obj.hasOwnProperty(data))
+            newObj[camelCase(data)] = obj[data];
+    }
+    return newObj;
+};
 const intervals = {
     minute: 60,
     fiveMinutes: 300,
@@ -13,7 +22,6 @@ const intervals = {
     hour: 3600,
     day: 86400
 };
-
 module.exports = class serviceHandler {
     constructor(client) {
         this.client = client;
@@ -44,6 +52,7 @@ module.exports = class serviceHandler {
             "messageReactionRemoveAll",
             "messageUpdate",
             "presenceUpdate",
+            "raw",
             "roleCreate",
             "roleDelete",
             "roleUpdate",
@@ -217,6 +226,15 @@ let fetchContext = async function (client, event, args) {
         getMessage(context);
         getChannel(context);
         await getGuild(context);
+    }
+    else if (event === "raw") {
+        let [{ d, t }] = args;
+        if (d && t)
+            context = {
+                ...context,
+                data: camelCaseKeys(d),
+                type: camelCase(t.toLowerCase())
+            };
     }
     else if (event === "roleCreate" || event === "roleDelete") {
         [context.role] = args;
