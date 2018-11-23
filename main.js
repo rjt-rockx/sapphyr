@@ -1,5 +1,5 @@
 const { resolve } = require("path"),
-	{ prefix, owners, mongoUrl, token } = require("./localdata/config.js"),
+	{ owners, mongoUrl, token } = require("./localdata/config.js"),
 	{ Client: commandoClient, FriendlyError } = require("discord.js-commando"),
 	serviceHandler = require("./services"),
 	utils = require("./utils"),
@@ -10,12 +10,12 @@ let client = new commandoClient({
 	commandEditableDuration: 0,
 	nonCommandEditable: false,
 	unknownCommandResponse: false,
-	commandPrefix: prefix
+	commandPrefix: "./",
 });
 
 try {
 	client
-		.once("ready", async () => {
+		.once("ready", async() => {
 			log(`Logged in as ${client.user.tag} (${client.user.id})`);
 			await client.user.setActivity("Logged in!");
 
@@ -47,10 +47,9 @@ try {
 		.on("commandError", (command, err) => {
 			if (err instanceof FriendlyError) return;
 			log.error(`Error in command ${command.groupID}:${command.name}`, err);
-		})
-		.on("error", log.error);
+		});
+
 	client.login(token);
-}
-catch (err) {
+} catch (err) {
 	log.error(err);
 }
