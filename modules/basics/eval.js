@@ -23,7 +23,7 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 	}
 
 	async task(ctx) {
-		if(ctx.msg.content.includes("token") || ctx.msg.content.includes('config')) return ctx.msg.send("Yea no. Don't be an idiot. We don't use code like that here.");
+		if(ctx.msg.content.includes("token") || ctx.msg.content.includes('config')) return ctx.send("Yea no. Don't be an idiot. We don't use code like that here.");
 		this.doReply = val => {
 			if (val instanceof Error)
 				ctx.send(`Callback error: \`${val}\``);
