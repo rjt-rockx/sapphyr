@@ -1,7 +1,7 @@
 {
   "extends": "eslint:recommended",
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2017
   },
   "env": {
     "es6": true,
@@ -12,7 +12,8 @@
   ],
   "rules": {
     "no-console" : "off",
-    "no-await-in-loop": "warn",
+    "no-constant-condition": "off",
+    "no-await-in-loop": "off",
     "no-compare-neg-zero": "error",
     "no-extra-parens": ["warn", "all", {
       "nestedBinaryExpressions": false
@@ -68,7 +69,7 @@
     "no-useless-escape": "warn",
     "no-useless-return": "warn",
     "no-void": "error",
-    "no-warning-comments": "warn",
+    "no-warning-comments": "off",
     "prefer-promise-reject-errors": "error",
     "require-await": "warn",
     "wrap-iife": "error",
