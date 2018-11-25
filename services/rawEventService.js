@@ -1,5 +1,4 @@
-const { MessageReaction, Emoji } = require("discord.js");
-
+const { MessageReaction, ReactionEmoji, Emoji } = require("discord.js");
 module.exports = class RawEvent extends global.utils.baseService {
     constructor(client) {
         super(client, {
@@ -12,14 +11,17 @@ module.exports = class RawEvent extends global.utils.baseService {
     async parseRawReactionEvent(ctx) {
         const user = this.client.users.get(ctx.data.userId);
         const channel = this.client.channels.get(ctx.data.channelId) || await user.createDM();
+        const guild = this.client.guilds.get(ctx.data.guildId);
+        let emoji = ctx.data.emoji;
         if (channel.messages.has(ctx.data.messageId)) return;
+        if (emoji && emoji.id)
+            if (guild.available && guild.emojis && guild.emojis.has(emoji.id))
+                emoji = new Emoji(guild, emoji);
         const message = await channel.fetchMessage(ctx.data.messageId);
-        let reaction = ctx.type === "messageReactionAdd" ? message._addReaction(ctx.data.emoji, user) : !message._removeReaction(ctx.data.emoji, user);
+        let reaction = ctx.type === "messageReactionAdd" ? message._addReaction(emoji, user) : !message._removeReaction(emoji, user);
         if (reaction) {
-            if (!(reaction instanceof MessageReaction)) {
-                const emoji = new Emoji(this.client.guilds.get(ctx.data.guildId), ctx.data.emoji);
+            if (!(reaction instanceof MessageReaction))
                 reaction = new MessageReaction(message, emoji, 0, ctx.data.userId === this.client.user.id);
-            }
             this.client.emit(ctx.type, reaction, user);
         }
     }
