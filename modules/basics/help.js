@@ -12,13 +12,13 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 					key: "command",
 					prompt: "Command to get help for.",
 					type: "command",
-					default: "all"
-				}
-			]
+					default: "all",
+				},
+			],
 		});
 	}
 
-	async task({ client, args, message, channel, user }) {
+	task({ client, args, message, channel, user }) {
 		if (args.command === "all") {
 			let fieldPaginator = global.utils.fieldPaginator;
 			let commands = client.registry.commands.array().map(command => {
@@ -30,10 +30,8 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 		}
 		let commandData = getCommandData(args.command, client);
 		let fields = [];
-		if (commandData.arguments.length > 0)
-			fields.push({ name: "Arguments", value: commandData.arguments });
-		if (commandData.userperms.length > 0)
-			fields.push({ name: "Required User Permissions", value: commandData.userperms });
+		if (commandData.arguments.length > 0) fields.push({ name: "Arguments", value: commandData.arguments });
+		if (commandData.userperms.length > 0) fields.push({ name: "Required User Permissions", value: commandData.userperms });
 		return message.channel.send({ embed: { title: commandData.name, description: commandData.description, fields: fields } });
 	}
 };
@@ -54,7 +52,7 @@ function getCommandData(command, client) {
 			if (arg.oneOf && arg.oneOf.length < 4) argName = arg.oneOf.join("/");
 			return `${arg.default ? `[${argName}]` : `<${argName}>`}`;
 		});
-		commandName += " " + argKeys.join(" ");
+		commandName += ` ${argKeys.join(" ")}`;
 		arguments = command.argsCollector.args.map(arg => `**${toTitleCase(arg.key)}** - ${arg.prompt} ${arg.default ? `(Default: ${arg.default})` : ""}`).join("\n");
 	}
 	let userperms = [];
@@ -65,20 +63,18 @@ function getCommandData(command, client) {
 		name: commandName,
 		arguments: arguments,
 		userperms: userperms,
-		description: command.description
+		description: command.description,
 	};
 }
 
 function toTitleCase(str) {
 	return str.replace(
 		/\w\S*/g,
-		function (txt) {
-			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-		}
+		txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
 	);
 }
 
 function chunk(a, l) {
-	if (a.length == 0) return [];
+	if (a.length === 0) return [];
 	else return [a.slice(0, l)].concat(chunk(a.slice(l), l));
 }

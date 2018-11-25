@@ -1,12 +1,11 @@
-const got = require("got");
-const { RichEmbed } = require("discord.js");
+const got = require("got"), { RichEmbed } = require("discord.js");
 module.exports = class ReactionLog extends global.utils.baseService {
     constructor(client) {
-        super(client, {
-            name: "Reaction Log Service",
-            description: "Logs reactions added to messages.",
-            enabled: true
-        });
+      super(client, {
+        name: "Reaction Log Service",
+        description: "Logs reactions added to messages.",
+        enabled: true,
+      });
     }
 
     async onMessageReactionAdd(ctx) {

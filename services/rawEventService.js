@@ -1,14 +1,14 @@
 const { MessageReaction, ReactionEmoji, Emoji } = require("discord.js");
 module.exports = class RawEvent extends global.utils.baseService {
-    constructor(client) {
-        super(client, {
-            name: "Raw Events Service",
-            description: "Handles undocumented raw events and parses them into documented ones.",
-            enabled: true
-        });
-    }
-
-    async parseRawReactionEvent(ctx) {
+	constructor(client) {
+		super(client, {
+			name: "Raw Events Service",
+			description: "Handles undocumented raw events and parses them into documented ones.",
+			enabled: true,
+		});
+	}
+  
+	async parseRawReactionEvent(ctx) {
         const user = this.client.users.get(ctx.data.userId);
         const channel = this.client.channels.get(ctx.data.channelId) || await user.createDM();
         const guild = this.client.guilds.get(ctx.data.guildId);
@@ -26,10 +26,9 @@ module.exports = class RawEvent extends global.utils.baseService {
         }
     }
 
-    onRaw(ctx) {
-        if (!ctx.type) return;
-        if (["messageReactionAdd", "messageReactionRemove"].includes(ctx.type)) {
-            return this.parseRawReactionEvent(ctx);
-        }
-    }
+	onRaw(ctx) {
+		if (!ctx.type) return null;
+		if (["messageReactionAdd", "messageReactionRemove"].includes(ctx.type)) return this.parseRawReactionEvent(ctx);
+		return null;
+	}
 };
