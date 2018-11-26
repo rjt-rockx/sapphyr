@@ -13,21 +13,21 @@ module.exports = class CashCommand extends global.utils.baseCommand {
 					key: "user",
 					prompt: "User to get the balance of",
 					type: "user",
-					default: "self",
-				},
-			],
+					default: "self"
+				}
+			]
 		});
 	}
 
 	async task(ctx) {
-		if (!ctx.nadekoConnector) return await ctx.send("NadekoConnector configuration not set.");
-		let botInfo = await ctx.nadekoConnector.getBotInfo();
-		if (typeof botInfo.bot.currency.sign === "undefined") return await ctx.send("Unable to parse NadekoConnector information.");
-		let targetUser = ctx.args.user === "self" ? ctx.message.author : ctx.args.user,
+		if (!ctx.nadekoConnector) return ctx.send("NadekoConnector configuration not set.");
+		const botInfo = await ctx.nadekoConnector.getBotInfo();
+		if (typeof botInfo.bot.currency.sign === "undefined") return ctx.send("Unable to parse NadekoConnector information.");
+		const targetUser = ctx.args.user === "self" ? ctx.message.author : ctx.args.user,
 			currency = await ctx.nadekoConnector.getCurrency(targetUser.id),
 			embed = new RichEmbed()
 				.setColor("#7959ff")
 				.setDescription(`**${targetUser.tag}** has ${currency.currency} ${botInfo.bot.currency.sign}`);
-		return await ctx.send(embed);
+		return ctx.send(embed);
 	}
 };

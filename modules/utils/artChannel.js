@@ -4,7 +4,7 @@ const reactionMap = {
 	likedislike: ["👍", "👎"],
 	upvote: ["🔺"],
 	downvote: ["🔻"],
-	upvotedownvote: ["🔺", "🔻"],
+	upvotedownvote: ["🔺", "🔻"]
 };
 
 module.exports = class ArtChannelCommand extends global.utils.baseCommand {
@@ -21,21 +21,21 @@ module.exports = class ArtChannelCommand extends global.utils.baseCommand {
 					key: "enabled",
 					prompt: "Whether to enable or disable artchannel.",
 					type: "string",
-					oneOf: ["enable", "disable"],
+					oneOf: ["enable", "disable"]
 				},
 				{
 					key: "channel",
 					prompt: "Channel to react in.",
-					type: "channel",
+					type: "channel"
 				},
 				{
 					key: "reactionType",
 					prompt: "One of the folowing:\nLike => 👍\nDislike =>👎\nLikeDislike => 👍,👎\nUpvote => 🔺\nDownvote => 🔻\nUpvoteDownvote => 🔺,🔻",
 					type: "string",
 					oneOf: ["like", "likedislike", "dislike", "upvote", "downvote", "upvotedownvote"],
-					default: "upvote",
-				},
-			],
+					default: "upvote"
+				}
+			]
 		});
 	}
 
@@ -47,7 +47,7 @@ module.exports = class ArtChannelCommand extends global.utils.baseCommand {
 			if (artchannels.map(channel => channel.id).includes(ctx.args.channel.id)) artchannels = artchannels.filter(channel => channel.id !== ctx.args.channel.id);
 			artchannels.push({
 				id: ctx.args.channel.id,
-				reactions: typeof reactionMap[ctx.args.reactionType.toLowerCase()] === "undefined" ? reactionMap.upvote : reactionMap[ctx.args.reactionType.toLowerCase()],
+				reactions: typeof reactionMap[ctx.args.reactionType.toLowerCase()] === "undefined" ? reactionMap.upvote : reactionMap[ctx.args.reactionType.toLowerCase()]
 			});
 		} else if (ctx.args.enabled === "disable") { artchannels = artchannels.filter(channel => channel.id !== ctx.args.channel.id); }
 		await ctx.globalDb.set("artchannels", artchannels);

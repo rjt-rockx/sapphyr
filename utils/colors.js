@@ -14,6 +14,6 @@ module.exports = {
 		purple: "#593695",
 		blurple: "#7289DA",
 		darkgrey: "#2C2F33",
-		darkergrey: "#23272A",
-	},
+		darkergrey: "#23272A"
+	}
 };

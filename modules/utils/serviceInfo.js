@@ -11,26 +11,26 @@ module.exports = class EnableServiceCommand extends global.utils.baseCommand {
 				{
 					key: "id",
 					prompt: "ID of the service",
-					type: "string",
-				},
-			],
+					type: "string"
+				}
+			]
 		});
 	}
 
 	task(ctx) {
-		let serviceList = global.services.listServices().map(service => service.id);
-		let index = serviceList.map(serviceId => serviceId.toLowerCase()).indexOf(ctx.args.id.toLowerCase());
+		const serviceList = global.services.listServices().map(service => service.id);
+		const index = serviceList.map(serviceId => serviceId.toLowerCase()).indexOf(ctx.args.id.toLowerCase());
 		if (index < 0) return ctx.send("Service not found.");
-		let serviceInfo = global.services.getServiceInfo(serviceList[index]);
+		const serviceInfo = global.services.getServiceInfo(serviceList[index]);
 		return ctx.embed({
 			title: serviceInfo.name,
 			description: serviceInfo.description,
 			fields: [
 				{
 					name: "Enabled",
-					value: serviceInfo.enabled ? "True" : "False",
-				},
-			],
+					value: serviceInfo.enabled ? "True" : "False"
+				}
+			]
 		});
 	}
 };

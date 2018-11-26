@@ -12,27 +12,27 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 				{
 					key: "id",
 					prompt: "The ID of the message to grab.",
-					type: "string",
+					type: "string"
 				},
 				{
 					key: "difficulty",
 					prompt: "The difficulty of the challenge.",
 					type: "string",
-					oneOf: ["easy", "medium", "hard"],
-				},
-			],
+					oneOf: ["easy", "medium", "hard"]
+				}
+			]
 		});
 	}
 	async task(ctx) {
-		let botInfo = await ctx.nadekoConnector.getBotInfo(),
+		const botInfo = await ctx.nadekoConnector.getBotInfo(),
 			noApprover = new RichEmbed()
 				.setTitle("Missing Approver")
 				.setColor("#7959ff")
 				.setDescription("You need to have role: `Challenge Approver` to do this."),
 			role = ctx.message.guild.roles.find(rolee => rolee.name === "Challenge Approver");
-		if (!ctx.message.member.roles.has(role.id)) return await ctx.send(noApprover);
-		if (!ctx.args.id) return null;
-		let appTch = ctx.client.channels.get("455252710732595211"),
+		if (!ctx.message.member.roles.has(role.id)) return ctx.send(noApprover);
+		if (!ctx.args.id) return;
+		const appTch = ctx.client.channels.get("455252710732595211"),
 			message = await appTch.fetchMessage(ctx.args.id),
 			rewardAmount = await ctx.db.get(`challenges/${ctx.args.difficulty}`),
 			approved = new RichEmbed()
@@ -56,7 +56,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		await message.delete();
 		await message.author.send(approved2);
 		await ctx.client.channels.get("507667784285552640").send(approved);
-		let reason = `[Sapphyr Challenges] ${ctx.message.author} approved ${ctx.args.id} with amount: ${rewardAmount}${botInfo.bot.currency.sign}`;
-		return await ctx.nadekoConnector.addCurrency(message.author.id, rewardAmount, reason);
+		const reason = `[Sapphyr Challenges] ${ctx.message.author} approved ${ctx.args.id} with amount: ${rewardAmount}${botInfo.bot.currency.sign}`;
+		return ctx.nadekoConnector.addCurrency(message.author.id, rewardAmount, reason);
 	}
 };

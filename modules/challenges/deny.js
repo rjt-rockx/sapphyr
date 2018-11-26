@@ -12,28 +12,29 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 				{
 					key: "id",
 					prompt: "ID of the message to grab.",
-					type: "string",
-				},
-			],
+					type: "string"
+				}
+			]
 		});
 	}
 	async task(ctx) {
-		let noApprover = new RichEmbed()
+		const noApprover = new RichEmbed()
 				.setTitle("Missing Approver")
 				.setColor("#7959ff")
 				.setDescription("You need to have role: `Challenge Approver` to do this."),
 			role = ctx.message.guild.roles.find("name", "Challenge Approver");
-		if (!ctx.message.member.roles.has(role.id)) return await ctx.send(noApprover);
-		if (!ctx.args.id) return null;
-		let appTch = ctx.client.channels.get("455252710732595211");
-		let message = await appTch.fetchMessage(ctx.args.id),
+		if (!ctx.message.member.roles.has(role.id))
+			return ctx.send(noApprover);
+		if (!ctx.args.id) return;
+		const appTch = ctx.client.channels.get("455252710732595211");
+		const message = await appTch.fetchMessage(ctx.args.id),
 			embed = new RichEmbed()
 				.setTitle("Denied.")
 				.setColor("#7959ff")
 				.setDescription("Your challenge submission has been denied.");
 		await message.delete();
 		await message.author.send(embed);
-		let success = new RichEmbed()
+		const success = new RichEmbed()
 			.setTitle("Success.")
 			.setDescription("Challenge Denied")
 			.setColor("#7959ff")
@@ -42,6 +43,6 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 			.addField("Challenge:", message.content)
 			.addField("Money Rewarded:", "False")
 			.setTimestamp();
-		return await ctx.send(success);
+		return ctx.send(success);
 	}
 };

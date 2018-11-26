@@ -11,14 +11,14 @@ module.exports = class FakeBanCommand extends global.utils.baseCommand {
 				{
 					key: "userToFakeban",
 					prompt: "Who to fake ban?",
-					type: "user",
+					type: "user"
 				},
 				{
 					key: "reason",
 					prompt: "Reason for the fake ban.",
-					type: "string",
-				},
-			],
+					type: "string"
+				}
+			]
 		});
 	}
 
@@ -31,26 +31,26 @@ module.exports = class FakeBanCommand extends global.utils.baseCommand {
 				{
 					name: "Reason",
 					value: ctx.args.reason,
-					inline: true,
+					inline: true
 				},
 				{
 					name: "Moderator",
 					value: ctx.user.tag,
-					inline: true,
-				},
-			],
+					inline: true
+				}
+			]
 		});
 		await ctx.args.userToFakeban.send({
 			embed: {
 				title: `You were banned by ${ctx.user.tag} in ${ctx.guild.name}!`,
 				fields: [{
 					name: "Reason",
-					value: ctx.args.reason,
+					value: ctx.args.reason
 				}],
 				footer: {
-					text: "This is a fake ban, please don't take it seriously :b",
-				},
-			},
+					text: "This is a fake ban, please don't take it seriously :b"
+				}
+			}
 		});
 	}
 };

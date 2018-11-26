@@ -12,16 +12,16 @@ module.exports = class SetRolePriceCommand extends global.utils.baseCommand {
 			args: [{
 				key: "price",
 				prompt: "What do you want the price of the roles to be?",
-				type: "integer",
-			}],
+				type: "integer"
+			}]
 		});
 	}
 	async task(ctx) {
 		await ctx.db.set("roleprice", ctx.args.price);
-		let botInfo = ctx.nadekoConnector.getBotInfo(),
+		const botInfo = ctx.nadekoConnector.getBotInfo(),
 			embed = new RichEmbed()
 				.setTitle("Success")
 				.setDescription(`Successfully set the role price to ${ctx.args.price}${botInfo.bot.currency.sign}`);
-		return await ctx.send(embed);
+		return ctx.send(embed);
 	}
 };

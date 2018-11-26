@@ -12,21 +12,21 @@ module.exports = class SetChallengeRewardCommand extends global.utils.baseComman
 					key: "difficulty",
 					prompt: "Easy/Medium/Hard",
 					type: "string",
-					oneOf: ["easy", "medium", "hard"],
+					oneOf: ["easy", "medium", "hard"]
 				},
 				{
 					key: "amount",
 					prompt: "Amount to reward to challenge difficulty.",
-					type: "integer",
-				},
-			],
+					type: "integer"
+				}
+			]
 		});
 	}
 	async task(ctx) {
-		let difrewards = {
+		const difrewards = {
 			easy: 50,
 			medium: 100,
-			hard: 150,
+			hard: 150
 		};
 		try {
 			let document = await ctx.db.get("difrewards");
@@ -37,13 +37,13 @@ module.exports = class SetChallengeRewardCommand extends global.utils.baseComman
 					value: ctx.args.amount,
 					writable: true,
 					configurable: true,
-					enumerable: true,
+					enumerable: true
 				});
 				await ctx.db.set("difrewards", difrewards);
 			}
 		} catch (e) {
 			console.error(e);
 		}
-		return await ctx.send("Success!");
+		return ctx.send("Success!");
 	}
 };

@@ -12,18 +12,18 @@ module.exports = class SetRoleCommand extends global.utils.baseCommand {
 			args: [{
 				key: "role",
 				prompt: "What role do you want to add to the shop?",
-				type: "string",
-			}],
+				type: "string"
+			}]
 		});
 	}
 	async task(ctx) {
-		let roles = await ctx.db.get("roles"),
-			role = ctx.message.guild.roles.find(rolee => rolee.name === ctx.args.role).name;
+		let roles = await ctx.db.get("roles");
+		const role = ctx.message.guild.roles.find(rolee => rolee.name === ctx.args.role).name;
 		roles.push(role);
 		roles = ctx.db.set("roles", roles);
-		let successEmbed = new RichEmbed()
+		const successEmbed = new RichEmbed()
 			.setTitle("Success")
 			.setDescription(`Successfully added role \`${role}\` to the shop.`);
-		return await ctx.send(successEmbed);
+		return ctx.send(successEmbed);
 	}
 };

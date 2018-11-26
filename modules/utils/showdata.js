@@ -12,9 +12,9 @@ module.exports = class ShowDataCommand extends global.utils.baseCommand {
 					key: "key",
 					prompt: "Key that the data was stored under",
 					type: "string",
-					default: "data",
-				},
-			],
+					default: "data"
+				}
+			]
 		});
 	}
 

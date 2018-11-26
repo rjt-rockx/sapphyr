@@ -15,9 +15,9 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 				{
 					key: "script",
 					prompt: "What code would you like to evaluate?",
-					type: "string",
-				},
-			],
+					type: "string"
+				}
+			]
 		});
 		this.lastResult = null;
 	}
@@ -77,8 +77,10 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 	getSensitivePatterns(ctx) {
 		if (!this._sensitivePattern || !Array.isArray(this._sensitivePattern)) {
 			this._sensitivePattern = [];
-			if (ctx.client.token) this._sensitivePattern.push(new RegExp(escapeRegex(ctx.client.token), "gi"));
-			if (ctx.nadekoConnector) this._sensitivePattern.push(new RegExp(escapeRegex(ctx.nadekoConnector.password), "gi"));
+			if (ctx.client.token)
+				this._sensitivePattern.push(new RegExp(escapeRegex(ctx.client.token), "gi"));
+			if (ctx.nadekoConnector)
+				this._sensitivePattern.push(new RegExp(escapeRegex(ctx.nadekoConnector.password), "gi"));
 		}
 		return this._sensitivePattern;
 	}

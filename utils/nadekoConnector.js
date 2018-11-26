@@ -1,5 +1,6 @@
-const got = require("got"), jwt = require("jsonwebtoken");
-const jsonbs = require("json-bigint")({ storeAsString: true });
+const got = require("got"),
+	jwt = require("jsonwebtoken"),
+	jsonbs = require("json-bigint")({ storeAsString: true });
 
 class NadekoConnectorClient {
 	/**
@@ -19,8 +20,8 @@ class NadekoConnectorClient {
 	 * @returns {Object} Parsed info returned by the endpoint.
 	 */
 	async getData(endpoint, data) {
-		let token = jwt.sign(data, this.password);
-		let { body } = await got(`${this.address}/${endpoint}/${token}`);
+		const token = jwt.sign(data, this.password);
+		const { body } = await got(`${this.address}/${endpoint}/${token}`);
 		return jsonbs.parse(body);
 	}
 
@@ -29,7 +30,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Info about the bot.
 	 */
 	async getBotInfo() {
-		return await this.getData("getBotInfo", {});
+		return this.getData("getBotInfo", {});
 	}
 
 	/**
@@ -37,7 +38,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Array of table names.
 	 */
 	async getTables() {
-		return await this.getData("getTables", {});
+		return this.getData("getTables", {});
 	}
 
 	/**
@@ -46,7 +47,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Array of field names.
 	 */
 	async getFields(table) {
-		return await this.getData("getFields", { table: table });
+		return this.getData("getFields", { table });
 	}
 
 	/**
@@ -55,7 +56,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Result of the command, array of rows if multiple rows were affected or a single JSON object if a single row was affected.
 	 */
 	async execSql(command) {
-		return await this.getData("execSql", { command: command });
+		return this.getData("execSql", { command });
 	}
 
 	/**
@@ -64,7 +65,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Balance info about the specified user.
 	 */
 	async getCurrency(userId) {
-		return await this.getData("getCurrency", { userId: userId });
+		return this.getData("getCurrency", { userId });
 	}
 
 	/**
@@ -74,7 +75,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Balance info about the specified user.
 	 */
 	async setCurrency(userId, currency) {
-		return await this.getData("setCurrency", { userId: userId, currency: currency });
+		return this.getData("setCurrency", { userId, currency });
 	}
 
 	/**
@@ -85,7 +86,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Balance info about the specified user.
 	 */
 	async addCurrency(userId, currency, reason) {
-		return await this.getData("addCurrency", { userId: userId, currency: currency, reason: reason });
+		return this.getData("addCurrency", { userId, currency, reason });
 	}
 
 	/**
@@ -96,7 +97,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Balance info about the specified user.
 	 */
 	async subtractCurrency(userId, currency, reason) {
-		return await this.getData("subtractCurrency", { userId: userId, currency: currency, reason: reason });
+		return this.getData("subtractCurrency", { userId, currency, reason });
 	}
 
 	/**
@@ -107,7 +108,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Transaction info.
 	 */
 	async createTransaction(userId, currency, reason) {
-		return await this.getData("createTransaction", { userId: userId, currency: currency, reason: reason });
+		return this.getData("createTransaction", { userId, currency, reason });
 	}
 
 	/**
@@ -118,7 +119,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Transactions.
 	 */
 	async getTransactions(userId, startPosition, items) {
-		return await this.getData("getTransactions", { userId: userId, startPosition: startPosition, items: items });
+		return this.getData("getTransactions", { userId, startPosition, items });
 	}
 
 	/**
@@ -128,7 +129,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Rank info.
 	 */
 	async getGuildRank(userId, guildId) {
-		return await this.getData("getGuildRank", { userId: userId, guildId: guildId });
+		return this.getData("getGuildRank", { userId, guildId });
 	}
 
 	/**
@@ -138,7 +139,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Information about the user's XP.
 	 */
 	async getGuildXp(userId, guildId) {
-		return await this.getData("getGuildXp", { userId: userId, guildId: guildId });
+		return this.getData("getGuildXp", { userId, guildId });
 	}
 
 	/**
@@ -150,7 +151,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Information about the user's guild XP.
 	 */
 	async setGuildXp(userId, guildId, xp, awardedXp) {
-		return await this.getData("setGuildXp", { userId: userId, guildId: guildId, xp: xp, awardedXp: awardedXp });
+		return this.getData("setGuildXp", { userId, guildId, xp, awardedXp });
 	}
 
 	/**
@@ -161,7 +162,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Information about the user's guild XP.
 	 */
 	async addGuildXp(userId, guildId, xp) {
-		return await this.getData("addGuildXp", { userId: userId, guildId: guildId, xp: xp });
+		return this.getData("addGuildXp", { userId, guildId, xp });
 	}
 
 	/**
@@ -172,7 +173,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Information about the user's guild XP.
 	 */
 	async subtractGuildXp(userId, guildId, xp) {
-		return await this.getData("subtractGuildXp", { userId: userId, guildId: guildId, xp: xp });
+		return this.getData("subtractGuildXp", { userId, guildId, xp });
 	}
 
 	/**
@@ -183,7 +184,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Information about the user's guild XP.
 	 */
 	async awardGuildXp(userId, guildId, xp) {
-		return await this.getData("awardGuildXp", { userId: userId, guildId: guildId, xp: xp });
+		return this.getData("awardGuildXp", { userId, guildId, xp });
 	}
 
 	/**
@@ -194,7 +195,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Leaderboard page.
 	 */
 	async getGuildXpLeaderboard(guildId, startPosition, items) {
-		return await this.getData("getGuildXpLeaderboard", { guildId: guildId, startPosition: startPosition, items: items });
+		return this.getData("getGuildXpLeaderboard", { guildId, startPosition, items });
 	}
 
 	/**
@@ -205,7 +206,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Role rewards page.
 	 */
 	async getGuildXpRoleRewards(guildId, startPosition, items) {
-		return await this.getData("getGuildXpRoleRewards", { guildId: guildId, startPosition: startPosition, items: items });
+		return this.getData("getGuildXpRoleRewards", { guildId, startPosition, items });
 	}
 
 	/**
@@ -216,7 +217,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Currency rewards page.
 	 */
 	async getGuildXpCurrencyRewards(guildId, startPosition, items) {
-		return await this.getData("getGuildXpCurrencyRewards", { guildId: guildId, startPosition: startPosition, items: items });
+		return this.getData("getGuildXpCurrencyRewards", { guildId, startPosition, items });
 	}
 
 	/**
@@ -225,7 +226,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Rank info.
 	 */
 	async getGlobalRank(userId) {
-		return await this.getData("getGlobalRank", { userId: userId });
+		return this.getData("getGlobalRank", { userId });
 	}
 
 	/**
@@ -234,7 +235,7 @@ class NadekoConnectorClient {
  	* @returns {Object} Information about the user's global XP.
  	*/
 	async getGlobalXp(userId) {
-		return await this.getData("getGlobalXp", { userId: userId });
+		return this.getData("getGlobalXp", { userId });
 	}
 
 	/**
@@ -244,7 +245,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Leaderboard page.
 	 */
 	async getGlobalXpLeaderboard(startPosition, items) {
-		return await this.getData("getGlobalXpLeaderboard", { startPosition: startPosition, items: items });
+		return this.getData("getGlobalXpLeaderboard", { startPosition, items });
 	}
 
 	/**
@@ -254,7 +255,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Leaderboard page.
 	 */
 	async getClubLeaderboard(startPosition, items) {
-		return await this.getData("getClubLeaderboard", { startPosition: startPosition, items: items });
+		return this.getData("getClubLeaderboard", { startPosition, items });
 	}
 
 	/**
@@ -263,7 +264,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Information about the club.
 	 */
 	async getClubInfo(name) {
-		return await this.getData("getClubInfo", { name: name });
+		return this.getData("getClubInfo", { name });
 	}
 
 	/**
@@ -272,7 +273,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Information about the club.
 	 */
 	async getClubInfoByUser(userId) {
-		return await this.getData("getClubInfoByUser", { userId: userId });
+		return this.getData("getClubInfoByUser", { userId });
 	}
 
 	/**
@@ -283,7 +284,7 @@ class NadekoConnectorClient {
 	 * @returns {Object} Members page.
 	 */
 	async getClubMembers(name, startPosition, items) {
-		return await this.getData("getClubMembers", { name: name, startPosition: startPosition, items: items });
+		return this.getData("getClubMembers", { name, startPosition, items });
 	}
 }
 

@@ -1,21 +1,21 @@
 const { resolve } = require("path"),
-	{ owners, mongoUrl, token } = require("./localdata/config.js"),
+	{ owners, mongoUrl, token, prefix } = require("./localdata/config.js"),
 	{ Client: commandoClient, FriendlyError } = require("discord.js-commando"),
 	serviceHandler = require("./services"),
 	utils = require("./utils"),
 	log = require("fancy-log");
 
-let client = new commandoClient({
+const client = new commandoClient({
 	owner: owners,
 	commandEditableDuration: 0,
 	nonCommandEditable: false,
 	unknownCommandResponse: false,
-	commandPrefix: "./",
+	commandPrefix: prefix
 });
 
 try {
 	client
-		.once("ready", async() => {
+		.once("ready", async () => {
 			log(`Logged in as ${client.user.tag} (${client.user.id})`);
 			await client.user.setActivity("Logged in!");
 
@@ -36,7 +36,7 @@ try {
 			log("Argument Types initialized.");
 
 			// Register modules
-			let { initializeModules } = require("./modules");
+			const { initializeModules } = require("./modules");
 			await initializeModules(client);
 			log("Modules initialized.");
 
@@ -47,7 +47,8 @@ try {
 		.on("commandError", (command, err) => {
 			if (err instanceof FriendlyError) return;
 			log.error(`Error in command ${command.groupID}:${command.name}`, err);
-		});
+		})
+		.on("error", log.error);
 
 	client.login(token);
 } catch (err) {

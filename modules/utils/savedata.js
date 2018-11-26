@@ -12,14 +12,14 @@ module.exports = class SaveDataCommand extends global.utils.baseCommand {
 					key: "key",
 					prompt: "Key to store the data under",
 					type: "string",
-					default: "data",
+					default: "data"
 				},
 				{
 					key: "value",
 					prompt: "Value to store",
-					type: "string",
-				},
-			],
+					type: "string"
+				}
+			]
 		});
 	}
 

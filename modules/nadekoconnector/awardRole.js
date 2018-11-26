@@ -13,55 +13,55 @@ module.exports = class AwardRoleCommand extends global.utils.baseCommand {
 				{
 					key: "role",
 					prompt: "The role to award.",
-					type: "string",
+					type: "string"
 				},
 				{
 					key: "amount",
 					prompt: "amount of currency to award.",
-					type: "integer",
+					type: "integer"
 				},
 				{
 					key: "reason",
 					prompt: "reason to award the currency.",
-					type: "string",
-				},
-			],
+					type: "string"
+				}
+			]
 		});
 	}
 	async task(ctx) {
-		let botInfo = await ctx.nadekoConnector.getBotInfo();
+		const botInfo = await ctx.nadekoConnector.getBotInfo();
 
-		let missingroles = new RichEmbed()
+		const missingroles = new RichEmbed()
 			.setTitle("Missing role")
 			.setColor("#7959ff")
 			.setDescription("Missing role to award, the role is case sensitive.");
-		let missingamount = new RichEmbed()
+		const missingamount = new RichEmbed()
 			.setTitle("Missing amount")
 			.setColor("#7959ff")
 			.setDescription("Missing amount to award.");
-		let missingreason = new RichEmbed()
+		const missingreason = new RichEmbed()
 			.setTitle("Missing reason")
 			.setColor("#7959ff")
 			.setDescription("Missing reason to award");
-		let nadekoError = new RichEmbed()
+		const nadekoError = new RichEmbed()
 			.setTitle("Error with NadekoConnector");
-		let successEmbed = new RichEmbed().setTitle("Success").setColor("#7959ff")
+		const successEmbed = new RichEmbed().setTitle("Success").setColor("#7959ff")
 			.setDescription(`Successfully awarded ${ctx.args.amount} ${botInfo.bot.currency.sign} to role ${ctx.args.role}`);
 
-		if (!ctx.message.guild.roles.find(role => role.name === ctx.args.role)) return await ctx.send(missingroles);
-		if (!ctx.args.amount) return await ctx.send(missingamount);
-		if (!ctx.args.reason) return await ctx.send(missingreason);
+		if (!ctx.message.guild.roles.find(role => role.name === ctx.args.role)) return ctx.send(missingroles);
+		if (!ctx.args.amount) return ctx.send(missingamount);
+		if (!ctx.args.reason) return ctx.send(missingreason);
 
-		let role = ctx.message.guild.roles.find(r => r.name === ctx.args.role);
+		const role = ctx.message.guild.roles.find(r => r.name === ctx.args.role);
 		ctx.args.reason = `[Sapphyr] Awarded by ${ctx.user} | ${ctx.args.reason}`;
 
 		role.members.map(async member => {
-			let embed = new RichEmbed();
+			const embed = new RichEmbed();
 			let response;
 
 			if (ctx.args.amount < 0) {
 				response = await ctx.nadekoConnector.subtractCurrency(member.id, ctx.args.amount, ctx.args.reason);
-				if (response.error) return await ctx.embed(nadekoError.setDescription(response.message));
+				if (response.error) return ctx.embed(nadekoError.setDescription(response.message));
 
 				log(`Currency subtracted from role ${ctx.args.role} with reason ${ctx.args.reason}\n Currency added: ${ctx.args.amount}`);
 				return embed.setTitle("Currency Removed")
@@ -70,7 +70,7 @@ module.exports = class AwardRoleCommand extends global.utils.baseCommand {
 			}
 			if (ctx.args.amount > 0) {
 				response = await ctx.nadekoConnector.addCurrency(member.id, ctx.args.amount, ctx.args.reason);
-				if (response.error) return await ctx.embed(nadekoError.setDescription(response.message));
+				if (response.error) return ctx.embed(nadekoError.setDescription(response.message));
 
 				log(`Currency added to role ${ctx.args.role} with reason ${ctx.args.reason}\n Currency added: ${ctx.args.amount}`);
 				return embed.setTitle("Currency Added")

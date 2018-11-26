@@ -50,8 +50,8 @@ class dataHandler {
      */
 	async getGuilds() {
 		this.checkInitialized();
-		let guilds = await this.db.collection("guilds");
-		return await guilds.find().toArray();
+		const guilds = await this.db.collection("guilds");
+		return guilds.find().toArray();
 	}
 
 	/**
@@ -61,8 +61,8 @@ class dataHandler {
      */
 	async getGuild(guild) {
 		this.checkInitialized();
-		let guilds = await this.db.collection("guilds");
-		let result = await guilds.find({ id: guild.id }).toArray();
+		const guilds = await this.db.collection("guilds");
+		const result = await guilds.find({ id: guild.id }).toArray();
 		return Array.isArray(result) && result.length > 0 ? result[0] : result;
 	}
 
@@ -73,9 +73,9 @@ class dataHandler {
      */
 	async getOrAddGuild(guild) {
 		this.checkInitialized();
-		let guildData = await this.getGuild(guild);
+		const guildData = await this.getGuild(guild);
 		if (Array.isArray(guildData) && guildData.length < 1) await this.addGuild(guild);
-		return await this.getGuild(guild);
+		return this.getGuild(guild);
 	}
 
 	/**
@@ -85,14 +85,14 @@ class dataHandler {
      */
 	async addGuild(guild) {
 		this.checkInitialized();
-		let guilds = await this.db.collection("guilds");
-		return await guilds.insertOne({
+		const guilds = await this.db.collection("guilds");
+		return guilds.insertOne({
 			id: guild.id,
 			prefix: "_",
 			permissions: [],
 			linkdetection: { enabled: false },
 			nadekoconnector: { enabled: false },
-			beta: false,
+			beta: false
 		});
 	}
 
@@ -103,9 +103,9 @@ class dataHandler {
      */
 	async removeGuild(guild) {
 		this.checkInitialized();
-		let guilds = await this.db.collection("guilds");
-		if (typeof guild.id === "undefined") return null;
-		return await guilds.deleteMany({ id: guild.id });
+		const guilds = await this.db.collection("guilds");
+		if (typeof guild.id === "undefined") return;
+		return guilds.deleteMany({ id: guild.id });
 	}
 
 	/**
@@ -114,8 +114,8 @@ class dataHandler {
      */
 	async removeAllGuilds() {
 		this.checkInitialized();
-		let guilds = await this.db.collection("guilds");
-		return await guilds.deleteMany({});
+		const guilds = await this.db.collection("guilds");
+		return guilds.deleteMany({});
 	}
 
 	/**
@@ -127,10 +127,10 @@ class dataHandler {
      */
 	async editGuild(guild, settings = {}, removeSettings = false) {
 		this.checkInitialized();
-		let guilds = await this.db.collection("guilds");
-		if (typeof removeSettings !== "boolean") return null;
-		if (removeSettings) return await guilds.updateOne({ id: guild.id }, { $unset: settings });
-		return await guilds.updateOne({ id: guild.id }, { $set: settings });
+		const guilds = await this.db.collection("guilds");
+		if (typeof removeSettings !== "boolean") return;
+		if (removeSettings) return guilds.updateOne({ id: guild.id }, { $unset: settings });
+		return guilds.updateOne({ id: guild.id }, { $set: settings });
 	}
 
 
@@ -140,12 +140,12 @@ class dataHandler {
      */
 	async getOrCreateGlobal() {
 		this.checkInitialized();
-		let globalData = await this.db.collection("global");
+		const globalData = await this.db.collection("global");
 		let existingData = await globalData.find().toArray();
 		if (existingData.length < 1) {
 			await globalData.insertOne({
 				prefix: "_",
-				permissions: [],
+				permissions: []
 			});
 			existingData = await globalData.find().toArray();
 		}
@@ -161,10 +161,10 @@ class dataHandler {
 	async editGlobal(settings = {}, removeSettings = false) {
 		this.checkInitialized();
 		if (!this.globalInitialized) throw new Error("Global data has not been initialized. Please call initializeGlobal() first.");
-		let globalData = await this.db.collection("global");
-		if (typeof removeSettings !== "boolean") return null;
-		if (removeSettings) return await globalData.updateOne({}, { $unset: settings });
-		return await globalData.updateOne({}, { $set: settings });
+		const globalData = await this.db.collection("global");
+		if (typeof removeSettings !== "boolean") return;
+		if (removeSettings) return globalData.updateOne({}, { $unset: settings });
+		return globalData.updateOne({}, { $set: settings });
 	}
 }
 

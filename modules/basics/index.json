@@ -1,6 +1,6 @@
 {
-    "name": "Basics",
-    "id": "basics",
-    "guarded": true,
-    "description": "Essential commands required for Sapphyr."
+	"name": "Basics",
+	"id": "basics",
+	"guarded": true,
+	"description": "Essential commands required for Sapphyr."
 }

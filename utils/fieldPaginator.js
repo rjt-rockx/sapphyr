@@ -18,20 +18,20 @@ module.exports = class fieldPaginator {
 
 			this.collector.on("collect", reaction => {
 				switch (reaction.emoji.toString()) {
-					case this.back:
-						this.current--;
-						if (this.current < 0) this.current = this.total - 1;
-						reaction.remove(member);
-						break;
-					case this.next:
-						this.current++;
-						if (this.current > this.total - 1) this.current = 0;
-						reaction.remove(member);
-						break;
-					case this.stop:
-						this.collector.stop();
-						this.message.clearReactions();
-						break;
+				case this.back:
+					this.current--;
+					if (this.current < 0) this.current = this.total - 1;
+					reaction.remove(member);
+					break;
+				case this.next:
+					this.current++;
+					if (this.current > this.total - 1) this.current = 0;
+					reaction.remove(member);
+					break;
+				case this.stop:
+					this.collector.stop();
+					this.message.clearReactions();
+					break;
 				}
 				this.refresh();
 			});

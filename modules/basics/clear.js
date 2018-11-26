@@ -13,12 +13,12 @@ module.exports = class ClearCommand extends global.utils.baseCommand {
 				key: "messages",
 				prompt: "How many messages do you want to clear?",
 				type: "integer",
-				default: "50",
-			}],
+				default: "50"
+			}]
 		});
 	}
 	async task(ctx) {
-		let embed = new RichEmbed()
+		const embed = new RichEmbed()
 			.setDescription(`Successfully cleared **${ctx.args.messages}** messages.`);
 		await ctx.message.channel.bulkDelete(ctx.args.messages);
 		ctx.send(embed);

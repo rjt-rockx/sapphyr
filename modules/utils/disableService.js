@@ -11,15 +11,15 @@ module.exports = class DisableServiceCommand extends global.utils.baseCommand {
 				{
 					key: "id",
 					prompt: "ID of the service",
-					type: "string",
-				},
-			],
+					type: "string"
+				}
+			]
 		});
 	}
 
 	task(ctx) {
-		let serviceList = global.services.listServices().map(service => service.id);
-		let index = serviceList.map(serviceId => serviceId.toLowerCase()).indexOf(ctx.args.id.toLowerCase());
+		const serviceList = global.services.listServices().map(service => service.id);
+		const index = serviceList.map(serviceId => serviceId.toLowerCase()).indexOf(ctx.args.id.toLowerCase());
 		if (index < 0) return ctx.send("Service not found.");
 		global.services.disableService(serviceList[index]);
 		return ctx.send(`Successfully disabled ${serviceList[index]}`);

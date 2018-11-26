@@ -11,15 +11,15 @@ module.exports = class SayCommand extends global.utils.baseCommand {
 				{
 					key: "text",
 					prompt: "The text you want the bot to say.",
-					type: "string",
-				},
-			],
+					type: "string"
+				}
+			]
 		});
 	}
 
 	async task(ctx) {
 		if (ctx.args.text.length > 1000) return ctx.send("Please enter less than 1,000 characters while using this command");
 		await ctx.message.delete();
-		return await ctx.embed({ description: ctx.args.text });
+		return ctx.embed({ description: ctx.args.text });
 	}
 };

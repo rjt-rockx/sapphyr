@@ -1,6 +1,6 @@
 {
-    "name": "Fun",
-    "id": "fun",
-    "guarded": false,
-    "description": "Recreational commands."
+	"name": "Fun",
+	"id": "fun",
+	"guarded": false,
+	"description": "Recreational commands."
 }

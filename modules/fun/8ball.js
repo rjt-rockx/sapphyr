@@ -2,7 +2,7 @@ const choices = [
 	"Yes.", "No.", "Maybe.", "Studies agree.",
 	"Studies do not agree.", "Yup.", "Indeed.", "For sure.",
 	"Umm...no.", "Nope.", "Really, no, just no.", "No u.",
-	"Nah.",
+	"Nah."
 ];
 module.exports = class EightBallCommand extends global.utils.baseCommand {
 	constructor(client) {
@@ -17,16 +17,16 @@ module.exports = class EightBallCommand extends global.utils.baseCommand {
 				{
 					key: "question",
 					prompt: "Question to ask the magic 8-ball.",
-					type: "string",
-				},
-			],
+					type: "string"
+				}
+			]
 		});
 	}
 
 	async task(ctx) {
 		await ctx.embed({
 			title: ctx.args.question,
-			description: choices[Math.floor(Math.random() * choices.length)],
+			description: choices[Math.floor(Math.random() * choices.length)]
 		});
 	}
 };

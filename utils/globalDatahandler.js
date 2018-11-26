@@ -45,7 +45,7 @@ module.exports = class globalDatahandler {
 		}
 		delete data._id;
 		await this.datahandler.editGlobal(data);
-		return await this.reload();
+		return this.reload();
 	}
 
 	/**
@@ -56,13 +56,13 @@ module.exports = class globalDatahandler {
 	async remove(keyOrObject) {
 		let data = keyOrObject;
 		await this.reload();
-		if (typeof keyOrObject === "undefined") return null;
+		if (typeof keyOrObject === "undefined") return;
 		if (["string", "number"].includes(typeof keyOrObject)) {
 			data = {};
 			data[keyOrObject] = null;
 		}
 		delete data._id;
 		await this.datahandler.editGlobal(data, true);
-		return await this.reload();
+		return this.reload();
 	}
 };

@@ -1,6 +1,6 @@
 {
 	"name": "sapphyr",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"description": "A community oriented Discord bot",
 	"main": "main.js",
 	"scripts": {
@@ -22,5 +22,19 @@
 		"mongodb": "^3.1.10",
 		"then-fs": "^2.0.0",
 		"url-regex-local": "^1.0.1"
-	}
+	},
+	"devDependencies": {},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/rjt-rockx/sapphyr.git"
+	},
+	"keywords": [
+		"nodejs",
+		"discord",
+		"bot"
+	],
+	"bugs": {
+		"url": "https://github.com/rjt-rockx/sapphyr/issues"
+	},
+	"homepage": "https://github.com/rjt-rockx/sapphyr#readme"
 }

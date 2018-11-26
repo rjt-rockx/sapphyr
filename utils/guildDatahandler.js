@@ -25,7 +25,7 @@ module.exports = class guildDataHandler {
 	async get(key) {
 		await this.reload();
 		if (typeof key === "undefined") return this.guild;
-		if (key === "_id") return null;
+		if (key === "_id") return;
 		return this.guild[key];
 	}
 
@@ -38,16 +38,16 @@ module.exports = class guildDataHandler {
 	async set(keyOrObject, value) {
 		await this.reload();
 		let data = keyOrObject;
-		if (typeof keyOrObject === "undefined") return null;
+		if (typeof keyOrObject === "undefined") return;
 		if (["string", "number"].includes(typeof keyOrObject)) {
-			if (typeof value === "undefined") return null;
-			if (keyOrObject === "_id") return null;
+			if (typeof value === "undefined") return;
+			if (keyOrObject === "_id") return;
 			data = {};
 			data[keyOrObject] = value;
 		}
 		delete data._id;
 		await this.datahandler.editGuild(this.guild, data);
-		return await this.reload();
+		return this.reload();
 	}
 
 	/**
@@ -58,14 +58,14 @@ module.exports = class guildDataHandler {
 	async remove(keyOrObject) {
 		let data = keyOrObject;
 		await this.reload();
-		if (typeof keyOrObject === "undefined") return null;
+		if (typeof keyOrObject === "undefined") return;
 		if (["string", "number"].includes(typeof keyOrObject)) {
 			data = {};
 			data[keyOrObject] = null;
 		}
 		delete data._id;
 		await this.datahandler.editGuild(this.guild, data, true);
-		return await this.reload();
+		return this.reload();
 	}
 
 	/**
@@ -74,6 +74,6 @@ module.exports = class guildDataHandler {
      */
 	async delete() {
 		await this.reload();
-		return await this.datahandler.removeGuild(this.guild);
+		return this.datahandler.removeGuild(this.guild);
 	}
 };
