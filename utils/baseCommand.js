@@ -17,15 +17,13 @@ module.exports = class BaseCommand extends Command {
 			channel: message.channel,
 			user: message.author,
 			react: message.react,
-			dm: data => message.author.send(data),
+			dm: message.author.send,
 			dmEmbed: data => message.author.send({ embed: data }),
-			send: data => message.channel.send(data),
-			embed: data => message.channel.send({ embed: data }),
-			client: this.client
+			send: message.channel.send,
+			embed: data => message.channel.send({ embed: data })
 		};
 		if (message.guild)
 			context.guild = message.guild;
-
 		if (typeof this.client.datahandler === "undefined") {
 			this.client.datahandler = new datahandler(mongoUrl ? mongoUrl : undefined);
 			await this.client.datahandler.initialize();

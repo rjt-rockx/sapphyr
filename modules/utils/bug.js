@@ -26,7 +26,7 @@ module.exports = class BugReportCommand extends global.utils.baseCommand {
 			.addField("Description:", ctx.args.context)
 			.addField("Visual:", `URL: [Here](${url}) | Image:`)
 			.setImage(url);
-		await ctx.client.channels.get("477644168299151375").send({ embed });
+		await this.client.channels.get("477644168299151375").send({ embed });
 		ctx.embed({ description: "Success! Thank you." });
 	}
 };

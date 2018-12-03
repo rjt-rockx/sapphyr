@@ -19,14 +19,14 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 	}
 	async task(ctx) {
 		const noApprover = new RichEmbed()
-				.setTitle("Missing Approver")
-				.setColor("#7959ff")
-				.setDescription("You need to have role: `Challenge Approver` to do this."),
+			.setTitle("Missing Approver")
+			.setColor("#7959ff")
+			.setDescription("You need to have role: `Challenge Approver` to do this."),
 			role = ctx.message.guild.roles.find("name", "Challenge Approver");
 		if (!ctx.message.member.roles.has(role.id))
 			return ctx.send(noApprover);
 		if (!ctx.args.id) return;
-		const appTch = ctx.client.channels.get("455252710732595211");
+		const appTch = this.client.channels.get("455252710732595211");
 		const message = await appTch.fetchMessage(ctx.args.id),
 			embed = new RichEmbed()
 				.setTitle("Denied.")

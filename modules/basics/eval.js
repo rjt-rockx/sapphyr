@@ -77,8 +77,8 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 	getSensitivePatterns(ctx) {
 		if (!this._sensitivePattern || !Array.isArray(this._sensitivePattern)) {
 			this._sensitivePattern = [];
-			if (ctx.client.token)
-				this._sensitivePattern.push(new RegExp(escapeRegex(ctx.client.token), "gi"));
+			if (this.client.token)
+				this._sensitivePattern.push(new RegExp(escapeRegex(this.client.token), "gi"));
 			if (ctx.nadekoConnector)
 				this._sensitivePattern.push(new RegExp(escapeRegex(ctx.nadekoConnector.password), "gi"));
 		}

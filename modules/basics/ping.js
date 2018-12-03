@@ -11,6 +11,6 @@ module.exports = class PingCommand extends global.utils.baseCommand {
 
 	async task(ctx) {
 		const pingMsg = await ctx.send("Pinging ...");
-		await pingMsg.edit(`Message Ping: ${Math.round(pingMsg.createdTimestamp - ctx.message.createdTimestamp)}ms | Websocket Ping: ${Math.round(ctx.client.ping)}ms`);
+		await pingMsg.edit(`Message Ping: ${Math.round(pingMsg.createdTimestamp - ctx.message.createdTimestamp)}ms | Websocket Ping: ${Math.round(this.client.ping)}ms`);
 	}
 };
