@@ -12,7 +12,8 @@ module.exports = class globalDatahandler {
      * @returns Global data.
      */
 	async reload() {
-		return this.globalData = await this.datahandler.getOrCreateGlobal();
+		const { _id, ...data } = await this.datahandler.getOrCreateGlobal();
+		return this.globalData = data;
 	}
 
 	/**
@@ -22,7 +23,7 @@ module.exports = class globalDatahandler {
      */
 	async get(key) {
 		await this.reload();
-		if (typeof key === "undefined") return this.globalData;
+		if (!["string", "number"].includes(typeof key)) return this.globalData;
 		if (key === "_id") return;
 		return this.globalData[key];
 	}

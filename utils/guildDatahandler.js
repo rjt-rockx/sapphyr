@@ -14,7 +14,8 @@ module.exports = class guildDataHandler {
      * @returns Guild data.
      */
 	async reload() {
-		return this.guild = await this.datahandler.getOrAddGuild({ id: this.id });
+		const { _id, ...data } = await this.datahandler.getOrAddGuild({ id: this.id });
+		return this.guild = data;
 	}
 
 	/**
@@ -24,7 +25,7 @@ module.exports = class guildDataHandler {
      */
 	async get(key) {
 		await this.reload();
-		if (typeof key === "undefined") return this.guild;
+		if (!["string", "number"].includes(typeof key)) return this.guild;
 		if (key === "_id") return;
 		return this.guild[key];
 	}
