@@ -14,6 +14,7 @@ module.exports = class BaseCommand extends Command {
 			message, args, fromPattern,
 			msg: message,
 			arguments: args,
+			prefix: this.client.commandPrefix,
 			channel: message.channel,
 			user: message.author,
 			react: message.react,
