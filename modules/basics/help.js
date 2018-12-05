@@ -21,17 +21,17 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 		});
 	}
 
-	task({ client, args, message, channel, user }) {
+	task({ args, message, channel, user }) {
 		if (args.command === "all") {
 			const fieldPaginator = global.utils.fieldPaginator;
-			const commands = client.registry.commands.array().map(command => {
-				const commandData = getCommandData(command, client);
+			const commands = this.client.registry.commands.array().map(command => {
+				const commandData = getCommandData(command, this.client);
 				return { name: commandData.name, value: commandData.description };
 			});
 			const fields = chunk(commands, 5);
 			return new fieldPaginator(channel, user, fields, 30);
 		}
-		const commandData = getCommandData(args.command, client);
+		const commandData = getCommandData(args.command, this.client);
 		const fields = [];
 		if (commandData.arguments.length > 0) fields.push({ name: "Arguments", value: commandData.arguments });
 		if (commandData.userperms.length > 0) fields.push({ name: "Required User Permissions", value: commandData.userperms });
