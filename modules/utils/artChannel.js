@@ -40,9 +40,7 @@ module.exports = class ArtChannelCommand extends global.utils.baseCommand {
 	}
 
 	async task(ctx) {
-		let artchannels = await ctx.globalDb.get("artchannels");
-		if (!artchannels) await ctx.globalDb.set("artchannels", []);
-		artchannels = await ctx.globalDb.get("artchannels");
+		let artchannels = await ctx.globalDb.get("artchannels") || await ctx.globalDb.set("artchannels", []);
 		if (ctx.args.enabled === "enable") {
 			if (artchannels.map(channel => channel.id).includes(ctx.args.channel.id)) artchannels = artchannels.filter(channel => channel.id !== ctx.args.channel.id);
 			artchannels.push({
