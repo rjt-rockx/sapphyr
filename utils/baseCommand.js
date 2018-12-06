@@ -19,12 +19,12 @@ module.exports = class BaseCommand extends Command {
 			prefix: this.client.commandPrefix,
 			channel: message.channel,
 			user: message.author,
-			react: message.react,
-			dm: message.author.send,
+			react: (...data) => message.react(...data),
+			dm: (...data) => message.author.send(...data),
 			dmEmbed: data => message.author.send({ embed: data }),
-			send: message.channel.send,
+			send: (...data) => message.channel.send(...data),
 			embed: data => message.channel.send({ embed: data }),
-			selfDestruct: (data, seconds = 5) => message.channel.send(data).then(msg => msg.delete(seconds * 1000))
+			selfDestruct: (data, seconds = 10) => message.channel.send(data).then(msg => msg.delete(seconds * 1000))
 		};
 		if (message.guild)
 			context.guild = message.guild;

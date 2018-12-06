@@ -23,8 +23,8 @@ module.exports = class globalDatahandler {
      */
 	async get(key) {
 		await this.reload();
-		if (!["string", "number"].includes(typeof key)) return this.globalData;
-		if (key === "_id") return;
+		if (!key) return this.globalData;
+		if (key === "_id" || !Object.keys(this.globalData).includes(key)) return;
 		return this.globalData[key];
 	}
 

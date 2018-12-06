@@ -25,8 +25,8 @@ module.exports = class guildDataHandler {
      */
 	async get(key) {
 		await this.reload();
-		if (!["string", "number"].includes(typeof key)) return this.guild;
-		if (key === "_id") return;
+		if (!key) return this.guild;
+		if (key === "_id" || !Object.keys(this.guild).includes(key)) return;
 		return this.guild[key];
 	}
 
