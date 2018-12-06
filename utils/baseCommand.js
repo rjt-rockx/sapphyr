@@ -4,6 +4,7 @@ const { Command } = require("discord.js-commando"),
 	globalDatahandler = require("./globalDatahandler.js"),
 	nadekoConnector = require("./nadekoConnector.js"),
 	{ mongoUrl } = require("../localdata/config"),
+	{ RichEmbed } = require("discord.js"),
 	log = require("fancy-log");
 
 module.exports = class BaseCommand extends Command {
@@ -21,9 +22,9 @@ module.exports = class BaseCommand extends Command {
 			user: message.author,
 			react: (...data) => message.react(...data),
 			dm: (...data) => message.author.send(...data),
-			dmEmbed: data => message.author.send({ embed: data }),
+			dmEmbed: data => data instanceof RichEmbed ? message.author.send(data) : message.author.send(new RichEmbed(data)),
 			send: (...data) => message.channel.send(...data),
-			embed: data => message.channel.send({ embed: data }),
+			embed: data => data instanceof RichEmbed ? message.channel.send(data) : message.channel.send(new RichEmbed(data)),
 			selfDestruct: (data, seconds = 10) => message.channel.send(data).then(msg => msg.delete(seconds * 1000))
 		};
 		if (message.guild)
