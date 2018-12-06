@@ -1,4 +1,4 @@
-const shortId = require("shortid");
+const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
 module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 	constructor(client) {
@@ -7,6 +7,7 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 			description: "Create a challenge for this guild. Stores the challenge and returns its ID for future reference. Can only be created by people with the approver role.",
 			group: "challenges",
 			memberName: "createchallenge",
+			aliases: ["crch"],
 			userPermissions: ["ADMINISTRATOR"],
 			clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
 			args: [
@@ -28,14 +29,44 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 	async task(ctx) {
 		const approverRole = await ctx.db.get("approverRole");
 		if (!approverRole)
-			return ctx.selfDestruct(`Approver role not specified. Please specify an approver role using ${ctx.prefix}approverRole`);
+			return ctx.send(`Approver role not specified. Please specify an approver role using ${ctx.prefix}approverRole`);
 		if (!ctx.guild.roles.has(approverRole)) {
 			await ctx.db.set("approverRole", "");
-			return ctx.selfDestruct("Approver role not found.");
+			return ctx.send("Approver role not found.");
 		}
 		if (!ctx.member.roles.has(approverRole))
-			return ctx.selfDestruct(`You need the ${ctx.guild.roles.get(approverRole).name} to use this command.`);
-		const id = shortId.generate();
-		ctx.send(`Challenge: [${ctx.args.difficulty}] ${ctx.args.challenge}\nID: ${id}`);
+			return ctx.send(`You need the ${ctx.guild.roles.get(approverRole).name} to use this command.`);
+		const challengeData = await ctx.db.get("challengeData") || await ctx.db.set("challengeData", { rewards: {} });
+		if (!Object.keys(challengeData.rewards).includes(ctx.args.difficulty))
+			return ctx.send("No reward specified for this difficulty.");
+		if (!challengeData.challenges)
+			challengeData.challenges = [];
+		const timestamp = Date.now();
+		challengeData.challenges.push([
+			ctx.args.challenge,
+			ctx.args.difficulty,
+			timestamp,
+			challengeData.rewards[ctx.args.difficulty]
+		]);
+		await ctx.db.set("challengeData", challengeData);
+		ctx.embed({
+			fields: [
+				{
+					name: "Challenge created!",
+					value: `[${toTitleCase(ctx.args.difficulty)}] ${ctx.args.challenge}`
+				},
+				{
+					name: "ID",
+					value: challengeData.challenges.length,
+					inline: true
+				},
+				{
+					name: "Reward",
+					value: challengeData.rewards[ctx.args.difficulty],
+					inline: true
+				}
+			],
+			timestamp
+		});
 	}
 };
