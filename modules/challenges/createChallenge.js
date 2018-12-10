@@ -41,31 +41,27 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 			return ctx.send("No reward specified for this difficulty.");
 		if (!challengeData.challenges)
 			challengeData.challenges = [];
-		const timestamp = Date.now();
-		challengeData.challenges.push([
-			ctx.args.challenge,
-			ctx.args.difficulty,
-			timestamp,
-			challengeData.rewards[ctx.args.difficulty]
-		]);
+		const timestamp = Date.now(), id = challengeData.challenges.length + 1;
+		challengeData.challenges.push({
+			id, timestamp,
+			challenge: ctx.args.challenge,
+			difficulty: ctx.args.difficulty,
+			reward: challengeData.rewards[ctx.args.difficulty],
+			enabled: true
+		});
 		await ctx.db.set("challengeData", challengeData);
 		ctx.embed({
 			fields: [
 				{
-					name: "Challenge created!",
+					name: `Challenge #${id} created!`,
 					value: `[${toTitleCase(ctx.args.difficulty)}] ${ctx.args.challenge}`
 				},
 				{
-					name: "ID",
-					value: challengeData.challenges.length,
-					inline: true
-				},
-				{
-					name: "Reward",
-					value: challengeData.rewards[ctx.args.difficulty],
-					inline: true
+					name: "Challenge is currently active.",
+					value: `Reward: ${challengeData.rewards[ctx.args.difficulty]}`
 				}
 			],
+			footer: { text: `ID: ${id}` },
 			timestamp
 		});
 	}
