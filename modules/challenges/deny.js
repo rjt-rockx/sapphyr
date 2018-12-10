@@ -36,8 +36,6 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 			return ctx.send(`This command can only be used in #${ctx.guild.channels.get(approverChannel).name}`);
 		if (!ctx.member.roles.has(approverRole))
 			return ctx.send(`You need the ${ctx.guild.roles.get(approverRole).name} to use this command.`);
-
-		const challengeData = await ctx.db.get("challengeData") || await ctx.db.set("challengeData", {});
 		let submission;
 		try {
 			submission = await ctx.channel.fetchMessage(ctx.args.messageId);
@@ -45,13 +43,17 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 		catch (error) {
 			return ctx.send("Unable to fetch the message. Make sure the message exists in this channel.");
 		}
-		if (!challengeData[submission.author.id])
-			challengeData[submission.author.id] = [];
-		if (!challengeData.rewards)
-			return ctx.send("No challenge rewards specified for this guild.");
-		if (!ctx.nadekoConnector)
-			return ctx.send("No NadekoConnector configuration found for this guild.");
-
-		ctx.send("wooot all checks passed");
+		await submission.author.send(new RichEmbed({
+			title: "Your submission was denied!",
+			fields: [
+				{
+					name: `Challenge denied by ${ctx.author.tag} (${ctx.author.id}).`,
+					value: "You were not rewarded anything."
+				}
+			],
+			footer: { text: `Submission ID: ${submission.id}` },
+			timestamp: Date.now()
+		}));
+		return ctx.send("Challenge submission successfully denied.");
 	}
 };
