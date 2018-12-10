@@ -38,7 +38,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 			return ctx.send(`You need the ${ctx.guild.roles.get(approverRole).name} to use this command.`);
 		let submission;
 		try {
-			submission = await ctx.channel.fetchMessage(ctx.args.messageId);
+			submission = await ctx.channel.fetchMessage(ctx.args.id);
 		}
 		catch (error) {
 			return ctx.send("Unable to fetch the message. Make sure the message exists in this channel.");
