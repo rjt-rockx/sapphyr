@@ -10,15 +10,14 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 			guildOnly: true,
 			args: [
 				{
-					key: "id",
+					key: "messageId",
 					prompt: "The ID of the submission message to approve.",
 					type: "string"
 				},
 				{
-					key: "difficulty",
-					prompt: "The difficulty of the challenge.",
-					type: "string",
-					oneOf: ["easy", "medium", "hard"]
+					key: "challengeId",
+					prompt: "The ID of the challenge to approve.",
+					type: "number"
 				}
 			]
 		});
