@@ -1,10 +1,9 @@
-const { RichEmbed } = require("discord.js");
-
 module.exports = class ApproveCommand extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "approve",
 			memberName: "approve",
+			aliases: ["approvechallenge", "ach"],
 			group: "challenges",
 			description: "Approve a challenge and award the submitter.",
 			clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
