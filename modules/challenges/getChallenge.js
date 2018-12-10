@@ -12,7 +12,7 @@ module.exports = class GetChallengeCommand extends global.utils.baseCommand {
 			args: [
 				{
 					key: "id",
-					prompt: "The ID of the challenge",
+					prompt: "ID of the challenge",
 					type: "integer"
 				}
 			]
@@ -28,7 +28,7 @@ module.exports = class GetChallengeCommand extends global.utils.baseCommand {
 		const [challenge] = challenges.filter(({ id }) => ctx.args.id === id);
 		if (!challenge)
 			return ctx.send("No challenge found.");
-		ctx.embed({
+		return ctx.embed({
 			fields: [
 				{
 					name: `Challenge #${challenge.id}`,

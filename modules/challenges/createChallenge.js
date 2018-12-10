@@ -13,13 +13,13 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 			args: [
 				{
 					key: "difficulty",
-					prompt: "The difficulty of the challenge.",
+					prompt: "Difficulty of the challenge",
 					type: "string",
 					oneOf: ["easy", "medium", "hard"]
 				},
 				{
 					key: "challenge",
-					prompt: "The difficulty of the challenge.",
+					prompt: "Description of the challenge",
 					type: "string"
 				}
 			]
@@ -43,11 +43,12 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 			challengeData.challenges = [];
 		const timestamp = Date.now(), id = challengeData.challenges.length + 1;
 		challengeData.challenges.push({
-			id, timestamp,
+			id,
 			challenge: ctx.args.challenge,
 			difficulty: ctx.args.difficulty,
 			reward: challengeData.rewards[ctx.args.difficulty],
-			enabled: true
+			enabled: true,
+			timestamp
 		});
 		await ctx.db.set("challengeData", challengeData);
 		ctx.embed({
