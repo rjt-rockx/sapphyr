@@ -7,10 +7,12 @@ class NadekoConnectorClient {
 	 * Creates a new NadekoConnector client for the specified address and password.
 	 * @param {string} address Address of the connector. Specify either the domain (eg: "zynxxer.ml") or IP Address and port together (eg: "12.34.56.78:1234").
 	 * @param {string} password Password for the connector.
+	 * @param {Boolean} [throwErrors=false] Whether to throw errors in the response text or not.
 	 */
-	constructor(address, password) {
+	constructor(address, password, throwErrors = false) {
 		this.address = address;
 		this.password = password;
+		this.throwErrors = Boolean(throwErrors);
 	}
 
 	/**
@@ -22,7 +24,14 @@ class NadekoConnectorClient {
 	async getData(endpoint, data) {
 		const token = jwt.sign(data, this.password);
 		const { body } = await got(`${this.address}/${endpoint}/${token}`);
-		return jsonbs.parse(body);
+		if (!this.throwErrors)
+			return jsonbs.parse(body);
+		else if (this.throwErrors) {
+			const data = jsonbs.parse(body);
+			if (data.error)
+				throw new Error(`${data.error}: ${data.message}`);
+			return data;
+		}
 	}
 
 	/**
