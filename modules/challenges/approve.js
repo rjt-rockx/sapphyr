@@ -70,7 +70,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 			return ctx.send("No NadekoConnector configuration found for this guild.");
 
 		const { bot: { currency: { sign } } } = await ctx.nadekoConnector.getBotInfo();
-		const result = await ctx.nadekoConnector.addCurrency(submission.author.id, challenge.reward, `Challenge #${challenge.id} approved by ${ctx.user.tag} (${ctx.user.id})`);
+		const result = await ctx.nadekoConnector.addCurrency(submission.author.id, challenge.reward, `[Sapphyr] Challenge #${challenge.id} approved by ${ctx.user.tag} (${ctx.user.id}) in ${ctx.guild.name} (${ctx.guild.id})`);
 		if (result.error) {
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to award currency to the user.");
