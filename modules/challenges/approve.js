@@ -56,7 +56,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		const { challenges } = challengeData;
 		if (!challenges || (Array.isArray(challenges) && challenges.length < 1))
 			return ctx.send("No challenges found.");
-		if (ctx.args.challengeId < 0 || ctx.args.challengeId > challenges.length)
+		if (ctx.args.challengeId < 0 || challenges.map(challenge => challenge.id).includes(ctx.args.challengeId))
 			return ctx.send("Invalid ID specified.");
 		const [challenge] = challenges.filter(({ id }) => ctx.args.challengeId === id);
 		if (!challenge)
