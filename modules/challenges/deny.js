@@ -1,3 +1,5 @@
+const { RichEmbed } = require("discord.js");
+
 module.exports = class DenyCommand extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {

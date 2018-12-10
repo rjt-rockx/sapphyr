@@ -1,3 +1,6 @@
+const { RichEmbed } = require("discord.js");
+const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+
 module.exports = class ApproveCommand extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
