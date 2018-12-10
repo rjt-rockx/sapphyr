@@ -24,7 +24,7 @@ module.exports = class RemoveChallenge extends global.utils.baseCommand {
 		let { challenges } = await ctx.db.get("challengeData");
 		if (!challenges || (Array.isArray(challenges) && challenges.length < 1))
 			return ctx.send("No challenges found.");
-		if (ctx.args.id < 0 || challenges.map(challenge => challenge.id).includes(ctx.args.id))
+		if (ctx.args.id < 0 || !challenges.some(challenge => challenge.id === ctx.args.id))
 			return ctx.send("Invalid ID specified.");
 		const [challenge] = challenges.filter(({ id }) => ctx.args.id === id);
 		if (!challenge)
