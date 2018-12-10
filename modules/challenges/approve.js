@@ -20,7 +20,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 				{
 					key: "challengeId",
 					prompt: "The ID of the challenge to approve.",
-					type: "number"
+					type: "integer"
 				}
 			]
 		});
