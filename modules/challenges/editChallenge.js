@@ -68,7 +68,7 @@ module.exports = class EditChallengeCommand extends global.utils.baseCommand {
 				},
 				{
 					name: `Challenge is currently ${challenge.enabled ? "active" : "inactive"}.`,
-					value: challenge.enabled ? "You won't be rewarded for this challenge." : `Reward: ${challenge.reward}`
+					value: !challenge.enabled ? "You won't be rewarded for this challenge." : `Reward: ${challenge.reward}`
 				}
 			],
 			footer: { text: `ID: ${challenge.id}` },
