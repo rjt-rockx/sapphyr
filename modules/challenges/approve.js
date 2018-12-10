@@ -52,13 +52,53 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		catch (error) {
 			return ctx.send("Unable to fetch the message. Make sure the message exists in this channel.");
 		}
+
+		const { challenges } = challengeData;
+		if (!challenges || (Array.isArray(challenges) && challenges.length < 1))
+			return ctx.send("No challenges found.");
+		if (ctx.args.challengeId < 0 || ctx.args.challengeId > challenges.length)
+			return ctx.send("Invalid ID specified.");
+		const [challenge] = challenges.filter(({ id }) => ctx.args.challengeId === id);
+		if (!challenge)
+			return ctx.send("No challenge found.");
+		if (!challenge.enabled)
+			return ctx.send("This challenge is currently disabled.");
+
 		if (!challengeData[submission.author.id])
 			challengeData[submission.author.id] = [];
-		if (!challengeData.rewards)
-			return ctx.send("No challenge rewards specified for this guild.");
 		if (!ctx.nadekoConnector)
 			return ctx.send("No NadekoConnector configuration found for this guild.");
 
-		ctx.send("wooot all checks passed");
+		const { bot: { currency: { sign } } } = await ctx.nadekoConnector.getBotInfo();
+		const result = await ctx.nadekoConnector.addCurrency(submission.author.id, challenge.reward, `Challenge #${challenge.id} approved by ${ctx.author.tag} (${ctx.author.id})`);
+		if (result.error) {
+			console.log(`[Error] NadekoConnector: ${result.message}`);
+			return ctx.send("Unable to award currency to the user.");
+		}
+
+		const timestamp = Date.now();
+		challengeData[submission.author.id].push({
+			id: challenge.id,
+			approver: ctx.author.id,
+			timestamp
+		});
+
+		await ctx.db.set("challengeData", challengeData);
+		await submission.author.send(new RichEmbed({
+			title: "Your submission was approved!",
+			fields: [
+				{
+					name: `Challenge #${challenge.id}`,
+					value: `[${toTitleCase(challenge.difficulty)}] ${challenge.challenge}`
+				},
+				{
+					name: `Challenge approved by ${ctx.author.tag} (${ctx.author.id}).`,
+					value: `You were rewarded with ${challenge.reward} ${sign}!`
+				}
+			],
+			footer: { text: `Submission ID: ${submission.id}` },
+			timestamp
+		}));
+		return ctx.send("Challenge submission successfully approved.");
 	}
 };
