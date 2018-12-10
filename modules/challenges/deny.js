@@ -47,7 +47,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 			title: "Your submission was denied!",
 			fields: [
 				{
-					name: `Challenge denied by ${ctx.author.tag} (${ctx.author.id}).`,
+					name: `Challenge denied by ${ctx.user.tag} (${ctx.user.id}).`,
 					value: "You were not rewarded anything."
 				}
 			],

@@ -70,7 +70,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 			return ctx.send("No NadekoConnector configuration found for this guild.");
 
 		const { bot: { currency: { sign } } } = await ctx.nadekoConnector.getBotInfo();
-		const result = await ctx.nadekoConnector.addCurrency(submission.author.id, challenge.reward, `Challenge #${challenge.id} approved by ${ctx.author.tag} (${ctx.author.id})`);
+		const result = await ctx.nadekoConnector.addCurrency(submission.author.id, challenge.reward, `Challenge #${challenge.id} approved by ${ctx.user.tag} (${ctx.user.id})`);
 		if (result.error) {
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to award currency to the user.");
@@ -79,7 +79,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		const timestamp = Date.now();
 		challengeData[submission.author.id].push({
 			id: challenge.id,
-			approver: ctx.author.id,
+			approver: ctx.user.id,
 			timestamp
 		});
 
@@ -92,7 +92,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 					value: `[${toTitleCase(challenge.difficulty)}] ${challenge.challenge}`
 				},
 				{
-					name: `Challenge approved by ${ctx.author.tag} (${ctx.author.id}).`,
+					name: `Challenge approved by ${ctx.user.tag} (${ctx.user.id}).`,
 					value: `You were rewarded with ${challenge.reward} ${sign}!`
 				}
 			],
