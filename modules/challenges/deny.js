@@ -19,7 +19,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 		});
 	}
 	async task(ctx) {
-		const { approverRole, approverChannel } = await ctx.db.get();
+		const { approverRole, approverChannel, challengeData } = await ctx.db.get();
 		if (!approverRole)
 			return ctx.send(`Approver role not specified. Please specify an approver role using ${ctx.prefix}approverRole`);
 		if (!approverChannel)
@@ -43,16 +43,32 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 		catch (error) {
 			return ctx.send("Unable to fetch the message. Make sure the message exists in this channel.");
 		}
+
+		const timestamp = Date.now();
+		const logChannel = challengeData.logChannel ? ctx.guild.channels.get(challengeData.logChannel) : null;
+		if (logChannel)
+			await logChannel.send(new RichEmbed({
+				title: `${submission.author.tag}'s submission was denied.`,
+				fields: [
+					{
+						name: `Challenge submission denied by ${ctx.user.tag} (${ctx.user.id}).`,
+						value: `${submission.author.tag} was not rewarded anything.`
+					}
+				],
+				footer: { text: `Submission ID: ${submission.id} | User ID: ${submission.author.id}` },
+				timestamp
+			}));
+
 		await submission.author.send(new RichEmbed({
 			title: "Your submission was denied!",
 			fields: [
 				{
-					name: `Challenge denied by ${ctx.user.tag} (${ctx.user.id}).`,
+					name: `Challenge submission denied by ${ctx.user.tag} (${ctx.user.id}).`,
 					value: "You were not rewarded anything."
 				}
 			],
-			footer: { text: `Submission ID: ${submission.id}` },
-			timestamp: Date.now()
+			footer: { text: `Submission ID: ${submission.id} | User ID: ${submission.author.id}` },
+			timestamp
 		}));
 		return ctx.send("Challenge submission successfully denied.");
 	}

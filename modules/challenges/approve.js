@@ -85,6 +85,24 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 			timestamp
 		});
 
+		const logChannel = challengeData.logChannel ? ctx.guild.channels.get(challengeData.logChannel) : null;
+		if (logChannel)
+			await logChannel.send(new RichEmbed({
+				title: `${submission.author.tag}'s submission was approved.`,
+				fields: [
+					{
+						name: `Challenge #${challenge.id}`,
+						value: `[${toTitleCase(challenge.difficulty)}] ${challenge.challenge}`
+					},
+					{
+						name: `Challenge submission approved by ${ctx.user.tag} (${ctx.user.id}).`,
+						value: `${submission.author.tag} was rewarded with ${challenge.reward} ${sign}!`
+					}
+				],
+				footer: { text: `Submission ID: ${submission.id} | User ID: ${submission.author.id}` },
+				timestamp
+			}));
+
 		await ctx.db.set("challengeData", challengeData);
 		await submission.author.send(new RichEmbed({
 			title: "Your submission was approved!",
@@ -94,11 +112,11 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 					value: `[${toTitleCase(challenge.difficulty)}] ${challenge.challenge}`
 				},
 				{
-					name: `Challenge approved by ${ctx.user.tag} (${ctx.user.id}).`,
+					name: `Challenge submission approved by ${ctx.user.tag} (${ctx.user.id}).`,
 					value: `You were rewarded with ${challenge.reward} ${sign}!`
 				}
 			],
-			footer: { text: `Submission ID: ${submission.id}` },
+			footer: { text: `Submission ID: ${submission.id} | User ID: ${submission.author.id}` },
 			timestamp
 		}));
 		return ctx.send("Challenge submission successfully approved.");
