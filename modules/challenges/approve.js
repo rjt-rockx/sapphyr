@@ -64,8 +64,10 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		if (!challenge.enabled)
 			return ctx.send("This challenge is currently disabled.");
 
-		if (!challengeData[submission.author.id])
-			challengeData[submission.author.id] = [];
+		if (!challengeData.users)
+			challengeData.users = {};
+		if (!challengeData.users[submission.author.id])
+			challengeData.users[submission.author.id] = [];
 		if (!ctx.nadekoConnector)
 			return ctx.send("No NadekoConnector configuration found for this guild.");
 
@@ -77,7 +79,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		}
 
 		const timestamp = Date.now();
-		challengeData[submission.author.id].push({
+		challengeData.users[submission.author.id].push({
 			id: challenge.id,
 			approver: ctx.user.id,
 			timestamp
