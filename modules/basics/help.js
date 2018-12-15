@@ -29,7 +29,7 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 				return { name: commandData.name, value: commandData.description };
 			});
 			const fields = chunk(commands, 5);
-			return new fieldPaginator(channel, user, fields, 30);
+			return new fieldPaginator(channel, user, fields, 15);
 		}
 		const commandData = getCommandData(args.command, this.client);
 		const fields = [];
