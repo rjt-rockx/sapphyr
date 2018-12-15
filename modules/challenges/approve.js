@@ -71,8 +71,13 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		if (!ctx.nadekoConnector)
 			return ctx.send("No NadekoConnector configuration found for this guild.");
 
-		const { bot: { currency: { sign } } } = await ctx.nadekoConnector.getBotInfo();
-		const result = await ctx.nadekoConnector.addCurrency(submission.author.id, challenge.reward, `[Sapphyr] Challenge #${challenge.id} approved by ${ctx.user.tag} (${ctx.user.id}) in ${ctx.guild.name} (${ctx.guild.id})`);
+		let result = await ctx.nadekoConnector.getBotInfo();
+		if (result.error) {
+			console.log(`[Error] NadekoConnector: ${result.message}`);
+			return ctx.send("Unable to get bot information.");
+		}
+		const sign = result.bot.currency.sign;
+		result = await ctx.nadekoConnector.addCurrency(submission.author.id, challenge.reward, `[Sapphyr] Challenge #${challenge.id} approved by ${ctx.user.tag} (${ctx.user.id}) in ${ctx.guild.name} (${ctx.guild.id})`);
 		if (result.error) {
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to award currency to the user.");
@@ -80,9 +85,8 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 
 		const timestamp = Date.now();
 		challengeData.users[submission.author.id].push({
-			id: challenge.id,
-			approver: ctx.user.id,
-			timestamp
+			challenge, timestamp,
+			approver: { tag: ctx.user.tag, id: ctx.user.id }
 		});
 
 		const logChannel = challengeData.logChannel ? ctx.guild.channels.get(challengeData.logChannel) : null;
