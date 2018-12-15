@@ -41,7 +41,10 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 			return ctx.send("No reward specified for this difficulty.");
 		if (!challengeData.challenges)
 			challengeData.challenges = [];
-		const timestamp = Date.now(), id = challengeData.challenges.length + 1;
+		if (!challengeData.previousId)
+			challengeData.previousId = challengeData.challenges.length;
+		challengeData.previousId += 1;
+		const timestamp = Date.now(), id = challengeData.previousId;
 		challengeData.challenges.push({
 			id,
 			challenge: ctx.args.challenge,
