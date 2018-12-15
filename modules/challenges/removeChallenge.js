@@ -21,16 +21,16 @@ module.exports = class RemoveChallenge extends global.utils.baseCommand {
 	}
 
 	async task(ctx) {
-		let { challenges } = await ctx.db.get("challengeData");
-		if (!challenges || (Array.isArray(challenges) && challenges.length < 1))
-			return ctx.send("No challenges found.");
-		if (ctx.args.id < 0 || !challenges.some(challenge => challenge.id === ctx.args.id))
+		const challengeData = await ctx.db.get("challengeData");
+		if (!challengeData.challenges || (Array.isArray(challengeData.challenges) && challengeData.challenges.length < 1))
+			return ctx.send("No challengeData.challenges found.");
+		if (ctx.args.id < 0 || !challengeData.challenges.some(challenge => challenge.id === ctx.args.id))
 			return ctx.send("Invalid ID specified.");
-		const [challenge] = challenges.filter(({ id }) => ctx.args.id === id);
+		const [challenge] = challengeData.challenges.filter(({ id }) => ctx.args.id === id);
 		if (!challenge)
 			return ctx.send("No challenge found.");
-		challenges = challenges.filter(({ id }) => id !== ctx.args.id);
-		await ctx.db.set("challengeData", { challenges });
+		challengeData.challenges = challengeData.challenges.filter(({ id }) => id !== ctx.args.id);
+		await ctx.db.set("challengeData", challengeData);
 		ctx.embed({
 			fields: [
 				{
