@@ -24,12 +24,12 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 	task({ args, message, channel, user }) {
 		if (args.command === "all") {
 			const fieldPaginator = global.utils.fieldPaginator;
-			const commands = this.client.registry.commands.array().map(command => {
+			const commands = this.client.registry.commands.array().sort((a, b) => a.name.localeCompare(b.name)).map(command => {
 				const commandData = getCommandData(command, this.client);
 				return { name: commandData.name, value: commandData.description };
 			});
 			const fields = chunk(commands, 5);
-			return new fieldPaginator(channel, user, fields, 30);
+			return new fieldPaginator(channel, user, fields, 15);
 		}
 		const commandData = getCommandData(args.command, this.client);
 		const fields = [];
@@ -51,8 +51,7 @@ function getCommandData(command, client) {
 	let arguments = [];
 	if (command.argsCollector && command.argsCollector.args && Array.isArray(command.argsCollector.args)) {
 		const argKeys = command.argsCollector.args.map(arg => {
-			let argName = arg.key;
-			if (arg.oneOf && arg.oneOf.length < 4) argName = arg.oneOf.join("/");
+			const argName = (arg.oneOf && arg.oneOf.length < 4) ? arg.oneOf.join("/") : arg.key;
 			return `${arg.default ? `[${argName}]` : `<${argName}>`}`;
 		});
 		commandName += ` ${argKeys.join(" ")}`;
