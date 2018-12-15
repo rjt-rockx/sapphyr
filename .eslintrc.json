@@ -12,7 +12,10 @@
         "no-constant-condition": "off",
         "indent": [
             "error",
-            "tab"
+            "tab",
+            {
+                "SwitchCase": 1
+            }
         ],
         "no-unused-vars": "off",
         "no-empty-pattern": "off",
