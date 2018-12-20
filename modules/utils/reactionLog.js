@@ -4,7 +4,7 @@ module.exports = class ReactionLogCommand extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "reactionlog",
-			description: "Enable or disable reaction logging in ",
+			description: "Enable or disable reaction logging in a particular channel.",
 			group: "utils",
 			memberName: "reactionlog",
 			userPermissions: ["ADMINISTRATOR"],
@@ -12,13 +12,13 @@ module.exports = class ReactionLogCommand extends global.utils.baseCommand {
 			args: [
 				{
 					key: "enabled",
-					prompt: "Whether to enable or disable artchannel.",
+					prompt: "Whether to enable or disable reaction logging.",
 					type: "string",
 					oneOf: ["enable", "disable"]
 				},
 				{
 					key: "channel",
-					prompt: "Channel to react in.",
+					prompt: "Channel to log reactions in.",
 					type: "channel",
 					default: "none"
 				}
