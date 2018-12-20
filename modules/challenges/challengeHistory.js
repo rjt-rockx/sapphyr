@@ -1,5 +1,4 @@
 const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-const chunk = (a, l) => a.length === 0 ? [] : [a.slice(0, l)].concat(chunk(a.slice(l), l));
 
 module.exports = class ChallengeHistoryCommand extends global.utils.baseCommand {
 	constructor(client) {
