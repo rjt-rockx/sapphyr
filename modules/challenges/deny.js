@@ -14,6 +14,12 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 					key: "id",
 					prompt: "ID of the message to grab.",
 					type: "string"
+				},
+				{
+					key: "reason",
+					prompt: "Reason why the submission was denied.",
+					type: "string",
+					default: "No reason specified."
 				}
 			]
 		});
@@ -54,6 +60,10 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 					{
 						name: `Challenge submission denied by ${ctx.user.tag} (${ctx.user.id}).`,
 						value: `${submission.author.tag} was not rewarded anything.`
+					},
+					{
+						name: "Reason",
+						value: ctx.args.reason
 					}
 				],
 				footer: { text: `Submission ID: ${submission.id} | User ID: ${submission.author.id}` },
@@ -67,6 +77,10 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 				{
 					name: `Challenge submission denied by ${ctx.user.tag} (${ctx.user.id}).`,
 					value: "You were not rewarded anything."
+				},
+				{
+					name: "Reason",
+					value: ctx.args.reason
 				}
 			],
 			footer: { text: `Submission ID: ${submission.id} | User ID: ${submission.author.id}` },
