@@ -93,6 +93,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		if (logChannel)
 			await logChannel.send(new RichEmbed({
 				title: `${submission.author.tag}'s submission was approved.`,
+				thumbnail: { url: submission.author.displayAvatarURL },
 				fields: [
 					{
 						name: `Challenge #${challenge.id}`,
@@ -110,6 +111,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		await ctx.db.set("challengeData", challengeData);
 		await submission.author.send(new RichEmbed({
 			title: "Your submission was approved!",
+			thumbnail: { url: submission.author.displayAvatarURL },
 			fields: [
 				{
 					name: `Challenge #${challenge.id}`,

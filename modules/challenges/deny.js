@@ -49,6 +49,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 		if (logChannel)
 			await logChannel.send(new RichEmbed({
 				title: `${submission.author.tag}'s submission was denied.`,
+				thumbnail: { url: submission.author.displayAvatarURL },
 				fields: [
 					{
 						name: `Challenge submission denied by ${ctx.user.tag} (${ctx.user.id}).`,
@@ -61,6 +62,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 
 		await submission.author.send(new RichEmbed({
 			title: "Your submission was denied!",
+			thumbnail: { url: submission.author.displayAvatarURL },
 			fields: [
 				{
 					name: `Challenge submission denied by ${ctx.user.tag} (${ctx.user.id}).`,

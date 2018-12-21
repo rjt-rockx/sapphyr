@@ -53,7 +53,11 @@ module.exports = class ChallengeHistoryCommand extends global.utils.baseCommand 
 			};
 		}).reverse();
 		return new global.utils.fieldPaginator(ctx.channel, ctx.user, fields, 15, {
-			numberFields: true, embedTemplate: { title: `Challenge history of ${user.tag}` }
+			numberFields: true,
+			embedTemplate: {
+				title: `Challenge history of ${user.tag}`,
+				thumbnail: { url: user.displayAvatarURL }
+			}
 		});
 	}
 };
