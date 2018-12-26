@@ -56,7 +56,9 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 		const logChannel = challengeData.logChannel ? ctx.guild.channels.get(challengeData.logChannel) : null;
 		if (logChannel)
 			await logChannel.send(new RichEmbed({
-				title: `${submission.author.tag}'s submission was denied.`,
+				author: { name: `${submission.author.tag}'s submission was denied.` },
+				title: "Message Content",
+				description: submission.cleanContent,
 				thumbnail: { url: submission.author.displayAvatarURL },
 				fields: [
 					{
