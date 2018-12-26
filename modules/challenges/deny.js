@@ -49,6 +49,8 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 		catch (error) {
 			return ctx.send("Unable to fetch the message. Make sure the message exists in this channel.");
 		}
+		if (submission.author.id === ctx.user.id)
+			return ctx.send("You cannot deny your own messages!");
 
 		const timestamp = Date.now();
 		const logChannel = challengeData.logChannel ? ctx.guild.channels.get(challengeData.logChannel) : null;

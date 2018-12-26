@@ -52,6 +52,8 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		catch (error) {
 			return ctx.send("Unable to fetch the message. Make sure the message exists in this channel.");
 		}
+		if (submission.author.id === ctx.user.id)
+			return ctx.send("You cannot approve your own messages!");
 
 		const { challenges } = challengeData;
 		if (!challenges || (Array.isArray(challenges) && challenges.length < 1))
