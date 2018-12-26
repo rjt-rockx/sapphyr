@@ -88,6 +88,8 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 			footer: { text: `Submission ID: ${submission.id} | User ID: ${submission.author.id}` },
 			timestamp
 		}));
+
+		await submission.react("❌");
 		return ctx.send("Challenge submission successfully denied.");
 	}
 };
