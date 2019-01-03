@@ -4,7 +4,7 @@ module.exports = class RemoveChallenge extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "removechallenge",
-			description: "Remove a challenge with a given id.",
+			description: "Remove the latest challenge entry of a particular challenge from a user.",
 			group: "challenges",
 			memberName: "removechallenge",
 			aliases: ["rch"],
@@ -13,8 +13,13 @@ module.exports = class RemoveChallenge extends global.utils.baseCommand {
 			args: [
 				{
 					key: "id",
-					prompt: "The ID of the challenge",
+					prompt: "ID of the challenge.",
 					type: "integer"
+				},
+				{
+					key: "user",
+					prompt: "User to remove the challenge ID from.",
+					type: "user"
 				}
 			]
 		});
@@ -26,24 +31,13 @@ module.exports = class RemoveChallenge extends global.utils.baseCommand {
 			return ctx.send("No challenges found.");
 		if (ctx.args.id < 0 || !challengeData.challenges.some(challenge => challenge.id === ctx.args.id))
 			return ctx.send("Invalid ID specified.");
-		const [challenge] = challengeData.challenges.filter(({ id }) => ctx.args.id === id);
-		if (!challenge)
-			return ctx.send("No challenge found.");
-		challengeData.challenges = challengeData.challenges.filter(({ id }) => id !== ctx.args.id);
+		const userId = ctx.args.user.id;
+		if (!challengeData.users[userId])
+			challengeData.users[userId] = [];
+		const index = challengeData.users[userId].findIndex(entry => entry.challenge.id === ctx.args.id);
+		if (index < 0) return ctx.send("No challenge entry found for the given user and challenge ID.");
+		challengeData.users[userId].splice(index, 1);
 		await ctx.db.set("challengeData", challengeData);
-		ctx.embed({
-			fields: [
-				{
-					name: `Challenge #${challenge.id} removed!`,
-					value: `[${toTitleCase(challenge.difficulty)}] ${challenge.challenge}`
-				},
-				{
-					name: "Challenge is currently inactive.",
-					value: "You won't be rewarded for this challenge."
-				}
-			],
-			footer: { text: `ID: ${challenge.id}` },
-			timestamp: challenge.timestamp
-		});
+		return ctx.send("Challenge entry successfully removed from the given user.");
 	}
 };
