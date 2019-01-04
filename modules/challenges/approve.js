@@ -1,5 +1,6 @@
 const { RichEmbed } = require("discord.js");
 const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+const DiscordColors = global.utils.colors.numbers.discord;
 
 module.exports = class ApproveCommand extends global.utils.baseCommand {
 	constructor(client) {
@@ -134,6 +135,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 						value: `${submission.author.tag} was rewarded with ${challenge.reward} ${sign}!`
 					}
 				],
+				color: DiscordColors.green,
 				footer: { text: `User ID: ${submission.author.id}` },
 				timestamp
 			}));
@@ -154,6 +156,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 					value: `You were rewarded with ${challenge.reward} ${sign}!`
 				}
 			],
+			color: DiscordColors.green,
 			footer: { text: `User ID: ${submission.author.id}` },
 			timestamp
 		}));

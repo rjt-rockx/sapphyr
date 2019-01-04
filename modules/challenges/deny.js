@@ -1,5 +1,5 @@
 const { RichEmbed } = require("discord.js");
-
+const DiscordColors = global.utils.colors.numbers.discord;
 module.exports = class DenyCommand extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
@@ -86,6 +86,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 						value: ctx.args.reason
 					}
 				],
+				color: DiscordColors.red,
 				footer: { text: `User ID: ${submission.author.id}` },
 				timestamp
 			}));
@@ -105,6 +106,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 					value: ctx.args.reason
 				}
 			],
+			color: DiscordColors.red,
 			footer: { text: `User ID: ${submission.author.id}` },
 			timestamp
 		}));
