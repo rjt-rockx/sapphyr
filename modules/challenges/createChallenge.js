@@ -37,7 +37,7 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 		if (!ctx.member.roles.has(approverRole))
 			return ctx.send(`You need the ${ctx.guild.roles.get(approverRole).name} to use this command.`);
 		const challengeData = await ctx.db.get("challengeData") || await ctx.db.set("challengeData", { rewards: {} });
-		if (!Object.keys(challengeData.rewards).includes(ctx.args.difficulty))
+		if (!Object.keys(challengeData.rewards).includes(ctx.args.difficulty.toLowerCase()))
 			return ctx.send("No reward specified for this difficulty.");
 		if (!challengeData.challenges)
 			challengeData.challenges = [];
@@ -48,8 +48,8 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 		challengeData.challenges.push({
 			id,
 			challenge: ctx.args.challenge,
-			difficulty: ctx.args.difficulty,
-			reward: challengeData.rewards[ctx.args.difficulty],
+			difficulty: ctx.args.difficulty.toLowerCase(),
+			reward: challengeData.rewards[ctx.args.difficulty.toLowerCase()],
 			enabled: true,
 			timestamp
 		});
@@ -62,7 +62,7 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 				},
 				{
 					name: "Challenge is currently active.",
-					value: `Reward: ${challengeData.rewards[ctx.args.difficulty]}`
+					value: `Reward: ${challengeData.rewards[ctx.args.difficulty.toLowerCase()]}`
 				}
 			],
 			footer: { text: `ID: ${id}` },

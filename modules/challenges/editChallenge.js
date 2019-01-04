@@ -53,8 +53,8 @@ module.exports = class EditChallengeCommand extends global.utils.baseCommand {
 		const challenge = {
 			id: oldChallenge.id,
 			challenge: ctx.args.challenge || oldChallenge.challenge,
-			difficulty: ctx.args.difficulty || oldChallenge.difficulty,
-			reward: challengeData.rewards[ctx.args.difficulty] || oldChallenge.reward,
+			difficulty: ctx.args.difficulty.toLowerCase() || oldChallenge.difficulty,
+			reward: challengeData.rewards[ctx.args.difficulty.toLowerCase()] || oldChallenge.reward,
 			enabled: oldChallenge.enabled,
 			timestamp
 		};
