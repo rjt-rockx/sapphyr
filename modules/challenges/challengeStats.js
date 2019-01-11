@@ -1,5 +1,5 @@
 const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-const sum = arr => arr.length && arr.length === 0 ? 0 : arr.reduce((sum, value) => (typeof sum === "number" ? sum : 0) + value);
+const sum = arr => arr.reduce((a, b) => a + b, 0);
 
 module.exports = class ChallengeStatsCommand extends global.utils.baseCommand {
 	constructor(client) {

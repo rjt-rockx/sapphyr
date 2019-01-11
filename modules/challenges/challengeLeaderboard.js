@@ -1,4 +1,4 @@
-const sum = arr => arr.length && arr.length === 0 ? 0 : arr.reduce((sum, value) => (typeof sum === "number" ? sum : 0) + value);
+const sum = arr => arr.reduce((a, b) => a + b, 0);
 
 module.exports = class ChallengeLeaderboardCommand extends global.utils.baseCommand {
 	constructor(client) {
