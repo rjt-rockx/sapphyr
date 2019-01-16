@@ -37,10 +37,13 @@ module.exports = class ChallengeLeaderboardCommand extends global.utils.baseComm
 		const leaderboard = this.getLeaderboard(challengeData, ctx.args.sortBy);
 		if (!leaderboard || (Array.isArray(leaderboard) && leaderboard.length < 1))
 			return ctx.send("Unable to fetch leaderboard.");
-		const leaderboardFields = leaderboard.map(user => ({
-			name: `#${user.rank} - ${this.client.users.get(user.userId).tag}`,
-			value: `${user.count} challenges completed.\n${user.reward} ${sign} earned.`
-		}));
+		const leaderboardFields = leaderboard.map(user => {
+			if (this.client.users.has(user.userId))
+				return {
+					name: `#${user.rank} - ${this.client.users.get(user.userId).tag}`,
+					value: `${user.count} challenges completed.\n${user.reward} ${sign} earned.`
+				};
+		}).filter(x => !!x);
 		return new global.utils.fieldPaginator(ctx.channel, ctx.user, leaderboardFields, 15, {
 			embedTemplate: { title: `Challenge leaderboard for ${ctx.guild.name}` },
 			chunkSize: 7
