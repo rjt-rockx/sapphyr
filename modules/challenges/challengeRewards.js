@@ -1,11 +1,11 @@
 const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
-module.exports = class ChallengeRewardCommand extends global.utils.baseCommand {
+module.exports = class ChallengeRewardsCommand extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
-			name: "challengereward",
-			memberName: "challengereward",
-			aliases: ["chrwrd"],
+			name: "challengerewards",
+			memberName: "challengerewards",
+			aliases: ["chrews"],
 			userPermissions: ["ADMINISTRATOR"],
 			clientPermissions: ["SEND_MESSAGES"],
 			group: "challenges",
