@@ -23,10 +23,7 @@
             "error",
             "double"
         ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
+        "linebreak-style": "off",
         "semi": [
             "error",
             "always"
