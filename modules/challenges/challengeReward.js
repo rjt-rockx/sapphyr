@@ -19,16 +19,15 @@ module.exports = class ChallengeRewardCommand extends global.utils.baseCommand {
 				},
 				{
 					key: "difficulty",
-					prompt: "Easy/Medium/Hard",
+					prompt: "Name of the difficulty",
 					type: "string",
-					oneOf: ["easy", "medium", "hard"],
-					default: "none"
+					default: ""
 				},
 				{
 					key: "amount",
 					prompt: "Amount to reward for the challenge difficulty level.",
 					type: "integer",
-					default: "none"
+					default: ""
 				}
 			]
 		});
@@ -41,10 +40,10 @@ module.exports = class ChallengeRewardCommand extends global.utils.baseCommand {
 				return ctx.send("Invalid amount specified.");
 			if (ctx.args.amount < 1)
 				return ctx.send("Challenge reward can't be lesser than or equal to 0.");
+			if (!ctx.args.difficulty)
+				return ctx.send("Invalid difficulty specified.");
 			else if (ctx.args.amount > Number.MAX_SAFE_INTEGER)
 				return ctx.send(`Challenge reward can't be greater than ${Number.MAX_SAFE_INTEGER}`);
-			if (typeof ctx.args.difficulty !== "string" || !["easy", "medium", "hard"].includes(ctx.args.difficulty.toLowerCase()))
-				return ctx.send("Invalid difficulty specified.");
 			challengeData.rewards[ctx.args.difficulty.toLowerCase()] = ctx.args.amount;
 			await ctx.db.set("challengeData", challengeData);
 			return ctx.send(`Successfully set challenge reward for ${toTitleCase(ctx.args.difficulty.toLowerCase())} to ${ctx.args.amount}.`);
@@ -56,7 +55,7 @@ module.exports = class ChallengeRewardCommand extends global.utils.baseCommand {
 			return ctx.send(rewards.filter(reward => reward || false).join("\n"));
 		}
 		else if (ctx.args.action === "remove") {
-			if (typeof ctx.args.difficulty !== "string" || !["easy", "medium", "hard"].includes(ctx.args.difficulty.toLowerCase()))
+			if (!Object.keys(challengeData.rewards).includes(ctx.args.difficulty.toLowerCase()))
 				return ctx.send("Invalid difficulty specified.");
 			delete challengeData.rewards[ctx.args.difficulty.toLowerCase()];
 			await ctx.db.set("challengeData", challengeData);

@@ -19,7 +19,6 @@ module.exports = class EditChallengeCommand extends global.utils.baseCommand {
 					key: "difficulty",
 					prompt: "Difficulty of the challenge",
 					type: "string",
-					oneOf: ["easy", "medium", "hard"],
 					default: ""
 				},
 				{
@@ -47,6 +46,8 @@ module.exports = class EditChallengeCommand extends global.utils.baseCommand {
 			return ctx.send("No challenge found.");
 		if (ctx.args.id < 0 || !challengeData.challenges.some(challenge => challenge.id === ctx.args.id))
 			return ctx.send("Invalid ID specified.");
+		if (!Object.keys(challengeData.rewards).includes(ctx.args.difficulty.toLowerCase()))
+			return ctx.send("Invalid difficulty specified.");
 		const index = challengeData.challenges.findIndex(({ id }) => ctx.args.id === id);
 		const timestamp = Date.now();
 		const oldChallenge = challengeData.challenges[index];

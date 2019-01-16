@@ -75,7 +75,7 @@ module.exports = class ChallengeStatsCommand extends global.utils.baseCommand {
 				reward: sum(challengeData.users[userId].map(entry => entry.challenge.reward))
 			}
 		};
-		["easy", "medium", "hard"].forEach(difficulty => {
+		Object.keys(challengeData.rewards).map(d => d.toLowerCase()).forEach(difficulty => {
 			const challenges = challengeData.users[userId].filter(entry => entry.challenge.difficulty === difficulty);
 			data[difficulty] = {
 				count: challenges.length,

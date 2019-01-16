@@ -14,8 +14,7 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 				{
 					key: "difficulty",
 					prompt: "Difficulty of the challenge",
-					type: "string",
-					oneOf: ["easy", "medium", "hard"]
+					type: "string"
 				},
 				{
 					key: "challenge",
