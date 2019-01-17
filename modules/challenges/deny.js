@@ -1,4 +1,4 @@
-const { RichEmbed } = require("discord.js");
+const { RichEmbed, Attachment } = require("discord.js");
 const DiscordColors = global.utils.colors.numbers.discord;
 module.exports = class DenyCommand extends global.utils.baseCommand {
 	constructor(client) {
@@ -28,7 +28,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 		if (this.isCached(ctx.args.messageId, ctx.guild.id))
 			return ctx.selfDestruct("This message was already denied by someone else!");
 		this.cache(ctx.args.messageId, ctx.guild.id);
-		const { approverRole, approverChannel, challengeData } = await ctx.db.get();
+		const { approverRole, approverChannel, challengeData, storageChannel } = await ctx.db.get();
 		if (!approverRole) {
 			this.uncache(ctx.args.messageId, ctx.guild.id);
 			return ctx.send(`Approver role not specified. Please specify an approver role using ${ctx.prefix}approverRole`);
@@ -68,48 +68,83 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 			return ctx.send("You cannot deny your own messages!");
 		}
 
+		let attachments = [];
+		if (storageChannel && ctx.guild.channels.has(storageChannel)) {
+			attachments = [...submission.attachments.values()];
+			if (attachments.some(attachment => !attachment.filesize || attachment.filesize >= 1024 * 1024 * 8)) {
+				this.uncache(ctx.args.messageId, ctx.guild.Id);
+				return ctx.send("Attachments are too big to parse.");
+			}
+			attachments = attachments.filter(attachment => typeof attachment.filesize === "number" && attachment.filesize < 1024 * 1024 * 8).map(file => new Attachment(file.url));
+			if (attachments.length > 0) {
+				const attachmentMessage = await ctx.guild.channels.get(storageChannel).send({
+					embed: new RichEmbed({
+						author: {
+							icon_url: submission.author.displayAvatarURL,
+							name: `Attachments sent by ${submission.author.tag}.`
+						},
+						title: "Message Content",
+						description: submission.cleanContent,
+						footer: { text: `User ID: ${submission.author.id} | Message ID: ${submission.id}` },
+						timestamp: submission.createdTimestamp
+					}),
+					files: attachments
+				});
+				attachments = [{
+					name: "Attachments",
+					value: [...attachmentMessage.attachments.values()].map(attachment => `[${attachment.filename} (${Math.round(attachment.filesize / (1024 * 1024))} MB)](${attachment.url})`).join("\n")
+				}];
+			}
+		}
+
 		const timestamp = Date.now();
 		const logChannel = challengeData.logChannel ? ctx.guild.channels.get(challengeData.logChannel) : null;
 		if (logChannel)
-			await logChannel.send(new RichEmbed({
-				author: { name: `${submission.author.tag}'s submission was denied.` },
+			await logChannel.send({
+				embed: new RichEmbed({
+					author: { name: `${submission.author.tag}'s submission was denied.` },
+					title: "Message Content",
+					description: submission.cleanContent,
+					thumbnail: { url: submission.author.displayAvatarURL },
+					fields: [
+						{
+							name: `Denied by ${ctx.user.tag} (${ctx.user.id}).`,
+							value: `${submission.author.tag} was not rewarded anything.`
+						},
+						{
+							name: "Reason",
+							value: ctx.args.reason
+						},
+						...attachments
+					],
+					color: DiscordColors.red,
+					footer: { text: `User ID: ${submission.author.id}` },
+					timestamp
+				})
+			});
+
+		await submission.author.send({
+			embed: new RichEmbed({
+				author: { name: "Your submission was denied!" },
 				title: "Message Content",
 				description: submission.cleanContent,
 				thumbnail: { url: submission.author.displayAvatarURL },
 				fields: [
 					{
-						name: `Challenge submission denied by ${ctx.user.tag} (${ctx.user.id}).`,
-						value: `${submission.author.tag} was not rewarded anything.`
+						name: `Denied by ${ctx.user.tag} (${ctx.user.id}).`,
+						value: "You were not rewarded anything."
 					},
 					{
 						name: "Reason",
 						value: ctx.args.reason
-					}
+					},
+					...attachments
 				],
 				color: DiscordColors.red,
 				footer: { text: `User ID: ${submission.author.id}` },
 				timestamp
-			}));
-
-		await submission.author.send(new RichEmbed({
-			author: { name: "Your submission was denied!" },
-			title: "Message Content",
-			description: submission.cleanContent,
-			thumbnail: { url: submission.author.displayAvatarURL },
-			fields: [
-				{
-					name: `Challenge submission denied by ${ctx.user.tag} (${ctx.user.id}).`,
-					value: "You were not rewarded anything."
-				},
-				{
-					name: "Reason",
-					value: ctx.args.reason
-				}
-			],
-			color: DiscordColors.red,
-			footer: { text: `User ID: ${submission.author.id}` },
-			timestamp
-		}));
+			})
+		});
 		await ctx.message.delete();
 		await submission.delete();
 		this.uncache(ctx.args.messageId, ctx.guild.id);
