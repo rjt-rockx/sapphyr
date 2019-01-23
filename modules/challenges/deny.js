@@ -1,5 +1,7 @@
 const { RichEmbed, Attachment } = require("discord.js");
 const DiscordColors = global.utils.colors.numbers.discord;
+const properRoundToTwo = num => +(Math.round(num + "e+2") + "e-2");
+
 module.exports = class DenyCommand extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
@@ -92,7 +94,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 				});
 				attachments = [{
 					name: "Attachments",
-					value: [...attachmentMessage.attachments.values()].map(attachment => `[${attachment.filename} (${Math.round(attachment.filesize / (1024 * 1024))} MB)](${attachment.url})`).join("\n")
+					value: [...attachmentMessage.attachments.values()].map(attachment => `[${attachment.filename} (${properRoundToTwo(attachment.filesize / (1024 * 1024))} MB)](${attachment.url})`).join("\n")
 				}];
 			}
 		}

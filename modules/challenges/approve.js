@@ -1,6 +1,7 @@
 const { RichEmbed, Attachment } = require("discord.js");
 const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 const DiscordColors = global.utils.colors.numbers.discord;
+const properRoundToTwo = num => +(Math.round(num + "e+2") + "e-2");
 
 module.exports = class ApproveCommand extends global.utils.baseCommand {
 	constructor(client) {
@@ -94,7 +95,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 				attachmentLinks = [...attachmentMessage.attachments.values()].map(({ filename, filesize, url }) => ({ name: filename, size: filesize, url }));
 				attachments = [{
 					name: "Attachments",
-					value: [...attachmentMessage.attachments.values()].map(attachment => `[${attachment.filename} (${Math.round(attachment.filesize / (1024 * 1024))} MB)](${attachment.url})`).join("\n")
+					value: [...attachmentMessage.attachments.values()].map(attachment => `[${attachment.filename} (${properRoundToTwo(attachment.filesize / (1024 * 1024))} MB)](${attachment.url})`).join("\n")
 				}];
 			}
 		}
