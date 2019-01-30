@@ -48,7 +48,7 @@ module.exports = class guildDataHandler {
 		}
 		delete data._id;
 		await this.datahandler.editGuild(this.guild, data);
-		return this.reload();
+		return ["string", "number"].includes(typeof keyOrObject) ? (await this.reload())[keyOrObject] : this.reload();
 	}
 
 	/**
@@ -66,7 +66,7 @@ module.exports = class guildDataHandler {
 		}
 		delete data._id;
 		await this.datahandler.editGuild(this.guild, data, true);
-		return this.reload();
+		return ["string", "number"].includes(typeof keyOrObject) ? (await this.reload())[keyOrObject] : this.reload();
 	}
 
 	/**
