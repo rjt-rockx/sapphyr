@@ -11,6 +11,7 @@ module.exports = class AttachmentLog extends global.utils.baseService {
 	}
 
 	async onMessage(ctx) {
+		if (!ctx.guild) return;
 		const logChannel = await ctx.db.get("attachmentLogChannel");
 		if (ctx.guild && ctx.guild.channels.has(logChannel) && ctx.message.attachments.size > 0 && !ctx.user.bot) {
 			const attachments = [...ctx.message.attachments.values()];
