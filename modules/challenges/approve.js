@@ -69,6 +69,10 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 			this.uncache(ctx.args.messageId, ctx.guild.id);
 			return ctx.send("You cannot approve your own messages!");
 		}
+		if (submission.author.bot) {
+			this.uncache(ctx.args.messageId, ctx.guild.id);
+			return ctx.send("Bot messages can't be approved.");
+		}
 
 		let attachments = [], attachmentLinks = [];
 		if (storageChannel && ctx.guild.channels.has(storageChannel)) {
@@ -123,6 +127,14 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 			challengeData.users = {};
 		if (!challengeData.users[submission.author.id])
 			challengeData.users[submission.author.id] = [];
+
+		const uniqueChallenges = await ctx.db.get("uniqueChallenges") || await ctx.db.set("uniqueChallenges", false);
+		const approvedChallenges = challengeData.users[submission.author.id].map(entry => entry.challenge.id);
+		if (uniqueChallenges && approvedChallenges.includes(ctx.args.challengeId)) {
+			this.uncache(ctx.args.messageId, ctx.guild.id);
+			return ctx.send("Challenge has already been approved for this user.");
+		}
+
 		if (!ctx.nadekoConnector) {
 			this.uncache(ctx.args.messageId, ctx.guild.id);
 			return ctx.send("No NadekoConnector configuration found for this guild.");
