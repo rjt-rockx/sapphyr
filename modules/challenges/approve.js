@@ -15,149 +15,178 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 			guildOnly: true,
 			args: [
 				{
-					key: "messageId",
-					prompt: "The ID of the submission message to approve.",
-					type: "string"
-				},
-				{
 					key: "challengeId",
 					prompt: "The ID of the challenge to approve.",
 					type: "integer"
+				},
+				{
+					key: "messages",
+					prompt: "The IDs of the submission message(s) to approve.",
+					validate: async (val, msg) => {
+						for (const value of val.split(" ")) {
+							if (!/^[0-9]+$/.test(value)) return false;
+							const message = await msg.channel.fetchMessage(value).catch(() => null);
+							if (!message) return false;
+						}
+						return true;
+					},
+					parse: async (val, msg) => Promise.all(val.split(" ").map(id => msg.channel.fetchMessage(id)))
 				}
 			]
 		});
 	}
 	async task(ctx) {
-		if (this.isCached(ctx.args.messageId, ctx.guild.id))
-			return ctx.selfDestruct("This message was already approved by someone else!");
-		this.cache(ctx.args.messageId, ctx.guild.id);
+		if (this.isCached(ctx.args.messages, ctx.guild.id))
+			return ctx.selfDestruct("These messages were already approved by someone else!");
+		this.cache(ctx.args.messages, ctx.guild.id);
 		const { approverRole, approverChannel, storageChannel } = await ctx.db.get();
 		if (!approverRole) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send(`Approver role not specified. Please specify an approver role using ${ctx.prefix}approverRole`);
 		}
 		if (!approverChannel) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send(`Approver channel not specified. Please specify an approver channel using ${ctx.prefix}approverChannel`);
 		}
 		if (!ctx.guild.roles.has(approverRole)) {
 			await ctx.db.set("approverRole", "");
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send("Approver role not found.");
 		}
 		if (!ctx.guild.channels.has(approverChannel)) {
 			await ctx.db.set("approverChannel", "");
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send("Approver channel not found.");
 		}
 		if (ctx.channel.id !== approverChannel) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send(`This command can only be used in #${ctx.guild.channels.get(approverChannel).name}`);
 		}
 		if (!ctx.member.roles.has(approverRole)) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
-			return ctx.send(`You need the ${ctx.guild.roles.get(approverRole).name} to use this command.`);
+			this.uncache(ctx.args.messages, ctx.guild.id);
+			return ctx.send(`You need the ${ctx.guild.roles.get(approverRole).name} role to use this command.`);
 		}
-		const challengeData = await ctx.db.get("challengeData") || await ctx.db.set("challengeData", {});
-		let submission;
-		try { submission = await ctx.channel.fetchMessage(ctx.args.messageId); }
-		catch (error) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
-			return ctx.send("Unable to fetch the message. Make sure the message exists in this channel.");
-		}
-		if (submission.author.id === ctx.user.id) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+
+		const authorId = ctx.args.messages[0].author.id;
+		if (authorId && (authorId === ctx.user.id)) {
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send("You cannot approve your own messages!");
 		}
-		if (submission.author.bot) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
-			return ctx.send("Bot messages can't be approved.");
+
+		for (const submissionMessage of ctx.args.messages) {
+			if (submissionMessage.author.id !== authorId) {
+				this.uncache(ctx.args.messages, ctx.guild.id);
+				return ctx.send("Messages from multiple users are not allowed.");
+			}
+			if (submissionMessage.author.bot) {
+				this.uncache(ctx.args.messages, ctx.guild.id);
+				return ctx.send("Bot messages can't be approved.");
+			}
 		}
 
-		let attachments = [], attachmentLinks = [];
+		const attachmentLinks = [], attachmentField = [];
 		if (storageChannel && ctx.guild.channels.has(storageChannel)) {
-			attachments = [...submission.attachments.values()];
-			if (attachments.some(attachment => !attachment.filesize || attachment.filesize >= 1024 * 1024 * 8)) {
-				this.uncache(ctx.args.messageId, ctx.guild.Id);
-				return ctx.send("Attachments are too big to parse.");
+
+			for (const submissionMessage of ctx.args.messages) {
+				let currentAttachments = [...submissionMessage.attachments.values()];
+				if (currentAttachments.some(attachment => !attachment.filesize || attachment.filesize >= 1024 * 1024 * 8)) {
+					this.uncache(ctx.args.messages, ctx.guild.Id);
+					return ctx.send("Attachments are too big to parse.");
+				}
+				currentAttachments = currentAttachments.filter(attachment => typeof attachment.filesize === "number" && attachment.filesize < 1024 * 1024 * 8).map(file => new Attachment(file.url));
+
+				if (currentAttachments.length > 0) {
+					const attachmentMessage = await ctx.guild.channels.get(storageChannel).send({
+						embed: new RichEmbed({
+							author: {
+								icon_url: submissionMessage.author.displayAvatarURL,
+								name: `Attachments sent by ${submissionMessage.author.tag}.`
+							},
+							title: "Message Content",
+							description: submissionMessage.cleanContent,
+							footer: { text: `User ID: ${submissionMessage.author.id} | Message ID: ${submissionMessage.id}` },
+							timestamp: submissionMessage.createdTimestamp
+						}),
+						files: currentAttachments
+					});
+					const currentAttachmentLinks = [...attachmentMessage.attachments.values()]
+						.map(({ filename, filesize, url }) => ({
+							name: filename, size: filesize, url
+						}));
+					attachmentLinks.push(...currentAttachmentLinks);
+				}
 			}
-			attachments = attachments.filter(attachment => typeof attachment.filesize === "number" && attachment.filesize < 1024 * 1024 * 8).map(file => new Attachment(file.url));
-			if (attachments.length > 0) {
-				const attachmentMessage = await ctx.guild.channels.get(storageChannel).send({
-					embed: new RichEmbed({
-						author: {
-							icon_url: submission.author.displayAvatarURL,
-							name: `Attachments sent by ${submission.author.tag}.`
-						},
-						title: "Message Content",
-						description: submission.cleanContent,
-						footer: { text: `User ID: ${submission.author.id} | Message ID: ${submission.id}` },
-						timestamp: submission.createdTimestamp
-					}),
-					files: attachments
-				});
-				attachmentLinks = [...attachmentMessage.attachments.values()].map(({ filename, filesize, url }) => ({ name: filename, size: filesize, url }));
-				attachments = [{
+
+			if (attachmentLinks.length > 0)
+				attachmentField.push({
 					name: "Attachments",
-					value: [...attachmentMessage.attachments.values()].map(attachment => `[${attachment.filename} (${properRoundToTwo(attachment.filesize / (1024 * 1024))} MB)](${attachment.url})`).join("\n")
-				}];
-			}
+					value: attachmentLinks.map(({ name, size, url }) => `[${name} (${properRoundToTwo(size / (1024 * 1024))} MB)](${url})`).join("\n")
+				});
+
 		}
 
+		const challengeData = await ctx.db.get("challengeData") || await ctx.db.set("challengeData", {});
 		const { challenges } = challengeData;
 		if (!challenges || (Array.isArray(challenges) && challenges.length < 1)) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send("No challenges found.");
 		}
 		if (ctx.args.challengeId < 0 || !challenges.some(challenge => challenge.id === ctx.args.challengeId)) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send("Invalid ID specified.");
 		}
 		const [challenge] = challenges.filter(({ id }) => ctx.args.challengeId === id);
 		if (!challenge) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send("No challenge found.");
 		}
 		if (!challenge.enabled) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send("This challenge is currently disabled.");
 		}
 
 		if (!challengeData.users)
 			challengeData.users = {};
-		if (!challengeData.users[submission.author.id])
-			challengeData.users[submission.author.id] = [];
+		if (!challengeData.users[authorId])
+			challengeData.users[authorId] = [];
 
 		const uniqueChallenges = await ctx.db.get("uniqueChallenges") || await ctx.db.set("uniqueChallenges", false);
-		const approvedChallenges = challengeData.users[submission.author.id].map(entry => entry.challenge.id);
+		const approvedChallenges = challengeData.users[authorId].map(entry => entry.challenge.id);
+
 		if (uniqueChallenges && approvedChallenges.includes(ctx.args.challengeId)) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send("Challenge has already been approved for this user.");
 		}
 
 		if (!ctx.nadekoConnector) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			return ctx.send("No NadekoConnector configuration found for this guild.");
 		}
 
 		let result = await ctx.nadekoConnector.getBotInfo();
 		if (result.error) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to get bot information.");
 		}
 		const sign = result.bot.currency.sign;
-		result = await ctx.nadekoConnector.addCurrency(submission.author.id, challenge.reward, `[Sapphyr] Challenge #${challenge.id} approved by ${ctx.user.tag} (${ctx.user.id}) in ${ctx.guild.name} (${ctx.guild.id})`);
+		result = await ctx.nadekoConnector.addCurrency(authorId, challenge.reward, `[Sapphyr] Challenge #${challenge.id} approved by ${ctx.user.tag} (${ctx.user.id}) in ${ctx.guild.name} (${ctx.guild.id})`);
 		if (result.error) {
-			this.uncache(ctx.args.messageId, ctx.guild.id);
+			this.uncache(ctx.args.messages, ctx.guild.id);
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to award currency to the user.");
 		}
 
+		const fullMessage = ctx.args.messages.map(message => message.cleanContent).join("\n") || "No message content.";
+		if (fullMessage.length > 2000) {
+			this.uncache(ctx.args.messages, ctx.guild.id);
+			return ctx.send("Combined message length must be less than or equal to 2000 characters.");
+		}
+
 		const timestamp = Date.now();
-		challengeData.users[submission.author.id].push({
+		challengeData.users[authorId].push({
 			challenge, timestamp,
-			proof: submission.cleanContent,
+			proof: fullMessage,
 			attachments: attachmentLinks,
 			approver: {
 				tag: ctx.user.tag,
@@ -166,13 +195,13 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		});
 
 		const logChannel = challengeData.logChannel ? ctx.guild.channels.get(challengeData.logChannel) : null;
-		if (logChannel)
+		if (logChannel) {
 			await logChannel.send({
 				embed: new RichEmbed({
-					author: { name: `${submission.author.tag}'s submission was approved.` },
+					author: { name: `${ctx.args.messages[0].author.tag}'s submission was approved.` },
 					title: "Message Content",
-					description: submission.cleanContent,
-					thumbnail: { url: submission.author.displayAvatarURL },
+					description: fullMessage,
+					thumbnail: { url: ctx.args.messages[0].author.displayAvatarURL },
 					fields: [
 						{
 							name: `Challenge #${challenge.id}`,
@@ -180,58 +209,78 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 						},
 						{
 							name: `Approved by ${ctx.user.tag} (${ctx.user.id}).`,
-							value: `${submission.author.tag} was rewarded with ${challenge.reward} ${sign}!`
+							value: `${ctx.args.messages[0].author.tag} was rewarded with ${challenge.reward} ${sign}!`
 						},
-						...attachments
+						...attachmentField
 					],
 					color: DiscordColors.green,
-					footer: { text: `User ID: ${submission.author.id}` },
+					footer: { text: `User ID: ${ctx.args.messages[0].author.id}` },
 					timestamp
 				})
 			});
-
+		}
 		await ctx.db.set("challengeData", challengeData);
-		await submission.author.send({
-			embed: new RichEmbed({
-				author: { name: "Your submission was approved!" },
-				title: "Message Content",
-				description: submission.cleanContent,
-				thumbnail: { url: submission.author.displayAvatarURL },
-				fields: [
-					{
-						name: `Challenge #${challenge.id}`,
-						value: `[${toTitleCase(challenge.difficulty)}] ${challenge.challenge}`
-					},
-					{
-						name: `Approved by ${ctx.user.tag} (${ctx.user.id}).`,
-						value: `You were rewarded with ${challenge.reward} ${sign}!`
-					},
-					...attachments
-				],
-				color: DiscordColors.green,
-				footer: { text: `User ID: ${submission.author.id}` },
-				timestamp
-			})
-		});
+		try {
+			await ctx.args.messages[0].author.send({
+				embed: new RichEmbed({
+					author: { name: "Your submission was approved!" },
+					title: "Message Content",
+					description: fullMessage,
+					thumbnail: { url: ctx.args.messages[0].author.displayAvatarURL },
+					fields: [
+						{
+							name: `Challenge #${challenge.id}`,
+							value: `[${toTitleCase(challenge.difficulty)}] ${challenge.challenge}`
+						},
+						{
+							name: `Approved by ${ctx.user.tag} (${ctx.user.id}).`,
+							value: `You were rewarded with ${challenge.reward} ${sign}!`
+						},
+						...attachmentField
+					],
+					color: DiscordColors.green,
+					footer: { text: `User ID: ${ctx.args.messages[0].author.id}` },
+					timestamp
+				})
+			});
+		}
+		catch (error) {
+			ctx.selfDestruct("Unable to DM user, ignoring.");
+		}
 		await ctx.message.delete();
-		await submission.delete();
-		this.uncache(ctx.args.messageId, ctx.guild.id);
+		await Promise.all(ctx.args.messages.map(message => message.delete()));
+		this.uncache(ctx.args.messages, ctx.guild.id);
 		return ctx.selfDestruct("Challenge submission successfully approved.");
 	}
 
-	uncache(messageId, guildId) {
+	uncache(messages, guildId) {
 		this.checkOrInitializeCache(guildId);
-		global.challengeMessages[guildId].delete(messageId);
+		if (!(messages instanceof Array))
+			messages = [messages];
+		messages.map(message => {
+			if (typeof message === "string" && /^[0-9]+$/.test(message)) return message;
+			else if (typeof message.id === "string" && /^[0-9]+$/.test(message.id)) return message.id;
+		}).forEach(id => global.challengeMessages[guildId].delete(id));
 	}
 
-	cache(messageId, guildId) {
+	cache(messages, guildId) {
 		this.checkOrInitializeCache(guildId);
-		global.challengeMessages[guildId].add(messageId);
+		if (!(messages instanceof Array))
+			messages = [messages];
+		messages.map(message => {
+			if (typeof message === "string" && /^[0-9]+$/.test(message)) return message;
+			else if (typeof message.id === "string" && /^[0-9]+$/.test(message.id)) return message.id;
+		}).forEach(id => global.challengeMessages[guildId].add(id));
 	}
 
-	isCached(messageId, guildId) {
+	isCached(messages, guildId) {
 		this.checkOrInitializeCache(guildId);
-		return global.challengeMessages[guildId].has(messageId);
+		if (!(messages instanceof Array))
+			messages = [messages];
+		return messages.map(message => {
+			if (typeof message === "string" && /^[0-9]+$/.test(message)) return message;
+			else if (typeof message.id === "string" && /^[0-9]+$/.test(message.id)) return message.id;
+		}).every(id => global.challengeMessages[guildId].has(id));
 	}
 
 	checkOrInitializeCache(guildId) {
