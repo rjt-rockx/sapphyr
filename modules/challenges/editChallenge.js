@@ -41,6 +41,8 @@ module.exports = class EditChallengeCommand extends global.utils.baseCommand {
 		}
 		if (!ctx.member.roles.has(approverRole))
 			return ctx.send(`You need the ${ctx.guild.roles.get(approverRole).name} to use this command.`);
+		if (ctx.args.challenge.length > 250)
+			return ctx.send("Challenge text length too long. Please specify a smaller challenge.");
 		const challengeData = await ctx.db.get("challengeData") || await ctx.db.set("challengeData", { rewards: {} });
 		if (!challengeData.challenges || (Array.isArray(challengeData.challenges) && challengeData.challenges.length < 1))
 			return ctx.send("No challenge found.");
@@ -72,8 +74,7 @@ module.exports = class EditChallengeCommand extends global.utils.baseCommand {
 					value: !challenge.enabled ? "You won't be rewarded for this challenge." : `Reward: ${challenge.reward}`
 				}
 			],
-			footer: { text: `ID: ${challenge.id}` },
-			timestamp: challenge.timestamp
+			footer: { text: `ID: ${challenge.id}` }, timestamp
 		});
 	}
 };

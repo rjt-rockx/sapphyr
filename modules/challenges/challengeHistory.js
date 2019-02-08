@@ -29,7 +29,7 @@ module.exports = class ChallengeHistoryCommand extends global.utils.baseCommand 
 		const { users } = challengeData;
 		const user = ctx.args.user === "self" ? ctx.user : ctx.args.user;
 		if (!Object.keys(users).includes(user.id))
-			return ctx.send("No challenge data found.");
+			return ctx.send("No challenge data found for this user.");
 		if (!Array.isArray(users[user.id]))
 			return ctx.send("Invalid challenge data stored.");
 		if (users[user.id].length < 1)
@@ -42,8 +42,9 @@ module.exports = class ChallengeHistoryCommand extends global.utils.baseCommand 
 		const sign = result.bot.currency.sign;
 		const fields = users[user.id].map(entry => {
 			const approver = this.client.users.get(entry.approver.id) || entry.approver;
+			const challengeString = `Challenge #${entry.challenge.id}: [${toTitleCase(entry.challenge.difficulty)}] ${entry.challenge.challenge}`;
 			return {
-				name: `Challenge #${entry.challenge.id}: [${toTitleCase(entry.challenge.difficulty)}] ${entry.challenge.challenge}`,
+				name: challengeString.length > 256 ? challengeString.substring(0, 253) + "..." : challengeString,
 				value: [
 					`**Submitted on**: ${new Date(entry.timestamp).toISOString().replace(/[TZ]/g, " ")}`,
 					`**Approved by**: ${approver.tag} (${approver.id})`,

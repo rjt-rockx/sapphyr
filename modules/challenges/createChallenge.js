@@ -38,6 +38,8 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 		const challengeData = await ctx.db.get("challengeData") || await ctx.db.set("challengeData", { rewards: {} });
 		if (!Object.keys(challengeData.rewards).includes(ctx.args.difficulty.toLowerCase()))
 			return ctx.send("No reward specified for this difficulty.");
+		if (ctx.args.challenge.length > 250)
+			return ctx.send("Challenge text length too long. Please specify a smaller challenge.");
 		if (!challengeData.challenges)
 			challengeData.challenges = [];
 		if (!challengeData.previousId)
