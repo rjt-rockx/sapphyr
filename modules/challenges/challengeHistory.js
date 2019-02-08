@@ -42,19 +42,15 @@ module.exports = class ChallengeHistoryCommand extends global.utils.baseCommand 
 		const sign = result.bot.currency.sign;
 		const fields = users[user.id].map(entry => {
 			const approver = this.client.users.get(entry.approver.id) || entry.approver;
-			const challengeString = `Challenge #${entry.challenge.id}: [${toTitleCase(entry.challenge.difficulty)}] ${entry.challenge.challenge}`;
+			const challengeString = `#${entry.challenge.id}: [${toTitleCase(entry.challenge.difficulty)}] ${entry.challenge.challenge}`;
 			return {
 				name: challengeString.length > 256 ? challengeString.substring(0, 253) + "..." : challengeString,
-				value: [
-					`**Submitted on**: ${new Date(entry.timestamp).toISOString().replace(/[TZ]/g, " ")}`,
-					`**Approved by**: ${approver.tag} (${approver.id})`,
-					`**Rewarded with**: ${entry.challenge.reward} ${sign}`
-				].join("\n"),
+				value: `${entry.challenge.reward} ${sign} | Approver: ${approver.tag} | ${new Date(entry.timestamp).toISOString().replace(/[TZ]/g, " ")}`,
 				inline: false
 			};
 		}).reverse();
 		return new global.utils.fieldPaginator(ctx.channel, ctx.user, fields, 15, {
-			numberFields: true,
+			numberFields: false,
 			embedTemplate: {
 				title: `Challenge history of ${user.tag}`,
 				thumbnail: { url: user.displayAvatarURL }
