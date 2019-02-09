@@ -1,4 +1,5 @@
 const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+const fromNow = timestamp => require("fromnow")(timestamp, { suffix: true, and: true, zero: false, max: 2 });
 
 module.exports = class ChallengeHistoryCommand extends global.utils.baseCommand {
 	constructor(client) {
@@ -45,7 +46,10 @@ module.exports = class ChallengeHistoryCommand extends global.utils.baseCommand 
 			const challengeString = `#${entry.challenge.id}: [${toTitleCase(entry.challenge.difficulty)}] ${entry.challenge.challenge}`;
 			return {
 				name: challengeString.length > 256 ? challengeString.substring(0, 253) + "..." : challengeString,
-				value: `${entry.challenge.reward} ${sign} | Approver: ${approver.tag} | ${new Date(entry.timestamp).toISOString().replace(/[TZ]/g, " ")}`,
+				value: [
+					`${entry.challenge.reward} ${sign} | ${fromNow(entry.timestamp)}`,
+					`Approved by <@${approver.id}>`
+				].join("\n"),
 				inline: false
 			};
 		}).reverse();
