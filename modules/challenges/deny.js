@@ -154,7 +154,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 						},
 						...attachmentField
 					],
-					color: DiscordColors.green,
+					color: DiscordColors.red,
 					footer: { text: `User ID: ${ctx.args.messages[0].author.id}` },
 					timestamp
 				})
@@ -180,7 +180,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 						},
 						...attachmentField
 					],
-					color: DiscordColors.green,
+					color: DiscordColors.red,
 					footer: { text: `User ID: ${ctx.args.messages[0].author.id}` },
 					timestamp
 				})
