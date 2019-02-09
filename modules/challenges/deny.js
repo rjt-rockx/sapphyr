@@ -146,7 +146,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 					fields: [
 						{
 							name: `Denied by ${ctx.user.tag} (${ctx.user.id}).`,
-							value: `${ctx.args.messages[0].author.tag} was not rewarded with anything.`
+							value: `${ctx.args.messages[0].author.tag} was not rewarded.`
 						},
 						{
 							name: "Reason",
@@ -165,14 +165,14 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 		try {
 			await ctx.args.messages[0].author.send({
 				embed: new RichEmbed({
-					author: { name: "Your submission was approved!" },
+					author: { name: "Your submission was denied." },
 					title: "Message Content",
 					description: fullMessage,
 					thumbnail: { url: ctx.args.messages[0].author.displayAvatarURL },
 					fields: [
 						{
 							name: `Denied by ${ctx.user.tag} (${ctx.user.id}).`,
-							value: "You were not rewarded anything."
+							value: "You were not rewarded."
 						},
 						{
 							name: "Reason",

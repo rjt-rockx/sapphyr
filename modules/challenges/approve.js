@@ -209,7 +209,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 						},
 						{
 							name: `Approved by ${ctx.user.tag} (${ctx.user.id}).`,
-							value: `${ctx.args.messages[0].author.tag} was rewarded with ${challenge.reward} ${sign}!`
+							value: `${ctx.args.messages[0].author.tag} was rewarded ${challenge.reward} ${sign}!`
 						},
 						...attachmentField
 					],
@@ -223,7 +223,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 		try {
 			await ctx.args.messages[0].author.send({
 				embed: new RichEmbed({
-					author: { name: "Your submission was approved!" },
+					author: { name: "Your submission was approved." },
 					title: "Message Content",
 					description: fullMessage,
 					thumbnail: { url: ctx.args.messages[0].author.displayAvatarURL },
@@ -234,7 +234,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 						},
 						{
 							name: `Approved by ${ctx.user.tag} (${ctx.user.id}).`,
-							value: `You were rewarded with ${challenge.reward} ${sign}!`
+							value: `You were rewarded ${challenge.reward} ${sign}!`
 						},
 						...attachmentField
 					],
