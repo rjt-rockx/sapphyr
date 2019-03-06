@@ -10,7 +10,8 @@ module.exports = class BotClearCommand extends global.utils.baseCommand {
 				{
 					key: "amount",
 					prompt: "Amount of messages to clear. (Max: 50)",
-					type: "integer"
+					type: "integer",
+					default: 25
 				},
 				{
 					key: "ignorepins",
