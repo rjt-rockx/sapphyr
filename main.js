@@ -21,7 +21,7 @@ try {
 
 			// Initialize datahandler
 			client.datahandler = new utils.datahandler(mongoUrl ? mongoUrl : undefined);
-			await client.datahandler.initialize();
+			await client.datahandler.initialize(client);
 			log("Datahandler initialized.");
 			global.utils = utils;
 

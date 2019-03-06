@@ -18,10 +18,24 @@ class dataHandler {
 	/**
      * Initialize the MongoClient and the database.
      */
-	async initialize() {
+	async initialize(client) {
 		await this.mongoClient.connect();
 		this.db = this.mongoClient.db(this._databaseName);
 		if (this.db) this.initialized = true;
+		await this.initializePrefixes(client);
+	}
+
+	/**
+	 * Initialize the global prefix and guild prefixes once the db has loaded.
+	 * @param {CommandoClient} client Client to initialize the prefixes for.
+	 */
+	async initializePrefixes(client) {
+		const globalData = await this.getOrCreateGlobal();
+		client.commandPrefix = globalData.prefix;
+		for (const guild of client.guilds.array()) {
+			const guildData = await this.getGuild(guild);
+			guild.commandPrefix = guildData.prefix;
+		}
 	}
 
 	/**
