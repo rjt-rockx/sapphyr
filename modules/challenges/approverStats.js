@@ -55,20 +55,18 @@ module.exports = class ApproverStatsCommand extends global.utils.baseCommand {
 				{
 					name: "Overall stats",
 					value: [
-						`${stats.total.approvals} submissions approved`,
-						`${stats.total.denials} submissions denied`,
+						`${stats.total.approvals} submissions approved.`,
+						`${stats.total.denials} submissions denied.`,
 						`${stats.total.rewarded} ${sign} given out.`
-					].join("\n"),
-					inline: true
+					].join("\n")
 				},
 				{
 					name: "Stats for the past day",
 					value: [
-						`${stats.pastday.approvals} submissions approved`,
-						`${stats.pastday.denials} submissions denied`,
+						`${stats.pastday.approvals} submissions approved.`,
+						`${stats.pastday.denials} submissions denied.`,
 						`${stats.pastday.rewarded} ${sign} given out.`
-					].join("\n"),
-					inline: true
+					].join("\n")
 				}
 			]
 		});
