@@ -1,5 +1,5 @@
 const { Util: { escapeMarkdown } } = require("discord.js");
-const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1));
 
 module.exports = class HelpCommand extends global.utils.baseCommand {
 	constructor(client) {
@@ -33,37 +33,39 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 		}
 		const commandData = getCommandData(args.command, this.client);
 		const fields = [];
-		if (commandData.arguments.length > 0) fields.push({ name: "Arguments", value: commandData.arguments });
-		if (commandData.userperms.length > 0) fields.push({ name: "Required User Permissions", value: commandData.userperms });
+		if (commandData.aliases)
+			fields.push({ name: "Aliases", value: commandData.aliases });
+		if (commandData.arguments)
+			fields.push({ name: "Arguments", value: commandData.arguments });
+		if (commandData.userperms)
+			fields.push({ name: "Required User Permissions", value: commandData.userperms });
+		if (commandData.clientperms)
+			fields.push({ name: "Required Bot Permissions", value: commandData.clientperms });
 		return message.channel.send({ embed: { title: commandData.name, description: commandData.description, fields } });
 	}
 };
 
 
 function getCommandData(command, client) {
-	let commandName = client.commandPrefix + command.name;
-	if (Array.isArray(command.aliases) && command.aliases.length > 0) {
-		const aliases = [];
-		aliases.push(escapeMarkdown(commandName));
-		command.aliases.map(alias => aliases.push(escapeMarkdown(client.commandPrefix + alias)));
-		commandName = aliases.join(" / ");
-	}
-	let arguments = [];
+	let commandTitle = escapeMarkdown(client.commandPrefix + command.name), arguments = [];
 	if (command.argsCollector && command.argsCollector.args && Array.isArray(command.argsCollector.args)) {
 		const argKeys = command.argsCollector.args.map(arg => {
 			const argName = (arg.oneOf && arg.oneOf.length < 4) ? arg.oneOf.join("/") : arg.key;
-			return `${arg.default ? `[${argName}]` : `<${argName}>`}`;
+			return `${typeof arg.default !== "undefined" && arg.default !== null ? `[${argName}]` : `<${argName}>`}`;
 		});
-		commandName += ` ${argKeys.join(" ")}`;
-		arguments = command.argsCollector.args.map(arg => `**${toTitleCase(arg.key)}** - ${arg.prompt} ${arg.default ? `(Default: ${arg.default})` : ""}`).join("\n");
+		commandTitle += ` ${argKeys.join(" ")}`;
+		arguments = command.argsCollector.args.map(arg => `**${toTitleCase(arg.key)}** - ${arg.prompt} ${typeof arg.default !== "undefined" && arg.default !== null ? `(Default: ${arg.default})` : ""}`).join("\n");
 	}
-	let userperms = [];
+	let userperms = "";
 	if (Array.isArray(command.userPermissions) && command.userPermissions.length > 0)
-		userperms = command.userPermissions.map(permission => toTitleCase(permission.split("_").join(" "))).join("\n");
+		userperms = command.userPermissions.map(permission => toTitleCase(permission.split("_").join(" ").toLowerCase())).join(", ");
+	let clientperms = "";
+	if (Array.isArray(command.clientPermissions) && command.clientPermissions.length > 0)
+		clientperms = command.clientPermissions.map(permission => toTitleCase(permission.split("_").join(" ").toLowerCase())).join(", ");
 	return {
-		name: commandName,
-		arguments,
-		userperms,
-		description: command.description
+		name: commandTitle,
+		aliases: Array.isArray(command.aliases) ? command.aliases.map(alias => escapeMarkdown(client.commandPrefix + alias)).join(", ") : "",
+		description: command.description,
+		arguments, userperms, clientperms
 	};
 }
