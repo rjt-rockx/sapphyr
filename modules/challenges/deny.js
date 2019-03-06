@@ -189,6 +189,13 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 		catch (error) {
 			ctx.selfDestruct("Unable to DM user, ignoring.");
 		}
+
+		const approverStats = await ctx.db.get("approverStats") || await ctx.db.set("approverStats", {});
+		if (!Array.isArray(approverStats[ctx.user.id]))
+			approverStats[ctx.user.id] = [];
+		approverStats[ctx.user.id].push({ type: "denial", timestamp });
+		await ctx.db.set("approverStats", approverStats);
+
 		await ctx.message.delete();
 		await Promise.all(ctx.args.messages.map(message => message.delete()));
 		this.uncache(ctx.args.messages, ctx.guild.id);
