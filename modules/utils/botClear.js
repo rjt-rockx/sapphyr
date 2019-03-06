@@ -37,7 +37,9 @@ module.exports = class BotClearCommand extends global.utils.baseCommand {
 			if (ctx.args.ignorepins)
 				messages = messages.filter(message => !message.pinned);
 			messages = messages.filter(message => message.author.bot || (prefixes.length > 0 && prefixes.some(prefix => message.content.toLowerCase().startsWith(prefix))));
-			await ctx.message.delete();
+			if (messages.length < 1)
+				return ctx.selfDestruct("No bot messages were found.", 5);
+			await ctx.message.delete().catch();
 			await ctx.channel.bulkDelete(messages, true);
 			return ctx.selfDestruct(`Deleted ${messages.size} bot messages in the last ${ctx.args.amount} messages.`, 5);
 		}
