@@ -55,17 +55,17 @@ module.exports = class ApproverStatsCommand extends global.utils.baseCommand {
 				{
 					name: "Overall stats",
 					value: [
-						`${stats.total.approvals} submissions approved.`,
+						`${stats.total.approvals} submissions approved.	`,
 						`${stats.total.denials} submissions denied.`,
 						`${stats.total.rewarded} ${sign} given out.`
 					].join("\n")
 				},
 				{
-					name: "Stats for the past day",
+					name: "Stats for the past 48h",
 					value: [
-						`${stats.pastday.approvals} submissions approved.`,
-						`${stats.pastday.denials} submissions denied.`,
-						`${stats.pastday.rewarded} ${sign} given out.`
+						`${stats.recent.approvals} submissions approved.`,
+						`${stats.recent.denials} submissions denied.`,
+						`${stats.recent.rewarded} ${sign} given out.`
 					].join("\n")
 				}
 			]
@@ -73,17 +73,17 @@ module.exports = class ApproverStatsCommand extends global.utils.baseCommand {
 	}
 
 	parseStats(stats) {
-		const pastDayStats = stats.filter(entry => entry.timestamp >= Date.now() - (24 * 60 * 60 * 1000));
+		const recentStats = stats.filter(entry => entry.timestamp >= Date.now() - (24 * 60 * 60 * 1000 * 2));
 		return {
 			total: {
 				approvals: stats.filter(entry => entry.type === "approval").length,
 				denials: stats.filter(entry => entry.type === "denial").length,
 				rewarded: sum(stats.filter(entry => entry.type === "approval").map(a => a.reward))
 			},
-			pastday: {
-				approvals: pastDayStats.filter(entry => entry.type === "approval").length,
-				denials: pastDayStats.filter(entry => entry.type === "denial").length,
-				rewarded: sum(pastDayStats.filter(entry => entry.type === "approval").map(a => a.reward))
+			recent: {
+				approvals: recentStats.filter(entry => entry.type === "approval").length,
+				denials: recentStats.filter(entry => entry.type === "denial").length,
+				rewarded: sum(recentStats.filter(entry => entry.type === "approval").map(a => a.reward))
 			}
 		};
 	}
