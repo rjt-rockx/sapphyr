@@ -1,48 +1,17 @@
 const { Command } = require("discord.js-commando"),
-	datahandler = require("./datahandler.js"),
-	guildDatahandler = require("./guildDatahandler.js"),
-	globalDatahandler = require("./globalDatahandler.js"),
-	nadekoConnector = require("./nadekoConnector.js"),
-	{ mongoUrl } = require("../localdata/config"),
-	{ RichEmbed } = require("discord.js"),
 	log = require("fancy-log");
 
 module.exports = class BaseCommand extends Command {
 	constructor(client, commandInfo) {
-		super(client, commandInfo);
+		super(client, {
+			...commandInfo,
+			memberName: commandInfo.memberName || commandInfo.name
+		});
 	}
 
-	async run(message, args, fromPattern) {
-		const context = {
-			message, args, fromPattern,
-			msg: message,
-			arguments: args,
-			prefix: this.client.commandPrefix,
-			channel: message.channel,
-			user: message.author,
-			react: (...data) => message.react(...data),
-			dm: (...data) => message.author.send(...data),
-			dmEmbed: data => data instanceof RichEmbed ? message.author.send(data) : message.author.send(new RichEmbed(data)),
-			send: (...data) => message.channel.send(...data),
-			embed: data => data instanceof RichEmbed ? message.channel.send(data) : message.channel.send(new RichEmbed(data)),
-			selfDestruct: (data, seconds = 10) => message.channel.send(data).then(msg => msg.delete(seconds * 1000))
-		};
-		if (message.guild)
-			context.guild = message.guild;
-		if (message.member)
-			context.member = message.member;
-		if (typeof this.client.datahandler === "undefined") {
-			this.client.datahandler = new datahandler(mongoUrl ? mongoUrl : undefined);
-			await this.client.datahandler.initialize();
-		}
-		context.globalDb = new globalDatahandler(this.client.datahandler);
-		if (context.guild && context.guild.id) {
-			context.db = new guildDatahandler(this.client.datahandler, context.guild.id);
-			const nc = await context.db.get("nadekoconnector");
-			if (typeof nc === "object" && nc.enabled === true)
-				context.nadekoConnector = new nadekoConnector(nc.address, nc.password);
-		}
+	async run(...args) {
+		const context = await global.utils.fetchContext(this.client, "commandMessage", args);
 		await this.task(context);
-		log(`Command ${message.command.name} was executed by user ${message.author.tag} (${message.author.id}).`);
+		log(`Command ${context.command.name} was executed by user ${context.user.tag} (${context.user.id}).`);
 	}
 };
