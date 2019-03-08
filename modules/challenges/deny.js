@@ -120,12 +120,27 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 				}
 			}
 
-			if (attachmentLinks.length > 0)
-				attachmentField.push({
-					name: "Attachments",
-					value: attachmentLinks.map(({ name, size, url }) => `[${name} (${properRoundToTwo(size / (1024 * 1024))} MB)](${url})`).join("\n")
-				});
-
+			if (attachmentLinks.length > 0) {
+				let currentField = 0, totalText = "";
+				const links = attachmentLinks.map(({ name, size, url }) => `[${name.length >= 30 ? name.substring(0, 27) + "..." : name} (${properRoundToTwo(size / (1024 * 1024))} MB)](${url})`);
+				for (const link of links) {
+					if ((totalText + link + "\n").length <= 1024)
+						totalText += link + "\n";
+					if ((totalText + link + "\n").length > 1024) {
+						attachmentField.push({
+							name: `Attachments${currentField > 0 ? " (contd.)" : ""}`,
+							value: totalText
+						});
+						currentField += 1;
+						totalText = "";
+					}
+				}
+				if (totalText)
+					attachmentField.push({
+						name: `Attachments${currentField > 0 ? " (contd.)" : ""}`,
+						value: totalText
+					});
+			}
 		}
 
 		const fullMessage = ctx.args.messages.map(message => message.cleanContent).join("\n") || "No message content.";
