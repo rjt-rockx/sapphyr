@@ -48,9 +48,9 @@ module.exports = class ChallengeStatsCommand extends global.utils.baseCommand {
 		let rankText = `Currently ranked at #${rankInfo.user.rank}.`;
 		if (rankInfo.previousUser) {
 			if (rankInfo.previousUser.count - rankInfo.user.count !== 0)
-				rankText += `\n${rankInfo.previousUser.count - rankInfo.user.count} challenges to catch up to ${this.client.users.get(rankInfo.previousUser.userId).tag}`;
+				rankText += `\n${rankInfo.previousUser.count - rankInfo.user.count} challenges to catch up to ${this.client.users.get(Math.abs(rankInfo.previousUser.userId)).tag}`;
 			else if (rankInfo.previousUser.reward - rankInfo.user.reward !== 0)
-				rankText += `\n${rankInfo.previousUser.reward - rankInfo.user.reward} ${sign} to catch up to ${this.client.users.get(rankInfo.previousUser.userId).tag}`;
+				rankText += `\n${Math.abs(rankInfo.previousUser.reward - rankInfo.user.reward)} ${sign} to catch up to ${this.client.users.get(rankInfo.previousUser.userId).tag}`;
 		}
 		return ctx.embed({
 			title: `Challenge Stats of ${user.tag}`,
