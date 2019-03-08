@@ -59,9 +59,8 @@ module.exports = class ChallengeLeaderboardCommand extends global.utils.baseComm
 				reward: sum(challengeHistory.map(entry => entry.challenge.reward))
 			});
 		}
-		if (sortBy === "reward")
-			leaderboard = leaderboard.sort((a, b) => b.reward - a.reward);
-		else
+		leaderboard = leaderboard.sort((a, b) => a.reward - b.reward);
+		if (sortBy === "count")
 			leaderboard = leaderboard.sort((a, b) => b.count - a.count);
 		return leaderboard.map((element, index) => ({ ...element, rank: index + 1 }));
 	}
