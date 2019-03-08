@@ -106,7 +106,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 								name: `Attachments sent by ${submissionMessage.author.tag}.`
 							},
 							title: "Message Content",
-							description: submissionMessage.cleanContent,
+							description: submissionMessage.cleanContent || "No message content.",
 							footer: { text: `User ID: ${submissionMessage.author.id} | Message ID: ${submissionMessage.id}` },
 							timestamp: submissionMessage.createdTimestamp
 						}),
@@ -141,7 +141,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 				embed: new RichEmbed({
 					author: { name: `${ctx.args.messages[0].author.tag}'s submission was denied.` },
 					title: "Message Content",
-					description: fullMessage,
+					description: fullMessage || "No message content.",
 					thumbnail: { url: ctx.args.messages[0].author.displayAvatarURL },
 					fields: [
 						{
@@ -167,7 +167,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 				embed: new RichEmbed({
 					author: { name: "Your submission was denied." },
 					title: "Message Content",
-					description: fullMessage,
+					description: fullMessage || "No message content.",
 					thumbnail: { url: ctx.args.messages[0].author.displayAvatarURL },
 					fields: [
 						{
