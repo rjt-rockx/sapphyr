@@ -109,9 +109,11 @@ module.exports = class ChallengeStatsCommand extends global.utils.baseCommand {
 		let index = leaderboard.findIndex(element => element.userId === userId);
 		if (index < 0) return;
 		const data = { user: leaderboard[index] };
-		while (index > 0 && data.previousUser.count === data.user.count && data.previousUser.reward === data.user.reward) {
+		while (index > 0) {
 			index -= 1;
 			data.previousUser = leaderboard[index];
+			if (data.previousUser.count !== data.user.count || data.previousUser.reward !== data.user.reward)
+				break;
 		}
 		return data;
 	}
