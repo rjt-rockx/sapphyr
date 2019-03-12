@@ -8,7 +8,6 @@ module.exports = class CreateChallengeCommand extends global.utils.baseCommand {
 			group: "challenges",
 			memberName: "createchallenge",
 			aliases: ["crch"],
-			userPermissions: ["ADMINISTRATOR"],
 			clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
 			args: [
 				{
