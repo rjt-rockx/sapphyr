@@ -16,7 +16,8 @@ module.exports = class BirthdayRole extends global.utils.baseService {
 					guild: ctx.guild.id,
 					member: ctx.user.id,
 					role: birthdayRole,
-					time: Date.now() + (24 * 60 * 60 * 1000)
+					time: Date.now() + (24 * 60 * 60 * 1000),
+					reason: "Birthday role duration over."
 				});
 				await ctx.globalDb.set("pendingRemovals", pendingRemovals);
 			}
@@ -34,7 +35,7 @@ module.exports = class BirthdayRole extends global.utils.baseService {
 				const member = guild.members.get(removal.member);
 				if (!member || !member.roles.has(removal.role)) return;
 				if (member.roles.has(removal.role)) {
-					await member.removeRole(removal.role, "Birthday role duration over.");
+					await member.removeRole(removal.role, removal.reason || "No reason specified.");
 					return;
 				}
 			}));
