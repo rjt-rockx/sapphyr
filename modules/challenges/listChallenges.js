@@ -41,6 +41,9 @@ module.exports = class ListChallengesCommand extends global.utils.baseCommand {
 			].join("\n")
 		}));
 
+		if (!challengeFields.length)
+			return ctx.send(`No ${ctx.args.activeOnly ? "active" : ""}challenges found.`);
+
 		return new global.utils.fieldPaginator(ctx.channel, ctx.user, challengeFields, 15, {
 			embedTemplate: {
 				title: `Challenges in ${ctx.guild.name}`,
