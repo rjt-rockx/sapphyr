@@ -183,7 +183,7 @@ module.exports = class DenyCommand extends global.utils.baseCommand {
 					author: { name: "Your submission was denied." },
 					title: "Message Content",
 					description: fullMessage || "No message content.",
-					thumbnail: { url: ctx.args.messages[0].author.displayAvatarURL },
+					thumbnail: { url: ctx.user.displayAvatarURL },
 					fields: [
 						{
 							name: `Denied by ${ctx.user.tag} (${ctx.user.id}).`,

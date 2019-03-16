@@ -241,7 +241,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 					author: { name: "Your submission was approved." },
 					title: "Message Content",
 					description: fullMessage || "No message content.",
-					thumbnail: { url: ctx.args.messages[0].author.displayAvatarURL },
+					thumbnail: { url: ctx.user.displayAvatarURL },
 					fields: [
 						{
 							name: `Challenge #${challenge.id}`,
