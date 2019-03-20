@@ -37,13 +37,10 @@ module.exports = class ChallengeLeaderboardCommand extends global.utils.baseComm
 		const leaderboard = this.getLeaderboard(challengeData, ctx.args.sortBy);
 		if (!leaderboard || (Array.isArray(leaderboard) && leaderboard.length < 1))
 			return ctx.send("Unable to fetch leaderboard.");
-		const leaderboardFields = leaderboard.map(user => {
-			if (this.client.users.has(user.userId))
-				return {
-					name: `#${user.rank} - ${this.client.users.get(user.userId).tag}`,
-					value: `${user.count} challenges completed.\n${user.reward} ${sign} earned.`
-				};
-		}).filter(x => !!x);
+		const leaderboardFields = leaderboard.map(user => ({
+			name: `#${user.rank} - ${this.client.users.get(user.userId).tag}`,
+			value: `${user.count} challenges completed.\n${user.reward} ${sign} earned.`
+		}));
 		return new global.utils.fieldPaginator(ctx.channel, ctx.user, leaderboardFields, 15, {
 			embedTemplate: { title: `Challenge leaderboard for ${ctx.guild.name}` },
 			chunkSize: 7
@@ -53,11 +50,12 @@ module.exports = class ChallengeLeaderboardCommand extends global.utils.baseComm
 	getLeaderboard(challengeData, sortBy = "count") {
 		let leaderboard = [];
 		for (const [userId, challengeHistory] of Object.entries(challengeData.users)) {
-			leaderboard.push({
-				userId,
-				count: challengeHistory.length,
-				reward: sum(challengeHistory.map(entry => entry.challenge.reward))
-			});
+			if (this.client.users.has(userId))
+				leaderboard.push({
+					userId,
+					count: challengeHistory.length,
+					reward: sum(challengeHistory.map(entry => entry.challenge.reward))
+				});
 		}
 		leaderboard = leaderboard.sort((a, b) => b.reward - a.reward);
 		if (sortBy === "count")

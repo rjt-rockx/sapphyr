@@ -92,11 +92,12 @@ module.exports = class ChallengeStatsCommand extends global.utils.baseCommand {
 	getLeaderboard(challengeData, sortBy = "count") {
 		let leaderboard = [];
 		for (const [userId, challengeHistory] of Object.entries(challengeData.users)) {
-			leaderboard.push({
-				userId,
-				count: challengeHistory.length,
-				reward: sum(challengeHistory.map(entry => entry.challenge.reward))
-			});
+			if (this.client.users.has(userId))
+				leaderboard.push({
+					userId,
+					count: challengeHistory.length,
+					reward: sum(challengeHistory.map(entry => entry.challenge.reward))
+				});
 		}
 		leaderboard = leaderboard.sort((a, b) => b.reward - a.reward);
 		if (sortBy === "count")
