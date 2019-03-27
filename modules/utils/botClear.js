@@ -36,7 +36,7 @@ module.exports = class BotClearCommand extends global.utils.baseCommand {
 			let messages = await ctx.channel.fetchMessages({ limit: ctx.args.amount, before: ctx.message.id });
 			if (ctx.args.ignorepins)
 				messages = messages.filter(message => !message.pinned);
-			messages = messages.filter(message => message.author.bot || (prefixes.length > 0 && prefixes.some(prefix => message.content.toLowerCase().startsWith(prefix))));
+			messages = messages.filter(message => message.author.bot || (prefixes.length > 0 && prefixes.some(prefix => message.cleanContent.toLowerCase().startsWith(prefix))));
 			if (messages.length < 1)
 				return ctx.selfDestruct("No bot messages were found.", 5);
 			await ctx.message.delete().catch();
