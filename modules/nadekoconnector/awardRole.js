@@ -1,4 +1,4 @@
-const { RichEmbed } = require("discord.js"), log = require("fancy-log");
+const { RichEmbed } = require("discord.js");
 
 module.exports = class AwardRoleCommand extends global.utils.baseCommand {
 	constructor(client) {
@@ -12,73 +12,45 @@ module.exports = class AwardRoleCommand extends global.utils.baseCommand {
 			args: [
 				{
 					key: "role",
-					prompt: "The role to award.",
-					type: "string"
+					prompt: "Role to award",
+					type: "role"
 				},
 				{
 					key: "amount",
-					prompt: "amount of currency to award.",
+					prompt: "Amount of currency to award",
 					type: "integer"
 				},
 				{
 					key: "reason",
-					prompt: "reason to award the currency.",
-					type: "string"
+					prompt: "Reason to award the currency",
+					type: "string",
+					default: "No reason specified."
 				}
 			]
 		});
 	}
 	async task(ctx) {
-		const botInfo = await ctx.nadekoConnector.getBotInfo();
-
-		const missingroles = new RichEmbed()
-			.setTitle("Missing role")
-			.setColor("#7959ff")
-			.setDescription("Missing role to award, the role is case sensitive.");
-		const missingamount = new RichEmbed()
-			.setTitle("Missing amount")
-			.setColor("#7959ff")
-			.setDescription("Missing amount to award.");
-		const missingreason = new RichEmbed()
-			.setTitle("Missing reason")
-			.setColor("#7959ff")
-			.setDescription("Missing reason to award");
-		const nadekoError = new RichEmbed()
-			.setTitle("Error with NadekoConnector");
-		const successEmbed = new RichEmbed().setTitle("Success").setColor("#7959ff")
-			.setDescription(`Successfully awarded ${ctx.args.amount} ${botInfo.bot.currency.sign} to role ${ctx.args.role}`);
-
-		if (!ctx.message.guild.roles.find(role => role.name === ctx.args.role)) return ctx.send(missingroles);
-		if (!ctx.args.amount) return ctx.send(missingamount);
-		if (!ctx.args.reason) return ctx.send(missingreason);
-
-		const role = ctx.message.guild.roles.find(r => r.name === ctx.args.role);
+		const result = await ctx.nadekoConnector.getBotInfo();
+		if (result.error)
+			return ctx.send("Invalid NadekoConnector configuration stored.");
+		if (!ctx.args.amount)
+			return ctx.send("Invalid amount specified.");
 		ctx.args.reason = `[Sapphyr] Awarded by ${ctx.user} | ${ctx.args.reason}`;
-
-		role.members.map(async member => {
-			const embed = new RichEmbed();
-			let response;
-
-			if (ctx.args.amount < 0) {
-				response = await ctx.nadekoConnector.subtractCurrency(member.id, ctx.args.amount, ctx.args.reason);
-				if (response.error) return ctx.embed(nadekoError.setDescription(response.message));
-
-				log(`Currency subtracted from role ${ctx.args.role} with reason ${ctx.args.reason}\n Currency added: ${ctx.args.amount}`);
-				return embed.setTitle("Currency Removed")
-					.setColor("#7959ff")
-					.setDescription(`${ctx.args.amount} ${botInfo.bot.currency.sign} has been removed from your account by ${ctx.message.author.tag} with reason ${ctx.args.reason}.`);
-			}
-			if (ctx.args.amount > 0) {
-				response = await ctx.nadekoConnector.addCurrency(member.id, ctx.args.amount, ctx.args.reason);
-				if (response.error) return ctx.embed(nadekoError.setDescription(response.message));
-
-				log(`Currency added to role ${ctx.args.role} with reason ${ctx.args.reason}\n Currency added: ${ctx.args.amount}`);
-				return embed.setTitle("Currency Added")
-					.setColor("#7959ff")
-					.setDescription(`${ctx.args.amount} ${botInfo.bot.currency.sign} has been added to your account by ${ctx.message.author.tag} with reason ${ctx.args.reason}.`);
-			}
-			return member.send(embed);
-		});
-		return ctx.message.channel.send(successEmbed);
+		let count = 0;
+		for (const [userId, member] of ctx.args.role.members) {
+			const response = await ctx.nadekoConnector[`${ctx.args.amount > 0 ? "add" : "subtract"}Currency`](userId, ctx.args.amount, ctx.args.reason);
+			count++;
+			if (response.error)
+				return ctx.send(`Unable to ${ctx.args.amount > 0 ? "add" : "subtract"} currency for members of this role.`);
+			member.user.send(new RichEmbed({
+				title: `${Math.abs(ctx.args.amount)} ${result.bot.currency.sign} has been ${ctx.args.amount > 0 ? "added to" : "subtracted from"} your balance.`,
+				description: `Transaction by ${ctx.user.tag} for having ${ctx.args.role.name} in ${ctx.guild.name}`,
+				fields: [{
+					name: "Reason",
+					value: ctx.args.reason
+				}]
+			}));
+		}
+		return ctx.send(`Successfully ${ctx.args.amount > 0 ? "added" : "subtracted"} ${ctx.args.amount} ${result.bot.currency.sign} ${ctx.args.amount > 0 ? "to" : "from"} ${count} members with the ${ctx.args.role.name} role.`);
 	}
 };
