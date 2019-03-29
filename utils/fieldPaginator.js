@@ -3,7 +3,6 @@ const chunk = (a, l) => a.length === 0 ? [] : [a.slice(0, l)].concat(chunk(a.sli
 
 module.exports = class fieldPaginator {
 	constructor(channel, member, fields, timeout, options) {
-		this.current = 0;
 		this.back = "◀";
 		this.next = "▶";
 		this.stop = "⏹";
@@ -14,17 +13,24 @@ module.exports = class fieldPaginator {
 			fields = fields.map((field, index) => ({ ...field, name: `${index + 1}. ${field.name}` }));
 		if (typeof options.chunkSize !== "number" || options.chunkSize < 1 || options.chunkSize > 12)
 			options.chunkSize = 5;
+		if (typeof options.defaultPage !== "number" || !(options.defaultPage >= 0 && options.defaultPage <= fields.length))
+			options.defaultPage = 0;
+		this.current = options.defaultPage;
 		this.fields = chunk(fields, options.chunkSize);
 		this.total = this.fields.length;
 		this.embedTemplate = typeof options.embedTemplate === "object" ? options.embedTemplate : {};
 
-		channel.send(new RichEmbed({ ...this.embedTemplate, fields: this.fields[0], footer: this.footer })).then(async msg => {
+		channel.send(new RichEmbed({
+			...this.embedTemplate,
+			fields: this.fields[this.current],
+			footer: this.footer
+		})).then(async msg => {
 			this.message = msg;
 			if (this.total < 2) return;
 			await this.message.react(this.back);
 			await this.message.react(this.next);
 			if (this.total > 2) await this.message.react(this.stop);
-			this.collector = this.message.createReactionCollector((reaction, user) => user.id === this.member.id && user.id !== this.message.author.id, { time: this.timeout * 1000 });
+			this.collector = this.message.createReactionCollector((reaction, user) => reaction.me && user.id === this.member.id && user.id !== this.message.author.id, { time: this.timeout * 1000 });
 
 			this.collector.on("collect", reaction => {
 				switch (reaction.emoji.toString()) {
