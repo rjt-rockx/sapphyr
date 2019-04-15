@@ -3,7 +3,8 @@ const { mongoUrl } = require("../localdata/config"),
 	datahandler = require("./datahandler.js"),
 	guildDatahandler = require("./guildDatahandler.js"),
 	globalDatahandler = require("./globalDatahandler.js"),
-	nadekoConnector = require("./nadekoConnector.js");
+	nadekoConnector = require("./nadekoConnector.js"),
+	nadekoDbConnector = require("./nadekoDatabaseConnector.js");
 
 const timedEvents = ["minute", "fiveMinutes", "fifteenMinutes", "halfAnHour", "hour", "day"];
 
@@ -211,8 +212,15 @@ const attachGuildDatahandler = async context => {
 	if (context.guild) {
 		context.db = new guildDatahandler(context.client.datahandler, context.guild.id);
 		const nc = await context.db.get("nadekoconnector");
-		if (typeof nc === "object" && nc.enabled === true)
+		if (typeof nc === "object" && nc.enabled)
 			context.nadekoConnector = new nadekoConnector(nc.address, nc.password);
+		else {
+			const ncdb = await context.db.get("nadekoDbConnector");
+			if (typeof ncdb === "object" && ncdb.enabled) {
+				context.nadekoConnector = new nadekoDbConnector(ncdb.databasePath, ncdb.credentialsPath);
+				context.nadekoConnector.initialize();
+			}
+		}
 	}
 };
 

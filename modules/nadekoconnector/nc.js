@@ -32,6 +32,7 @@ module.exports = class NcSetCommand extends global.utils.baseCommand {
 			await ctx.message.channel.send("Unable to connect to the given NadekoConnector instance.");
 		}
 		if (typeof botInfo.error === "undefined") {
+			await ctx.db.set("nadekoDbConnector", { enabled: false });
 			await ctx.db.set("nadekoconnector", { address: ctx.args.address, password: ctx.args.password, enabled: true });
 			await ctx.message.channel.send("NadekoConnector configuration stored.");
 		}
