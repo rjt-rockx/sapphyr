@@ -45,7 +45,7 @@ module.exports = class ApproverStatsCommand extends global.utils.baseCommand {
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to get bot information.");
 		}
-		const sign = result.bot.currency.sign;
+		const sign = result.currency.sign;
 
 		const stats = this.parseStats(approverStats[targetMember.user.id]);
 		return ctx.embed({

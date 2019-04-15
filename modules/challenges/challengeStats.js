@@ -41,7 +41,7 @@ module.exports = class ChallengeStatsCommand extends global.utils.baseCommand {
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to get bot information.");
 		}
-		const sign = result.bot.currency.sign;
+		const sign = result.currency.sign;
 		const challengeCount = this.parseChallengeHistory(challengeData, user.id);
 		const rankInfo = this.getUserRank(challengeData, user.id);
 		if (!rankInfo) return ctx.send("User not found!");

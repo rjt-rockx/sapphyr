@@ -31,7 +31,7 @@ module.exports = class AwardUserCommand extends global.utils.baseCommand {
 		if (!ctx.nadekoConnector)
 			return ctx.send("NadekoConnector configuration not set.");
 		const botInfo = await ctx.nadekoConnector.getBotInfo();
-		if (typeof botInfo.bot.currency.sign === "undefined")
+		if (typeof botInfo.currency.sign === "undefined")
 			return ctx.send("Unable to parse NadekoConnector information.");
 		if (!ctx.args.reason)
 			return ctx.send("No reason specified.");
@@ -42,8 +42,8 @@ module.exports = class AwardUserCommand extends global.utils.baseCommand {
 		if (response.error)
 			return ctx.send(response.message);
 		if (!response.error) {
-			await ctx.send(`Successfully awarded ${ctx.args.amount} ${botInfo.bot.currency.sign} to ${ctx.args.user.tag}`);
-			return ctx.dm(`You've been awarded ${ctx.args.amount} ${botInfo.bot.currency.sign} by ${ctx.user.tag}!`);
+			await ctx.send(`Successfully awarded ${ctx.args.amount} ${botInfo.currency.sign} to ${ctx.args.user.tag}`);
+			return ctx.dm(`You've been awarded ${ctx.args.amount} ${botInfo.currency.sign} by ${ctx.user.tag}!`);
 		}
 	}
 };

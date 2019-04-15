@@ -184,7 +184,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to get bot information.");
 		}
-		const sign = result.bot.currency.sign;
+		const sign = result.currency.sign;
 		result = await ctx.nadekoConnector.addCurrency(authorId, challenge.reward, `[Sapphyr] Challenge #${challenge.id} approved by ${ctx.user.tag} (${ctx.user.id}) in ${ctx.guild.name} (${ctx.guild.id})`);
 		if (result.error) {
 			this.uncache(ctx.args.messages, ctx.guild.id);

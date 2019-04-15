@@ -40,7 +40,7 @@ module.exports = class ChallengeHistoryCommand extends global.utils.baseCommand 
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to get bot information.");
 		}
-		const sign = result.bot.currency.sign;
+		const sign = result.currency.sign;
 		const fields = users[user.id].map(entry => {
 			const approver = this.client.users.get(entry.approver.id) || entry.approver;
 			const challengeString = `#${entry.challenge.id}: [${toTitleCase(entry.challenge.difficulty)}] ${entry.challenge.challenge}`;

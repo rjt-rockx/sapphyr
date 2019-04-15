@@ -43,7 +43,7 @@ module.exports = class AwardRoleCommand extends global.utils.baseCommand {
 			if (response.error)
 				return ctx.send(`Unable to ${ctx.args.amount > 0 ? "add" : "subtract"} currency for members of this role.`);
 			member.user.send(new RichEmbed({
-				title: `${Math.abs(ctx.args.amount)} ${result.bot.currency.sign} has been ${ctx.args.amount > 0 ? "added to" : "subtracted from"} your balance.`,
+				title: `${Math.abs(ctx.args.amount)} ${result.currency.sign} has been ${ctx.args.amount > 0 ? "added to" : "subtracted from"} your balance.`,
 				description: `Transaction by ${ctx.user.tag} for having ${ctx.args.role.name} in ${ctx.guild.name}`,
 				fields: [{
 					name: "Reason",
@@ -51,6 +51,6 @@ module.exports = class AwardRoleCommand extends global.utils.baseCommand {
 				}]
 			}));
 		}
-		return ctx.send(`Successfully ${ctx.args.amount > 0 ? "added" : "subtracted"} ${ctx.args.amount} ${result.bot.currency.sign} ${ctx.args.amount > 0 ? "to" : "from"} ${count} members with the ${ctx.args.role.name} role.`);
+		return ctx.send(`Successfully ${ctx.args.amount > 0 ? "added" : "subtracted"} ${ctx.args.amount} ${result.currency.sign} ${ctx.args.amount > 0 ? "to" : "from"} ${count} members with the ${ctx.args.role.name} role.`);
 	}
 };

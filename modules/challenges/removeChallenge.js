@@ -43,7 +43,7 @@ module.exports = class RemoveChallenge extends global.utils.baseCommand {
 		if (!ctx.nadekoConnector)
 			return ctx.send("NadekoConnector configuration not set.");
 		const botInfo = await ctx.nadekoConnector.getBotInfo();
-		if (typeof botInfo.bot.currency.sign === "undefined")
+		if (typeof botInfo.currency.sign === "undefined")
 			return ctx.send("Unable to parse NadekoConnector information.");
 
 		const challengeData = await ctx.db.get("challengeData");
@@ -65,7 +65,7 @@ module.exports = class RemoveChallenge extends global.utils.baseCommand {
 		challengeHistory = challengeHistory.splice(index, 1);
 
 		const response = await ctx.nadekoConnector.subtractCurrency(ctx.args.user.id, challengeEntry.challenge.reward, `[Sapphyr] Removed challenge #${challengeEntry.challenge.id}.`);
-		const currencyText = !response.error ? `${challengeEntry.challenge.reward} ${botInfo.bot.currency.sign} was deducted from ${ctx.args.user.tag}` : `Unable to deduct currency from ${ctx.args.user.tag}`;
+		const currencyText = !response.error ? `${challengeEntry.challenge.reward} ${botInfo.currency.sign} was deducted from ${ctx.args.user.tag}` : `Unable to deduct currency from ${ctx.args.user.tag}`;
 
 		await ctx.db.set("challengeData", challengeData);
 

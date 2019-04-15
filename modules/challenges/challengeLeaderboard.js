@@ -33,7 +33,7 @@ module.exports = class ChallengeLeaderboardCommand extends global.utils.baseComm
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to get bot information.");
 		}
-		const sign = result.bot.currency.sign;
+		const sign = result.currency.sign;
 		const leaderboard = this.getLeaderboard(challengeData, ctx.args.sortBy);
 		if (!leaderboard || (Array.isArray(leaderboard) && leaderboard.length < 1))
 			return ctx.send("Unable to fetch leaderboard.");

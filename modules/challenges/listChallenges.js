@@ -30,7 +30,7 @@ module.exports = class ListChallengesCommand extends global.utils.baseCommand {
 			console.log(`[Error] NadekoConnector: ${result.message}`);
 			return ctx.send("Unable to get bot information.");
 		}
-		const sign = result.bot.currency.sign;
+		const sign = result.currency.sign;
 
 		const challenges = ctx.args.activeOnly ? challengeData.challenges.filter(challenge => challenge.enabled === true) : challengeData.challenges;
 		const challengeFields = challenges.map(challenge => ({

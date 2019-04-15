@@ -21,10 +21,10 @@ module.exports = class CashCommand extends global.utils.baseCommand {
 	async task(ctx) {
 		if (!ctx.nadekoConnector) return ctx.send("NadekoConnector configuration not set.");
 		const result = await ctx.nadekoConnector.getBotInfo();
-		if (result.error || !result.bot.currency.sign)
+		if (result.error || !result.currency.sign)
 			return ctx.send("Unable to parse NadekoConnector information.");
 		const targetUser = ctx.args.user === "self" ? ctx.message.author : ctx.args.user,
 			currency = await ctx.nadekoConnector.getCurrency(targetUser.id);
-		return ctx.embed({ description: `**${targetUser.tag}** has ${currency.currency} ${result.bot.currency.sign}` });
+		return ctx.embed({ description: `**${targetUser.tag}** has ${currency.currency} ${result.currency.sign}` });
 	}
 };
