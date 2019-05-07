@@ -35,6 +35,10 @@ module.exports = class ChallengeHistoryCommand extends global.utils.baseCommand 
 			return ctx.send("Invalid challenge data stored.");
 		if (users[user.id].length < 1)
 			return ctx.send("No challenge history found!");
+
+		if (!ctx.nadekoConnector)
+			return ctx.send("No NadekoConnector configuration found for this guild.");
+
 		const result = await ctx.nadekoConnector.getBotInfo();
 		if (result.error) {
 			console.log(`[Error] NadekoConnector: ${result.message}`);

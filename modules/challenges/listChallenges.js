@@ -25,6 +25,9 @@ module.exports = class ListChallengesCommand extends global.utils.baseCommand {
 		if (!challengeData.challenges || (Array.isArray(challengeData.challenges) && challengeData.challenges.length < 1))
 			return ctx.send("No challenges found.");
 
+		if (!ctx.nadekoConnector)
+			return ctx.send("No NadekoConnector configuration found for this guild.");
+
 		const result = await ctx.nadekoConnector.getBotInfo();
 		if (result.error) {
 			console.log(`[Error] NadekoConnector: ${result.message}`);
