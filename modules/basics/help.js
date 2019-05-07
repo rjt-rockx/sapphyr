@@ -20,18 +20,18 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 		});
 	}
 
-	task({ args, message, channel, user }) {
+	task({ args, message, channel, user, guild }) {
 		if (args.command === "all") {
 			const fieldPaginator = global.utils.fieldPaginator;
 			const commands = this.client.registry.commands.array().sort((a, b) => a.name.localeCompare(b.name)).map(command => {
-				const commandData = getCommandData(command, this.client);
+				const commandData = getCommandData(command, this.client, guild);
 				return { name: commandData.name, value: commandData.description };
 			});
 			return new fieldPaginator(channel, user, commands, 15, {
 				embedTemplate: { title: "List of commands:" }
 			});
 		}
-		const commandData = getCommandData(args.command, this.client);
+		const commandData = getCommandData(args.command, this.client, guild);
 		const fields = [];
 		if (commandData.aliases)
 			fields.push({ name: "Aliases", value: commandData.aliases });
@@ -46,8 +46,8 @@ module.exports = class HelpCommand extends global.utils.baseCommand {
 };
 
 
-function getCommandData(command, client) {
-	let commandTitle = escapeMarkdown(client.commandPrefix + command.name), arguments = [];
+function getCommandData(command, client, guild) {
+	let commandTitle = escapeMarkdown((guild.commandPrefix || client.commandPrefix) + command.name), arguments = [];
 	if (command.argsCollector && command.argsCollector.args && Array.isArray(command.argsCollector.args)) {
 		const argKeys = command.argsCollector.args.map(arg => {
 			const argName = (arg.oneOf && arg.oneOf.length < 4) ? arg.oneOf.join("/") : arg.key;
@@ -64,7 +64,7 @@ function getCommandData(command, client) {
 		clientperms = command.clientPermissions.map(permission => toTitleCase(permission.split("_").join(" ").toLowerCase())).join(", ");
 	return {
 		name: commandTitle,
-		aliases: Array.isArray(command.aliases) ? command.aliases.map(alias => escapeMarkdown(client.commandPrefix + alias)).join(", ") : "",
+		aliases: Array.isArray(command.aliases) ? command.aliases.map(alias => escapeMarkdown((guild.commandPrefix || client.commandPrefix) + alias)).join(", ") : "",
 		description: command.description,
 		arguments, userperms, clientperms
 	};
