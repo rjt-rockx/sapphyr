@@ -209,6 +209,60 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 			}
 		});
 
+		const challengeRoles = await ctx.db.get("challengeRoles") || await ctx.db.set("challengeRoles", {});
+		const amountOfChallengesCompleted = challengeData.users[authorId].length;
+		const rolesField = [];
+
+		if (challengeRoles.enabled) {
+			if (!challengeRoles.roles || typeof challengeRoles.roles !== "object")
+				challengeRoles.roles = {};
+
+			const configuredChallengeRoles = Object.entries(challengeRoles.roles)
+				.map(([key, value]) => [parseInt(key), value])
+				.sort(([a], [b]) => a - b);
+			const member = ctx.guild.members.get(authorId);
+
+			let roleChanges = [];
+
+			for (const [amount, role] of configuredChallengeRoles) {
+				if (!ctx.guild.roles.has(role)) {
+					delete challengeRoles.roles[amount];
+					continue;
+				}
+				if (amountOfChallengesCompleted >= amount) {
+					if (!challengeRoles.stacked)
+						roleChanges.forEach(e => e.action = "-");
+					roleChanges.push({ amount, role, action: "+" });
+				}
+			}
+
+			roleChanges = roleChanges.filter(entry => {
+				if (entry.action === "+" && member.roles.has(entry.role)) return false;
+				else if (entry.action === "-" && !member.roles.has(entry.role)) return false;
+				else return true;
+			});
+
+			try {
+				if (roleChanges.length > 0) {
+					const rolesToAdd = roleChanges.filter(entry => entry.action === "+").map(entry => ctx.guild.roles.get(entry.role));
+					await member.addRoles(rolesToAdd, "Adding challenge roles.");
+
+					const rolesToRemove = roleChanges.filter(entry => entry.action === "-").map(entry => ctx.guild.roles.get(entry.role));
+					await member.removeRoles(rolesToRemove, "Removing challenge roles.");
+
+					rolesField.push({
+						name: `Role Changes (${roleChanges.length})`,
+						value: roleChanges.map(entry => `${entry.action}${ctx.guild.roles.get(entry.role).name}`).join(", ")
+					});
+				}
+			}
+			catch (err) {
+				ctx.selfDestruct("Error adding challenge roles to this user; ignoring.");
+			}
+
+			await ctx.db.set("challengeRoles", challengeRoles);
+		}
+
 		const logChannel = challengeData.logChannel ? ctx.guild.channels.get(challengeData.logChannel) : null;
 		if (logChannel) {
 			await logChannel.send({
@@ -226,7 +280,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 							name: `Approved by ${ctx.user.tag} (${ctx.user.id}).`,
 							value: `${ctx.args.messages[0].author.tag} was rewarded ${challenge.reward} ${sign}!`
 						},
-						...attachmentField
+						...attachmentField, ...rolesField
 					],
 					color: DiscordColors.green,
 					footer: { text: `User ID: ${ctx.args.messages[0].author.id}` },
@@ -251,7 +305,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 							name: `Approved by ${ctx.user.tag} (${ctx.user.id}).`,
 							value: `You were rewarded ${challenge.reward} ${sign}!`
 						},
-						...attachmentField
+						...attachmentField, ...rolesField
 					],
 					color: DiscordColors.green,
 					footer: { text: `User ID: ${ctx.args.messages[0].author.id}` },
