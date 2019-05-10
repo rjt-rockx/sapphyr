@@ -237,6 +237,7 @@ const attachExtras = async context => {
 	if (context.channel) {
 		context.selfDestruct = (data, seconds = 10) => context.channel.send(data).then(msg => msg.delete(seconds * 1000));
 	}
+	context.prefix = context.guild && context.guild.commandPrefix ? context.guild.commandPrefix : context.client.commandPrefix;
 	if (context.arguments)
 		context.args = context.arguments;
 };
