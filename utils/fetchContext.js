@@ -215,10 +215,8 @@ const attachGuildDatahandler = async context => {
 			context.nadekoConnector = new nadekoConnector(nc.address, nc.password);
 		else {
 			const ncdb = await context.db.get("nadekoDbConnector");
-			if (typeof ncdb === "object" && ncdb.enabled) {
-				context.nadekoConnector = new nadekoDbConnector(ncdb.databasePath, ncdb.credentialsPath);
-				context.nadekoConnector.initialize();
-			}
+			if (typeof ncdb === "object" && ncdb.enabled)
+				context.nadekoConnector = new nadekoDbConnector(ncdb.databasePath, ncdb.credentialsPath).initialize();
 		}
 	}
 };
