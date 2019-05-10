@@ -11,7 +11,7 @@ module.exports = class ApproveCommand extends global.utils.baseCommand {
 			aliases: ["approvechallenge", "ach"],
 			group: "challenges",
 			description: "Approve a challenge and award the submitter.",
-			clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
+			clientPermissions: ["SEND_MESSAGES", "EMBED_LINKS", "MANAGE_ROLES"],
 			guildOnly: true,
 			args: [
 				{
