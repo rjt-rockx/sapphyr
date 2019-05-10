@@ -10,7 +10,7 @@ const timedEvents = ["minute", "fiveMinutes", "fifteenMinutes", "halfAnHour", "h
 
 const camelCase = data => data.replace(/(_\w)/g, text => text[1].toUpperCase());
 const camelCaseKeys = obj => {
-	var newObj = {};
+	const newObj = {};
 	for (const data in obj) {
 		if (obj.hasOwnProperty(data))
 			newObj[camelCase(data)] = obj[data];
