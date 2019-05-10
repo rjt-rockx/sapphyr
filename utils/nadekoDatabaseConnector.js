@@ -138,6 +138,7 @@ class Connector {
 			throw new Error("Database could not be initialized.");
 		}
 		this._init = true;
+		return this;
 	}
 
 	/**
