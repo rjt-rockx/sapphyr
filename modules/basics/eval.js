@@ -1,4 +1,4 @@
-const { inspect } = require("util"), { splitMessage } = require("discord.js"), { stripIndents } = require("common-tags"),
+const { inspect } = require("util"), { splitMessage } = require("discord.js"),
 	escapeRegex = require("escape-string-regexp");
 const nlPattern = new RegExp("!!NL!!", "g");
 
@@ -58,19 +58,20 @@ module.exports = class EvalCommand extends global.utils.baseCommand {
 		const prepend = `\`\`\`js\n${prependPart}\n`;
 		const append = `\n${appendPart}\n\`\`\``;
 		if (input) {
-			return splitMessage(stripIndents`
-				*Executed in ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ""}${hrDiff[1] / 1000000}ms.*
-				\`\`\`js
-				${inspected}
-				\`\`\`
-			`, { maxLength: 1900, prepend, append });
+
+			return splitMessage([
+				`Executed in ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ""}${hrDiff[1] / 1000000}ms.`,
+				"```js",
+				inspected,
+				"```"
+			].join("\n"), { maxLength: 1900, prepend, append });
 		} else {
-			return splitMessage(stripIndents`
-				*Callback executed after ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ""}${hrDiff[1] / 1000000}ms.*
-				\`\`\`js
-				${inspected}
-				\`\`\`
-			`, { maxLength: 1900, prepend, append });
+			return splitMessage([
+				`Callback executed after ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ""}${hrDiff[1] / 1000000}ms.`,
+				"```js",
+				inspected,
+				"```"
+			].join("\n"), { maxLength: 1900, prepend, append });
 		}
 	}
 
