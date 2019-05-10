@@ -23,7 +23,6 @@ const fetchContext = async function (client, event, args) {
 	await attachDatahandler(client, context);
 	if (timedEvents.includes(event)) {
 		context.currentTime = new Date(Date.now());
-		return context;
 	}
 	if (event === "channelCreate" || event === "channelDelete") {
 		[context.channel] = args;
