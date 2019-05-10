@@ -240,6 +240,26 @@ const attachExtras = async context => {
 	context.prefix = context.guild && context.guild.commandPrefix ? context.guild.commandPrefix : context.client.commandPrefix;
 	if (context.arguments)
 		context.args = context.arguments;
+
+	if (!context.guild) {
+		context.getDb = guild => {
+			const id = typeof guild === "string" ? guild : guild.id;
+			return new guildDatahandler(context.client.datahandler, id);
+		};
+		context.getNadekoConnector = async guild => {
+			const id = typeof guild === "string" ? guild : guild.id;
+			const db = new guildDatahandler(context.client.datahandler, id);
+			const nc = await db.get("nadekoconnector");
+			if (typeof nc === "object" && nc.enabled)
+				return new nadekoConnector(nc.address, nc.password);
+			else {
+				const ncdb = await context.db.get("nadekoDbConnector");
+				if (typeof ncdb === "object" && ncdb.enabled)
+					return new nadekoDbConnector(ncdb.databasePath, ncdb.credentialsPath).initialize();
+			}
+			return;
+		};
+	}
 };
 
 module.exports = fetchContext;
