@@ -1,6 +1,6 @@
 const { Role } = require("discord.js");
 
-module.exports = class ChallengeRolesCommand extends global.utils.baseCommand {
+module.exports = class ChallengeRoles extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "challengeroles",
@@ -42,7 +42,7 @@ module.exports = class ChallengeRolesCommand extends global.utils.baseCommand {
 			challengeRoles.roles = {};
 		for (const [amount, role] of Object.entries(challengeRoles.roles)) {
 			if (!ctx.guild.roles.has(role))
-				delete challengeRoles.roles[amount];	
+				delete challengeRoles.roles[amount];
 		}
 		await ctx.db.set("challengeRoles", challengeRoles);
 

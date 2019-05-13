@@ -1,6 +1,6 @@
 const { RichEmbed } = require("discord.js");
 
-module.exports = class AwardRoleCommand extends global.utils.baseCommand {
+module.exports = class AwardRole extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "awardrole",

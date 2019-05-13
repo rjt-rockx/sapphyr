@@ -1,4 +1,4 @@
-module.exports = class EnableServiceCommand extends global.utils.baseCommand {
+module.exports = class EnableService extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "serviceinfo",

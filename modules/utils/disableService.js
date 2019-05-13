@@ -1,4 +1,4 @@
-module.exports = class DisableServiceCommand extends global.utils.baseCommand {
+module.exports = class DisableService extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "disableservice",

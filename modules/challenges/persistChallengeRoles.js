@@ -1,4 +1,4 @@
-module.exports = class PersistChallengeRolesCommand extends global.utils.baseCommand {
+module.exports = class PersistChallengeRoles extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "persistchallengeroles",

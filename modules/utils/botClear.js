@@ -1,4 +1,4 @@
-module.exports = class BotClearCommand extends global.utils.baseCommand {
+module.exports = class BotClear extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "botclear",

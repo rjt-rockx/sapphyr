@@ -1,6 +1,6 @@
 const sum = arr => arr.reduce((a, b) => a + b, 0);
 
-module.exports = class ApproverStatsCommand extends global.utils.baseCommand {
+module.exports = class ApproverStats extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "approverstats",

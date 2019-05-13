@@ -1,6 +1,6 @@
 const { TextChannel } = require("discord.js");
 
-module.exports = class StorageChannelCommand extends global.utils.baseCommand {
+module.exports = class StorageChannel extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "storagechannel",

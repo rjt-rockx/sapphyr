@@ -1,6 +1,6 @@
 const { Channel } = require("discord.js");
 
-module.exports = class ReactionLogCommand extends global.utils.baseCommand {
+module.exports = class ReactionLog extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "reactionlog",

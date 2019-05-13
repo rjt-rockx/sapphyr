@@ -1,4 +1,4 @@
-module.exports = class PrefixCommand extends global.utils.baseCommand {
+module.exports = class Prefix extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "prefix",

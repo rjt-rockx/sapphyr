@@ -1,6 +1,6 @@
 const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
-module.exports = class ListChallengesCommand extends global.utils.baseCommand {
+module.exports = class ListChallenges extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "listchallenges",

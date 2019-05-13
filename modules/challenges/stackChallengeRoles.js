@@ -1,4 +1,4 @@
-module.exports = class StackChallengeRolesCommand extends global.utils.baseCommand {
+module.exports = class StackChallengeRoles extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "stackchallengeroles",

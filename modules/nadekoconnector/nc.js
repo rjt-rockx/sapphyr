@@ -1,4 +1,4 @@
-module.exports = class NcSetCommand extends global.utils.baseCommand {
+module.exports = class NcSet extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "ncset",

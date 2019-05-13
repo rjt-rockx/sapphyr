@@ -3,7 +3,7 @@ const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCas
 const DiscordColors = global.utils.colors.numbers.discord;
 const properRoundToTwo = num => +(Math.round(num + "e+2") + "e-2");
 
-module.exports = class ApproveCommand extends global.utils.baseCommand {
+module.exports = class Approve extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "approve",

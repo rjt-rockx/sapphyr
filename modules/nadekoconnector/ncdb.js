@@ -1,4 +1,4 @@
-module.exports = class NadekoDbConnectorCommand extends global.utils.baseCommand {
+module.exports = class NadekoDbConnector extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "ncdbset",

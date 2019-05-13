@@ -7,7 +7,7 @@ const reactionMap = {
 	upvotedownvote: ["🔺", "🔻"]
 };
 
-module.exports = class ArtChannelCommand extends global.utils.baseCommand {
+module.exports = class ArtChannel extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "artchannel",

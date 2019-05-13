@@ -1,4 +1,4 @@
-module.exports = class AwardUserCommand extends global.utils.baseCommand {
+module.exports = class AwardUser extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "awarduser",

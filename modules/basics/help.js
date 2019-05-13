@@ -1,7 +1,7 @@
 const { Util: { escapeMarkdown } } = require("discord.js");
 const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1));
 
-module.exports = class HelpCommand extends global.utils.baseCommand {
+module.exports = class Help extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "help",

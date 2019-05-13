@@ -1,6 +1,6 @@
 const { Role } = require("discord.js");
 
-module.exports = class ApproverRoleCommand extends global.utils.baseCommand {
+module.exports = class ApproverRole extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "approverrole",

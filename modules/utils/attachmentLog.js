@@ -1,6 +1,6 @@
 const { Channel } = require("discord.js");
 
-module.exports = class AttachmentLogCommand extends global.utils.baseCommand {
+module.exports = class AttachmentLog extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "attachmentlog",

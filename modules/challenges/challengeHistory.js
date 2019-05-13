@@ -1,7 +1,7 @@
 const toTitleCase = str => str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 const fromNow = timestamp => require("fromnow")(timestamp, { suffix: true, and: true, zero: false, max: 2 });
 
-module.exports = class ChallengeHistoryCommand extends global.utils.baseCommand {
+module.exports = class ChallengeHistory extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "challengehistory",

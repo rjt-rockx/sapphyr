@@ -1,6 +1,6 @@
 const { TextChannel } = require("discord.js");
 
-module.exports = class ApproverChannelCommand extends global.utils.baseCommand {
+module.exports = class ApproverChannel extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "approverchannel",

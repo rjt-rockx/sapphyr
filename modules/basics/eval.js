@@ -2,7 +2,7 @@ const { inspect } = require("util"), { splitMessage } = require("discord.js"),
 	escapeRegex = require("escape-string-regexp");
 const nlPattern = new RegExp("!!NL!!", "g");
 
-module.exports = class EvalCommand extends global.utils.baseCommand {
+module.exports = class Eval extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "eval",

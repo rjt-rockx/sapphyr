@@ -1,4 +1,4 @@
-module.exports = class CashCommand extends global.utils.baseCommand {
+module.exports = class Cash extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "cash",

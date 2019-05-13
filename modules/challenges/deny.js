@@ -2,7 +2,7 @@ const { RichEmbed, Attachment } = require("discord.js");
 const DiscordColors = global.utils.colors.numbers.discord;
 const properRoundToTwo = num => +(Math.round(num + "e+2") + "e-2");
 
-module.exports = class DenyCommand extends global.utils.baseCommand {
+module.exports = class Deny extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "deny",

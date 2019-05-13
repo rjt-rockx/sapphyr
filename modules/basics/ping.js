@@ -1,4 +1,4 @@
-module.exports = class PingCommand extends global.utils.baseCommand {
+module.exports = class Ping extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "ping",

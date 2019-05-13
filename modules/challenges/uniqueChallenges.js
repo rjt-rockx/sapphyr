@@ -1,4 +1,4 @@
-module.exports = class UniqueChallengesCommand extends global.utils.baseCommand {
+module.exports = class UniqueChallenges extends global.utils.baseCommand {
 	constructor(client) {
 		super(client, {
 			name: "uniquechallenges",
