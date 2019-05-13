@@ -1,6 +1,6 @@
 const { Role } = require("discord.js");
 
-module.exports = class ChallengeRolePersisterService extends global.utils.baseService {
+module.exports = class ChallengeRolePersister extends global.utils.baseService {
 	constructor(client) {
 		super(client, {
 			name: "Challenge Role Persister Service",
