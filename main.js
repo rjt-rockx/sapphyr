@@ -20,7 +20,7 @@ try {
 			await client.user.setActivity("Logged in!");
 
 			// Initialize datahandler
-			client.datahandler = new utils.datahandler(mongoUrl ? mongoUrl : undefined);
+			client.datahandler = new utils.datahandler(mongoUrl);
 			await client.datahandler.initialize(client);
 			log("Datahandler initialized.");
 			global.utils = utils;
