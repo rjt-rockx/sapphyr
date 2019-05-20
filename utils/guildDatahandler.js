@@ -14,7 +14,8 @@ module.exports = class guildDataHandler {
      * @returns Guild data.
      */
 	async reload() {
-		const { _id, ...data } = await this.datahandler.getOrAddGuild({ id: this.id });
+		const data = await this.datahandler.getOrAddGuild({ id: this.id });
+		delete data._id;
 		return this.guild = data;
 	}
 

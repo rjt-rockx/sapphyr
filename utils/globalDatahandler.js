@@ -12,7 +12,8 @@ module.exports = class globalDatahandler {
      * @returns Global data.
      */
 	async reload() {
-		const { _id, ...data } = await this.datahandler.getOrCreateGlobal();
+		const data = await this.datahandler.getOrCreateGlobal();
+		delete data._id;
 		return this.globalData = data;
 	}
 
