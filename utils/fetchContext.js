@@ -1,6 +1,7 @@
-const { mongoUrl } = require("../localdata/config"),
+const { db } = require("../localdata/config"),
 	{ RichEmbed } = require("discord.js"),
 	datahandler = require("./datahandler.js"),
+	sqliteDatahandler = require("./sqliteDatahandler.js"),
 	guildDatahandler = require("./guildDatahandler.js"),
 	globalDatahandler = require("./globalDatahandler.js"),
 	nadekoConnector = require("./nadekoConnector.js"),
@@ -200,7 +201,10 @@ const getGuild = async context => {
 
 const attachDatahandler = async (client, context) => {
 	if (!client.datahandler) {
-		client.datahandler = new datahandler(mongoUrl);
+		if (db.type === "mongo")
+			client.datahandler = new datahandler(db);
+		else if (db.type === "sqlite")
+			client.datahandler = new sqliteDatahandler(db);
 		await client.datahandler.initialize(client);
 	}
 	context.globalDb = new globalDatahandler(client.datahandler);

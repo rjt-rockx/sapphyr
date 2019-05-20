@@ -1,5 +1,5 @@
 const { resolve } = require("path"),
-	{ owners, mongoUrl, token, prefix } = require("./localdata/config.js"),
+	{ owners, db, token, prefix } = require("./localdata/config.js"),
 	{ Client: commandoClient, FriendlyError } = require("discord.js-commando"),
 	serviceHandler = require("./services"),
 	utils = require("./utils"),
@@ -20,7 +20,11 @@ try {
 			await client.user.setActivity("Logged in!");
 
 			// Initialize datahandler
-			client.datahandler = new utils.datahandler(mongoUrl);
+			if (db.type === "mongo")
+				client.datahandler = new utils.datahandler(db);
+			else if (db.type === "sqlite")
+				client.datahandler = new utils.sqliteDatahandler(db);
+			
 			await client.datahandler.initialize(client);
 			log("Datahandler initialized.");
 			global.utils = utils;
