@@ -4,5 +4,11 @@ module.exports = {
 	owners: [
 		"192060404501839872"
 	],
-	mongoUrl: "localhost:27017"
+	db: {
+		type: "mongo",
+		location: "localhost:27017",
+		username: "",
+		password: "",
+		name: "sapphyr"
+	}
 };

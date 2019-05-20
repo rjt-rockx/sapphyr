@@ -3,14 +3,20 @@ const { MongoClient } = require("mongodb");
 class dataHandler {
 	/**
      * @constructor Create a new dataHandler instance.
-     * @param {Number} host Host of the mongodb server. Defaults to localhost:27017.
-     * @param {String} databaseName Name of the database to use. Defaults to "sapphyr".
+     * @param {Object} options Options to connect to the MongoDB instance.
      */
-	constructor(host = 27017, databaseName = "sapphyr") {
-		if (typeof host === "number") host = `localhost:${host}`;
-		this._host = `mongodb://${host}`;
-		this._databaseName = databaseName;
-		this.mongoClient = new MongoClient(this._host, { useNewUrlParser: true });
+	constructor({ location = "27017", name = "sapphyr", username = "", password = "" }) {
+		this._credentials = "";
+		if (username && password)
+			this._credentials = `${encodeURIComponent(username)}:${encodeURIComponent(password)}@`;
+
+		this._host = location;
+		if (typeof this._host === "number")
+			this._host = `localhost:${this._host}`;
+
+		this._url = `mongodb://${this._credentials}${this._host}`;
+		this._databaseName = name;
+		this.mongoClient = new MongoClient(this._url, { useNewUrlParser: true });
 		this.initialized = false;
 		this.globalInitialized = false;
 	}
